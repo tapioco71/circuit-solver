@@ -1,0 +1,105 @@
+;;
+;; pay attention to three-phase machine abduction phenomena
+;;
+
+(NETLIST
+ :NAME "test_1ph_fault_02"
+ :ELEMENTS-LIST ((SOURCE 
+		  :NAME "V1"
+		  :CLASS "voltage-source"
+		  :NODES-LIST ("GND" "N1")
+		  :MODEL (MODEL 
+			  :NAME "sinusoidal-voltage-1"
+			  :FUNCTION-NAME "sinusoidal-function"
+			  :CLASS "function"
+			  :PARAMETERS-LIST (:AMPLITUDE 1414d0 :FREQUENCY 50d0 :PHASE 0d0)))
+
+		 (SOURCE
+		  :NAME "Vb"
+		  :CLASS "voltage-source"
+		  :NODES-LIST ("N10" "GND")
+		  :MODEL (MODEL
+			  :NAME "square-voltage-1"
+			  :FUNCTION-NAME "bistable-function-1"
+			  :CLASS "function"
+			  :PARAMETERS-LIST (:POLARITY nil :T0 500d-3 :LOW-VALUE 0d0 :HIGH-VALUE 10d0)))
+
+		 (PASSIVE
+		  :NAME "Rb"
+		  :CLASS "resistance"
+		  :NODES-LIST ("N10" "GND")
+		  :VALUE 1d6)
+
+		 (PASSIVE
+		  :NAME "R1"
+		  :CLASS "resistance"
+		  :NODES-LIST ("N2" "N3")
+		  :VALUE 1d0)
+
+		 (PASSIVE
+		  :NAME "L1"
+		  :CLASS "inductance"
+		  :NODES-LIST ("N1" "N2")
+		  :VALUE 1d-6)
+
+		 (PASSIVE
+		  :NAME "Rload"
+		  :CLASS "resistance"
+		  :NODES-LIST ("N3" "GND")
+		  :VALUE 1d2)
+
+		 (PASSIVE
+		  :NAME "Cload"
+		  :CLASS "capacitance"
+		  :NODES-LIST ("N3" "GND")
+		  :VALUE 4700d-6)
+
+		 (PASSIVE
+		  :NAME "I1"
+		  :CLASS "conductance"
+		  :NODES-LIST ("N3" "GND")
+		  :MODEL (MODEL
+			  :NAME "breaker"
+			  :FUNCTION-NAME "simple-switch-2"
+			  :CLASS "function"
+			  :PARAMETERS-LIST (:ON-CONDUCTANCE 1d4 :OFF-CONDUCTANCE 1d-6 :ON-TIME 1d-6 :OFF-TIME 1d-6 :UPPER-THRESHOLD 6d0 :LOWER-THRESHOLD 4d0)
+			  :PROBES-LIST ((PROBE
+					 :NAME "P1"
+					 :CLASS "voltage-probe"
+					 :NODES-LIST ("GND"))
+					(PROBE
+					 :NAME "P2"
+					 :CLASS "voltage-probe"
+					 :NODES-LIST ("N10")))
+			  :VALUE 1d-6))
+
+
+		 (NODE
+		  :NAME "GND"
+		  :CLASS "reference")
+
+		 (NODE
+		  :NAME "N1"
+		  :CLASS "v-i")
+
+		 (NODE
+		  :NAME "N2"
+		  :CLASS "v-i")
+
+		 (NODE
+		  :NAME "N3"
+		  :CLASS "v-i")
+
+		 (NODE
+		  :NAME "N10"
+		  :CLASS "v-i")
+
+		 (PROBE
+		  :NAME "current"
+		  :CLASS "current-probe"
+		  :ELEMENTS-LIST ("V1" "R1" "L1" "Rload" "I1"))
+
+		 (PROBE
+		  :NAME "voltage"
+		  :CLASS "voltage-probe"
+		  :NODES-LIST ("N1" "N2" "N3" "N10"))))

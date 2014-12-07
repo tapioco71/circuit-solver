@@ -1,0 +1,227 @@
+;;
+;; single phase transformer
+;; Sn = 10000 VA
+;; V1n = 4000 V
+;; V2n = 380 V 
+;;
+
+(NETLIST
+	:NAME "t3_10000_4000_380_YY"
+	:ELEMENTS-LIST ((PASSIVE
+				:NAME "G01"
+				:CLASS "conductance"
+				:NODES-LIST ("B1" "Np")
+				:VALUE 21d-6)
+
+			(PASSIVE
+				:NAME "G02"
+				:CLASS "conductance"
+				:NODES-LIST ("B2" "Np")
+				:VALUE 21d-6)
+
+			(PASSIVE
+				:NAME "G03"
+				:CLASS "conductance"
+				:NODES-LIST ("B3" "Np")
+				:VALUE 21d-6)
+
+			(PASSIVE
+				:NAME "R1d"
+				:CLASS "resistance"
+				:NODES-LIST ("B1" "N1")
+				:VALUE 20d0)
+
+			(PASSIVE
+				:NAME "L1d"
+				:CLASS "inductance"
+				:NODES-LIST ("N1" "N4")
+				:VALUE 138d-3)
+
+			(PASSIVE
+				:NAME "R2d"
+				:CLASS "resistance"
+				:NODES-LIST ("B2" "N2")
+				:VALUE 20d0)
+
+			(PASSIVE
+				:NAME "L2d"
+				:CLASS "inductance"
+				:NODES-LIST ("N2" "N5")
+				:VALUE 138d-3)
+
+			(PASSIVE
+				:NAME "R3d"
+				:CLASS "resistance"
+				:NODES-LIST ("B3" "N3")
+				:VALUE 20d0)
+
+			(PASSIVE
+				:NAME "L3d"
+				:CLASS "inductance"
+				:NODES-LIST ("N3" "N6")
+				:VALUE 138d-3)
+
+			(PASSIVE
+				:NAME "R4d"
+				:CLASS "resistance"
+				:NODES-LIST ("N7" "N10")
+				:VALUE 180d-3)
+
+			(PASSIVE
+				:NAME "L4d"
+				:CLASS "inductance"
+				:NODES-LIST ("N10" "B4")
+				:VALUE 1.245d-3)
+
+			(PASSIVE
+				:NAME "R5d"
+				:CLASS "resistance"
+				:NODES-LIST ("N8" "N11")
+				:VALUE 180d-3)
+
+			(PASSIVE
+				:NAME "L5d"
+				:CLASS "inductance"
+				:NODES-LIST ("N11" "B5")
+				:VALUE 1.245d-3)
+
+			(PASSIVE
+				:NAME "R6d"
+				:CLASS "resistance"
+				:NODES-LIST ("N9" "N12")
+				:VALUE 180d-3)
+
+			(PASSIVE
+				:NAME "L6d"
+				:CLASS "inductance"
+				:NODES-LIST ("N12" "B6")
+				:VALUE 1.245d-3)
+
+			(COUPLING
+				:NAME "M"
+				:CLASS "transformational"
+
+;
+;					 k12	  k13	   k14 k15	k16	 k23	  k24	   k25 k26	k34      k35      k36 k45      k46      k56
+;
+				:VALUE #(0.5795d0 0.3285d0 1d0 0.5795d0 0.3285d0 0.5795d0 0.5795d0 1d0 0.5795d0 0.3285d0 0.5795d0 1d0 0.5795d0 0.3285d0 0.5795d0)
+				:ELEMENTS-LIST ((PASSIVE
+							:NAME "L11"
+							:CLASS "inductance"
+							:NODES-LIST ("N4" "Np")
+							:VALUE 147268d-3)
+						
+						(PASSIVE
+							:NAME "L22"
+							:CLASS "inductance"
+							:NODES-LIST ("N5" "Np")
+							:VALUE 197775d-3)
+
+						(PASSIVE
+							:NAME "L33"
+							:CLASS "inductance"
+							:NODES-LIST ("N6" "Np")
+							:VALUE 147268d-3)
+
+						(PASSIVE
+							:NAME "L44"
+							:CLASS "inductance"
+							:NODES-LIST ("Ns" "N7")
+							:VALUE 1328d-3)
+
+						(PASSIVE
+							:NAME "L55"
+							:CLASS "inductance"
+							:NODES-LIST ("Ns" "N8")
+							:VALUE 1785d-3)
+
+						(PASSIVE
+							:NAME "L66"
+							:CLASS "inductance"
+							:NODES-LIST ("Ns" "N9")
+							:VALUE 1328d-3)))
+
+			(NODE
+				:NAME "B1"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "B2"
+				:CLASS "v-i")				
+
+			(NODE
+				:NAME "B3"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "Np"
+				:CLASS "v-i")				
+
+			(NODE
+				:NAME "B4"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "B5"
+				:CLASS "v-i")
+				
+			(NODE
+				:NAME "B6"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "Ns"
+				:CLASS "v-i")
+				
+			(NODE
+				:NAME "N1"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "N2"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "N3"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "N4"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "N5"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "N6"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "N7"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "N8"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "N9"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "N10"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "N11"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "N12"
+				:CLASS "v-i")))
+
+
+
+
+			

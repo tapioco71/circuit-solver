@@ -1,0 +1,274 @@
+;
+; See Power Electronics by Mohan / Undeland / Robbins
+; example page 120 fig. 5A-2
+;
+
+
+(NETLIST
+	:NAME "3phase-ac-dc-converter_03"
+	:ELEMENTS-LIST ((SOURCE
+				:NAME "V1"
+				:CLASS "voltage-source"
+				:MODEL (MODEL :NAME "sinusoidal-voltage-1"
+				       	      :FUNCTION-NAME "sinusoidal-function"
+				       	      :CLASS "function"
+					      :PARAMETERS-LIST (:AMPLITUDE 170d0 :FREQUENCY 60d0 :PHASE 0d0))	
+				:NODES-LIST ("GND" "N1"))
+
+			(SOURCE
+				:NAME "V2"
+				:CLASS "voltage-source"
+				:MODEL (MODEL :NAME "sinusoidal-voltage-2"
+				       	      :FUNCTION-NAME "sinusoidal-function"
+				       	      :CLASS "function"
+					      :PARAMETERS-LIST (:AMPLITUDE 170d0 :FREQUENCY 60d0 :PHASE 2.0943d0))	
+				:NODES-LIST ("GND" "N2"))
+
+			(SOURCE
+				:NAME "V3"
+				:CLASS "voltage-source"
+				:MODEL (MODEL :NAME "sinusoidal-voltage-3"
+				       	      :FUNCTION-NAME "sinusoidal-function"
+				       	      :CLASS "function"
+					      :PARAMETERS-LIST (:AMPLITUDE 170d0 :FREQUENCY 60d0 :PHASE -2.0943d0))
+				:NODES-LIST ("GND" "N3"))
+
+			(PASSIVE
+				:NAME "L1s"
+				:CLASS "inductance"
+				:NODES-LIST ("N1" "N11")
+				:VALUE 1d-3)
+
+			(PASSIVE
+				:NAME "R1s"
+				:CLASS "resistance"
+				:NODES-LIST ("N11" "N12")
+				:VALUE 1d-3)
+
+			(PASSIVE
+				:NAME "L2s"
+				:CLASS "inductance"
+				:NODES-LIST ("N2" "N21")
+				:VALUE 1d-3)
+
+			(PASSIVE
+				:NAME "R2s"
+				:CLASS "resistance"
+				:NODES-LIST ("N21" "N22")
+				:VALUE 1d-3)
+
+			(PASSIVE
+				:NAME "L3s"
+				:CLASS "inductance"
+				:NODES-LIST ("N3" "N31")
+				:VALUE 1d-3)
+
+			(PASSIVE
+				:NAME "R3s"
+				:CLASS "resistance"
+				:NODES-LIST ("N31" "N32")
+				:VALUE 1d-3)
+
+			(PASSIVE
+				:NAME "D1"
+				:CLASS "conductance"
+				:NODES-LIST ("N12" "N4")
+				:MODEL (MODEL :NAME "simple-diode-1"
+				       	      :FUNCTION-NAME "simple-diode-4"
+					      :CLASS "function"
+					      :PARAMETERS-LIST (:VT 252d-3 :N 1d0 :IS 1d-6 :ORDER 1)
+					      :PROBES-LIST ((PROBE 
+					      		   	   :NAME "diode-a-1"
+								   :CLASS "voltage-probe"
+								   :NODES-LIST ("N12"))
+
+							    (PROBE 
+					      		   	   :NAME "diode-k-1"
+								   :CLASS "voltage-probe"
+								   :NODES-LIST ("N4")))	
+					      :VALUE 0d0))
+
+			(PASSIVE
+				:NAME "D2"
+				:CLASS "conductance"
+				:NODES-LIST ("N7" "N32")
+				:MODEL (MODEL :NAME "simple-diode-2"
+				       	      :FUNCTION-NAME "simple-diode-4"
+					      :CLASS "function"
+					      :PARAMETERS-LIST (:VT 252d-3 :N 1d0 :IS 1d-6 :ORDER 1)
+					      :PROBES-LIST ((PROBE 
+					      		   	   :NAME "diode-a-2"
+								   :CLASS "voltage-probe"
+								   :NODES-LIST ("N7"))
+
+							    (PROBE 
+					      		   	   :NAME "diode-k-2"
+								   :CLASS "voltage-probe"
+								   :NODES-LIST ("N32")))	
+					      :VALUE 0d0))
+
+			(PASSIVE
+				:NAME "D3"
+				:CLASS "conductance"
+				:NODES-LIST ("N22" "N4")
+				:MODEL (MODEL :NAME "simple-diode-3"
+				       	      :FUNCTION-NAME "simple-diode-4"
+					      :CLASS "function"
+					      :PARAMETERS-LIST (:VT 252d-3 :N 1d0 :IS 1d-6 :ORDER 1)
+					      :PROBES-LIST ((PROBE 
+					      		   	   :NAME "diode-a-3"
+								   :CLASS "voltage-probe"
+								   :NODES-LIST ("N22"))
+
+							    (PROBE 
+					      		   	   :NAME "diode-k-3"
+								   :CLASS "voltage-probe"
+								   :NODES-LIST ("N4")))	
+					      :VALUE 0d0))
+
+			(PASSIVE
+				:NAME "D4"
+				:CLASS "conductance"
+				:NODES-LIST ("N7" "N12")
+				:MODEL (MODEL :NAME "simple-diode-4"
+				       	      :FUNCTION-NAME "simple-diode-4"
+					      :CLASS "function"
+					      :PARAMETERS-LIST (:VT 252d-3 :N 1d0 :IS 1d-6 :ORDER 1)
+					      :PROBES-LIST ((PROBE 
+					      		   	   :NAME "diode-a-4"
+								   :CLASS "voltage-probe"
+								   :NODES-LIST ("N7"))
+
+							    (PROBE 
+					      		   	   :NAME "diode-k-4"
+								   :CLASS "voltage-probe"
+								   :NODES-LIST ("N12")))	
+					      :VALUE 0d0))
+
+			(PASSIVE
+				:NAME "D5"
+				:CLASS "conductance"
+				:NODES-LIST ("N32" "N4")
+				:MODEL (MODEL :NAME "simple-diode-5"
+				       	      :FUNCTION-NAME "simple-diode-4"
+					      :CLASS "function"
+					      :PARAMETERS-LIST (:VT 252d-3 :N 1d0 :IS 1d-6 :ORDER 1)
+					      :PROBES-LIST ((PROBE 
+					      		   	   :NAME "diode-a-5"
+								   :CLASS "voltage-probe"
+								   :NODES-LIST ("N32"))
+
+							    (PROBE 
+					      		   	   :NAME "diode-k-5"
+								   :CLASS "voltage-probe"
+								   :NODES-LIST ("N4")))	
+					      :VALUE 0d0))
+
+			(PASSIVE
+				:NAME "D6"
+				:CLASS "conductance"
+				:NODES-LIST ("N7" "N22")
+				:MODEL (MODEL :NAME "simple-diode-6"
+				       	      :FUNCTION-NAME "simple-diode-4"
+					      :CLASS "function"
+					      :PARAMETERS-LIST (:VT 252d-3 :N 1d0 :IS 1d-6 :ORDER 1)
+					      :PROBES-LIST ((PROBE 
+					      		   	   :NAME "diode-a-6"
+								   :CLASS "voltage-probe"
+								   :NODES-LIST ("N7"))
+
+							    (PROBE 
+					      		   	   :NAME "diode-k-6"
+								   :CLASS "voltage-probe"
+								   :NODES-LIST ("N22")))	
+					      :VALUE 0d0))
+
+			(PASSIVE
+				:NAME "Ld"
+				:CLASS "inductance"
+				:NODES-LIST ("N4" "N5")
+				:VALUE 1d-6)
+
+			(PASSIVE
+				:NAME "Rd"
+				:CLASS "resistance"
+				:NODES-LIST ("N5" "N6")
+				:VALUE 1d-6)
+
+			(PASSIVE
+				:NAME "Rload"
+				:CLASS "resistance"
+				:NODES-LIST ("N6" "N7")
+				:VALUE 35d0)
+
+			(PASSIVE
+				:NAME "Cd"
+				:CLASS "capacitance"
+				:NODES-LIST ("N7" "N6")
+				:VALUE 1100d-6)
+							
+			(NODE
+				:NAME "GND"
+				:CLASS "reference")
+
+			(NODE
+				:NAME "N1"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "N2"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "N3"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "N4"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "N5"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "N6"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "N7"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "N11"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "N12"
+				:CLASS "v-i")
+			
+			(NODE
+				:NAME "N21"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "N22"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "N31"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "N32"
+				:CLASS "v-i")
+
+			(PROBE
+			       :NAME "current"
+			       :CLASS "current-probe"
+			       :ELEMENTS-LIST ("Rload"))
+
+			(PROBE
+			       :NAME "voltage"
+			       :CLASS "voltage-probe"
+			       :NODES-LIST ("N6" "N7"))))

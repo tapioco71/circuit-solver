@@ -1,0 +1,173 @@
+K 25
+svn:wc:ra_dav:version-url
+V 31
+/svn/!svn/ver/70/trunk/examples
+END
+test_inductance_01.net
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/28/trunk/examples/test_inductance_01.net
+END
+test_rlc_01.net
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/28/trunk/examples/test_rlc_01.net
+END
+test_01.net
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/28/trunk/examples/test_01.net
+END
+test_02.net
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/28/trunk/examples/test_02.net
+END
+test_03.net
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/28/trunk/examples/test_03.net
+END
+test_diode-2.net
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/28/trunk/examples/test_diode-2.net
+END
+test_04.net
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/28/trunk/examples/test_04.net
+END
+test_1ph_fault.net
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/70/trunk/examples/test_1ph_fault.net
+END
+test_05.net
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/28/trunk/examples/test_05.net
+END
+test_conductance_01.net
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/28/trunk/examples/test_conductance_01.net
+END
+test_capacitance_01.net
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/28/trunk/examples/test_capacitance_01.net
+END
+test_3phase_acdc.net
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/28/trunk/examples/test_3phase_acdc.net
+END
+test_3phase_acdc_02.net
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/28/trunk/examples/test_3phase_acdc_02.net
+END
+test_3phase_acdc_03.net
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/28/trunk/examples/test_3phase_acdc_03.net
+END
+test_3phase_acdc_04.net
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/28/trunk/examples/test_3phase_acdc_04.net
+END
+test_3phase_acdc_05.net
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/28/trunk/examples/test_3phase_acdc_05.net
+END
+test_switch_01.net
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/28/trunk/examples/test_switch_01.net
+END
+test_switch_02.net
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/28/trunk/examples/test_switch_02.net
+END
+test_3phase_acdc_06.net
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/28/trunk/examples/test_3phase_acdc_06.net
+END
+test_switch_03.net
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/28/trunk/examples/test_switch_03.net
+END
+test_pwm_01.net
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/28/trunk/examples/test_pwm_01.net
+END
+test_switch_04.net
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/28/trunk/examples/test_switch_04.net
+END
+test_pwm_02.net
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/28/trunk/examples/test_pwm_02.net
+END
+test_switch_05.net
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/28/trunk/examples/test_switch_05.net
+END
+test_switch_06.net
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/28/trunk/examples/test_switch_06.net
+END
+test_switch_07.net
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/28/trunk/examples/test_switch_07.net
+END
+test_diode4_01.net
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/28/trunk/examples/test_diode4_01.net
+END
+test_diode4_02.net
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/28/trunk/examples/test_diode4_02.net
+END

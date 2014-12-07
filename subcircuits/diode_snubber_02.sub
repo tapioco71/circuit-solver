@@ -1,0 +1,62 @@
+;;
+;; diode with snubber Rs = 1 kOhm, Cs = 100 nF, Cj0 = 100 pF
+;;
+
+(NETLIST
+	:NAME "diode_snubber_02"
+	:ELEMENTS-LIST ((PASSIVE
+					  :NAME "D"
+					  :CLASS "conductance"
+					  :NODES-LIST ("A" "K")
+					  :MODEL (MODEL 
+							  :NAME "simple-diode"
+							  :FUNCTION-NAME "simple-diode-4"
+							  :CLASS "function"
+							  :PARAMETERS-LIST (:VT 252d-3 :N 1d0 :IS 1d-6 :ORDER 1)
+							  :PROBES-LIST ((PROBE 
+											  :NAME "diode-a"
+											  :CLASS "voltage-probe"
+											  :NODES-LIST ("A"))
+
+											(PROBE 
+											  :NAME "diode-k"
+											  :CLASS "voltage-probe"
+											  :NODES-LIST ("K")))))
+					      
+					(PASSIVE
+					  :NAME "Rs"
+					  :CLASS "resistance"
+					  :NODES-LIST ("A" "N1")
+					  :VALUE 47d0)
+					
+					(PASSIVE
+					  :NAME "Cs"
+					  :CLASS "capacitance"
+					  :NODES-LIST ("N1" "K")
+					  :VALUE 220d-9)
+					  
+					(PASSIVE
+					  :NAME "Cj"
+					  :CLASS "capacitance"
+					  :NODES-LIST ("A" "K")
+					  :VALUE 100d-12)
+
+;;
+;; external connection nodes
+;;
+
+					(NODE
+					  :NAME "A"
+					  :CLASS "v-i")
+
+					(NODE
+					  :NAME "K"
+					  :CLASS "v-i")
+
+;;
+;; internal nodes
+;;
+
+					(NODE
+					  :NAME "N1"
+					  :CLASS "v-i")))

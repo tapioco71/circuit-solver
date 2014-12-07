@@ -1,0 +1,207 @@
+;;
+;; three phase rectifier bridge type 01
+;;
+
+(NETLIST
+	:NAME "three_phases_bridge_01"
+	:ELEMENTS-LIST ((PASSIVE
+				:NAME "D1"
+				:CLASS "conductance"
+				:NODES-LIST ("A" "N1")
+				:MODEL (MODEL :NAME "simple-diode-1"
+				       	      :FUNCTION-NAME "simple-diode-4"
+					      :CLASS "function"
+					      :PARAMETERS-LIST (:VT 252d-3 :N 1d0 :IS 1d-6 :ORDER 1)
+					      :PROBES-LIST ((PROBE 
+					      		   	   :NAME "diode-a-1"
+								   :CLASS "voltage-probe"
+								   :NODES-LIST ("A"))
+
+							    (PROBE 
+					      		   	   :NAME "diode-k-1"
+								   :CLASS "voltage-probe"
+								   :NODES-LIST ("N1")))	
+					      :VALUE 0d0))
+					      
+			(PASSIVE
+				:NAME "L1"
+				:CLASS "inductance"
+				:NODES-LIST ("N1" "P")
+				:VALUE 1d-6)
+
+			(PASSIVE
+				:NAME "D2"
+				:CLASS "conductance"
+				:NODES-LIST ("B" "N2")
+				:MODEL (MODEL :NAME "simple-diode-2"
+				       	      :FUNCTION-NAME "simple-diode-4"
+					      :CLASS "function"
+					      :PARAMETERS-LIST (:VT 252d-3 :N 1d0 :IS 1d-6 :ORDER 1)
+					      :PROBES-LIST ((PROBE 
+					      		   	   :NAME "diode-a-2"
+								   :CLASS "voltage-probe"
+								   :NODES-LIST ("B"))
+
+							    (PROBE 
+					      		   	   :NAME "diode-k-2"
+								   :CLASS "voltage-probe"
+								   :NODES-LIST ("N2")))	
+					      :VALUE 0d0))
+
+			(PASSIVE
+				:NAME "L2"
+				:CLASS "inductance"
+				:NODES-LIST ("N1" "P")
+				:VALUE 1d-6)
+
+			(PASSIVE
+				:NAME "D3"
+				:CLASS "conductance"
+				:NODES-LIST ("C" "N3")
+				:MODEL (MODEL :NAME "simple-diode-3"
+				       	      :FUNCTION-NAME "simple-diode-4"
+					      :CLASS "function"
+					      :PARAMETERS-LIST (:VT 252d-3 :N 1d0 :IS 1d-6 :ORDER 1)
+					      :PROBES-LIST ((PROBE 
+					      		   	   :NAME "diode-a-3"
+								   :CLASS "voltage-probe"
+								   :NODES-LIST ("C"))
+
+							    (PROBE 
+					      		   	   :NAME "diode-k-3"
+								   :CLASS "voltage-probe"
+								   :NODES-LIST ("N3")))	
+					      :VALUE 0d0))
+
+			(PASSIVE
+				:NAME "L3"
+				:CLASS "inductance"
+				:NODES-LIST ("N3" "P")
+				:VALUE 1d-6)
+
+			(PASSIVE
+				:NAME "D4"
+				:CLASS "conductance"
+				:NODES-LIST ("N" "N4")
+				:MODEL (MODEL :NAME "simple-diode-4"
+				       	      :FUNCTION-NAME "simple-diode-4"
+					      :CLASS "function"
+					      :PARAMETERS-LIST (:VT 252d-3 :N 1d0 :IS 1d-6 :ORDER 1)
+					      :PROBES-LIST ((PROBE 
+					      		   	   :NAME "diode-a-4"
+								   :CLASS "voltage-probe"
+								   :NODES-LIST ("N"))
+
+							    (PROBE 
+					      		   	   :NAME "diode-k-4"
+								   :CLASS "voltage-probe"
+								   :NODES-LIST ("N4")))	
+					      :VALUE 0d0))
+
+			(PASSIVE
+				:NAME "L4"
+				:CLASS "inductance"
+				:NODES-LIST ("N4" "C")
+				:VALUE 1d-6)
+
+			(PASSIVE
+				:NAME "D5"
+				:CLASS "conductance"
+				:NODES-LIST ("N" "N5")
+				:MODEL (MODEL :NAME "simple-diode-5"
+				       	      :FUNCTION-NAME "simple-diode-4"
+					      :CLASS "function"
+					      :PARAMETERS-LIST (:VT 252d-3 :N 1d0 :IS 1d-6 :ORDER 1)
+					      :PROBES-LIST ((PROBE 
+					      		   	   :NAME "diode-a-5"
+								   :CLASS "voltage-probe"
+								   :NODES-LIST ("N"))
+
+							    (PROBE 
+					      		   	   :NAME "diode-k-5"
+								   :CLASS "voltage-probe"
+								   :NODES-LIST ("N5")))	
+					      :VALUE 0d0))
+
+			(PASSIVE
+				:NAME "L5"
+				:CLASS "inductance"
+				:NODES-LIST ("N5" "B")
+				:VALUE 1d-6)
+
+			(PASSIVE
+				:NAME "D6"
+				:CLASS "conductance"
+				:NODES-LIST ("N" "N6")
+				:MODEL (MODEL :NAME "simple-diode-6"
+				       	      :FUNCTION-NAME "simple-diode-4"
+					      :CLASS "function"
+					      :PARAMETERS-LIST (:VT 252d-3 :N 1d0 :IS 1d-6 :ORDER 1)
+					      :PROBES-LIST ((PROBE 
+					      		   	   :NAME "diode-a-6"
+								   :CLASS "voltage-probe"
+								   :NODES-LIST ("N"))
+
+							    (PROBE 
+					      		   	   :NAME "diode-k-6"
+								   :CLASS "voltage-probe"
+								   :NODES-LIST ("N6")))	
+					      :VALUE 0d0))
+
+			(PASSIVE
+				:NAME "L6"
+				:CLASS "inductance"
+				:NODES-LIST ("N6" "A")
+				:VALUE 1d-6)
+
+;;
+;; external connection nodes
+;;
+
+			(NODE
+				:NAME "A"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "B"
+				:CLASS "v-i")
+			
+			(NODE
+				:NAME "C"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "P"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "N"
+				:CLASS "v-i")
+
+;;
+;; internal nodes
+;;
+
+			(NODES
+				:NAME "N1"
+				:CLASS "v-i")
+
+			(NODES
+				:NAME "N2"
+				:CLASS "v-i")
+
+			(NODES
+				:NAME "N3"
+				:CLASS "v-i")
+
+			(NODES
+				:NAME "N4"
+				:CLASS "v-i")
+
+			(NODES
+				:NAME "N5"
+				:CLASS "v-i")
+
+			(NODES
+				:NAME "N6"
+				:CLASS "v-i")))

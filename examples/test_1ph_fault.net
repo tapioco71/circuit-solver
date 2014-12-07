@@ -1,0 +1,246 @@
+;;
+;; pay attention to three-phase machine abduction phenomena
+;;
+
+(NETLIST
+ :NAME "test_1ph_fault"
+ :ELEMENTS-LIST ((SOURCE 
+		  :NAME "V1"
+		  :CLASS "voltage-source"
+		  :NODES-LIST ("GND" "N1")
+		  :MODEL (MODEL 
+			  :NAME "sinusoidal-voltage-1"
+			  :FUNCTION-NAME "sinusoidal-function"
+			  :CLASS "function"
+			  :PARAMETERS-LIST (:AMPLITUDE 4242d0 :FREQUENCY 50d0 :PHASE 0d0)))
+
+		 (SOURCE 
+		  :NAME "V2"
+		  :CLASS "voltage-source"
+		  :NODES-LIST ("GND" "N2")
+		  :MODEL (MODEL 
+			  :NAME "sinusoidal-voltage-2"
+			  :FUNCTION-NAME "sinusoidal-function"
+			  :CLASS "function"
+			  :PARAMETERS-LIST (:AMPLITUDE 4242d0 :FREQUENCY 50d0 :PHASE -2.09439510239d0)))
+
+		 (SOURCE 
+		  :NAME "V3"
+		  :CLASS "voltage-source"
+		  :NODES-LIST ("GND" "N3")
+		  :MODEL (MODEL 
+			  :NAME "sinusoidal-voltage-3"
+			  :FUNCTION-NAME "sinusoidal-function"
+			  :CLASS "function"
+			  :PARAMETERS-LIST (:AMPLITUDE 4242d0 :FREQUENCY 50d0 :PHASE 2.09439510239d0)))
+
+		 (SOURCE
+		  :NAME "Vb"
+		  :CLASS "voltage-source"
+		  :NODES-LIST ("GND" "N10")
+		  :MODEL (MODEL
+			  :NAME "square-voltage-1"
+			  :FUNCTION-NAME "bistable-function-1"
+			  :CLASS "function"
+			  :PARAMETERS-LIST (:POLARITY nil :T0 10d-3 :LOW-VALUE 0d0 :HIGH-VALUE 10d0)))
+
+		 (PASSIVE
+		  :NAME "Rb"
+		  :CLASS "resistance"
+		  :NODES-LIST ("N10" "GND")
+		  :VALUE 1d6)
+
+		 (SUBCIRCUIT
+		  :NAME "T"
+		  :FILE-NAME #p"/home/angel/Development/lisp/circuit-solver/subcircuits/t3_75000_3000_250.sub"
+		  :NODES-LIST ("N1" "GND" "N2" "GND" "N3" "GND" "N4" "GND" "N5" "GND" "N6" "GND"))
+
+		 ;;
+		 ;; useless load: just to break transformer's balls
+		 ;;
+
+		 (PASSIVE
+		  :NAME "R1"
+		  :CLASS "resistance"
+		  :NODES-LIST ("N4" "GND")
+		  :VALUE 7.5d0)
+		 
+		 (PASSIVE
+		  :NAME "R2"
+		  :CLASS "resistance"
+		  :NODES-LIST ("N5" "GND")
+		  :VALUE 7.5d0)
+
+		 (PASSIVE
+		  :NAME "R3"
+		  :CLASS "resistance"
+		  :NODES-LIST ("N6" "GND")
+		  :VALUE 7.5d0)
+
+		 ;;
+		 ;; first phase lamp
+		 ;;
+
+		 (PASSIVE
+		  :NAME "I1"
+		  :CLASS "conductance"
+		  :NODES-LIST ("N7" "GND")
+		  :MODEL (MODEL
+			  :NAME "breaker"
+			  :FUNCTION-NAME "simple-switch-2"
+			  :CLASS "function"
+			  :PARAMETERS-LIST (:ON-CONDUCTANCE 1d4 
+							    :OFF-CONDUCTANCE 1d-6 
+							    :ON-TIME 1d-6
+							    :OFF-TIME 1d-6
+							    :UPPER-THRESHOLD 6d0 
+							    :LOWER-THRESHOLD 4d0)
+			  :PROBES-LIST ((PROBE
+					 :NAME "P1"
+					 :CLASS "voltage-probe"
+					 :NODES-LIST ("GND"))
+					(PROBE
+					 :NAME "P2"
+					 :CLASS "voltage-probe"
+					 :NODES-LIST ("N10")))
+			  :VALUE 1d-6))
+
+		 (PASSIVE
+		  :NAME "Cl1"
+		  :CLASS "capacitance"
+		  :NODES-LIST ("N4" "GND")
+		  :VALUE 22d-6)
+
+		 (SUBCIRCUIT
+		  :NAME "B11"
+		  :FILE-NAME #p"/home/angel/Development/lisp/circuit-solver/subcircuits/ballast_01.sub"
+		  :NODES-LIST ("N4" "N7"))
+
+		 (PASSIVE
+		  :NAME "G11"
+		  :CLASS "conductance"
+		  :NODES-LIST ("N7" "GND")
+		  :MODEL (MODEL
+			  :NAME "gas-discharge-lamp-1"
+			  :FUNCTION-NAME "gas-discharge-lamp"
+			  :CLASS "differential"
+			  :PARAMETERS-LIST (:A2 67d0 :A1 0d0 :B3 0d0 :B2 6.3d5 :B1 1d3 :B0 0d0 :FRAG 0d0 :EQE 0d0)
+			  :PROBES-LIST ((PROBE 
+					 :NAME "lamp-current-1"
+					 :CLASS "current-probe"
+					 :ELEMENTS-LIST ("G11")))
+			  :VALUE 4.7d-3))
+
+		 ;;
+		 ;; second phase lamp
+		 ;;
+
+		 (PASSIVE
+		  :NAME "Cl2"
+		  :CLASS "capacitance"
+		  :NODES-LIST ("N5" "GND")
+		  :VALUE 22d-6)
+
+		 (SUBCIRCUIT
+		  :NAME "B21"
+		  :FILE-NAME #p"/home/angel/Development/lisp/circuit-solver/subcircuits/ballast_01.sub"
+		  :NODES-LIST ("N5" "N8"))
+
+		 (PASSIVE
+		  :NAME "G21"
+		  :CLASS "conductance"
+		  :NODES-LIST ("N8" "GND")
+		  :MODEL (MODEL 
+			  :NAME "gas-discharge-lamp-2"
+			  :FUNCTION-NAME "gas-discharge-lamp"
+			  :CLASS "differential"
+			  :PARAMETERS-LIST (:A2 67d0 :A1 0d0 :B3 0d0 :B2 6.3d5 :B1 1d3 :B0 0d0 :FRAG 0d0 :EQE 0d0)
+			  :PROBES-LIST ((PROBE 
+					 :NAME "lamp-current-2"
+					 :CLASS "current-probe"
+					 :ELEMENTS-LIST ("G21")))
+			  :VALUE 4.7d-3))
+
+		 ;;
+		 ;; third phase lamp
+		 ;;
+
+		 (PASSIVE
+		  :NAME "Cl3"
+		  :CLASS "capacitance"
+		  :NODES-LIST ("N6" "GND")
+		  :VALUE 22d-6)
+
+		 (SUBCIRCUIT
+		  :NAME "B31"
+		  :FILE-NAME #p"/home/angel/Development/lisp/circuit-solver/subcircuits/ballast_01.sub"
+		  :NODES-LIST ("N6" "N9"))
+
+		 (PASSIVE
+		  :NAME "G31"
+		  :CLASS "conductance"
+		  :NODES-LIST ("N9" "GND")
+		  :MODEL (MODEL 
+			  :NAME "gas-discharge-lamp-3"
+			  :FUNCTION-NAME "gas-discharge-lamp"
+			  :CLASS "differential"
+			  :PARAMETERS-LIST (:A2 67d0 :A1 0d0 :B3 0d0 :B2 6.3d5 :B1 1d3 :B0 0d0 :FRAG 0d0 :EQE 0d0)
+			  :PROBES-LIST ((PROBE 
+					 :NAME "lamp-current-3"
+					 :CLASS "current-probe"
+					 :ELEMENTS-LIST ("G31")))	
+			  :VALUE 4.7d-3))
+
+		 (NODE
+		  :NAME "GND"
+		  :CLASS "reference")
+
+		 (NODE
+		  :NAME "N1"
+		  :CLASS "v-i")
+
+		 (NODE
+		  :NAME "N2"
+		  :CLASS "v-i")
+
+		 (NODE
+		  :NAME "N3"
+		  :CLASS "v-i")
+
+		 (NODE
+		  :NAME "N4"
+		  :CLASS "v-i")
+
+		 (NODE
+		  :NAME "N5"
+		  :CLASS "v-i")
+
+		 (NODE
+		  :NAME "N6"
+		  :CLASS "v-i")
+
+		 (NODE
+		  :NAME "N7"
+		  :CLASS "v-i")
+
+		 (NODE
+		  :NAME "N8"
+		  :CLASS "v-i")
+
+		 (NODE
+		  :NAME "N9"
+		  :CLASS "v-i")
+
+		 (NODE
+		  :NAME "N10"
+		  :CLASS "v-i")
+
+		 (PROBE
+		  :NAME "current"
+		  :CLASS "current-probe"
+		  :ELEMENTS-LIST ("V1" "V2" "V3" "G11" "G21" "G31" "I1"))
+
+		 (PROBE
+		  :NAME "voltage"
+		  :CLASS "voltage-probe"
+		  :NODES-LIST ("N1" "N2" "N3" "N4" "N5" "N6" "N7" "N8" "N9" "N10"))))

@@ -1,0 +1,108 @@
+; 
+; Three phases switch
+;
+; Written by Angelo Rossi and Marco Maccioni (C) 2011
+;
+
+(NETLIST
+	:NAME "b3"
+	:ELEMENTS-LIST ((PASSIVE
+				:NAME "S1"
+				:CLASS "conductance"
+				:NODES-LIST ("A1" "A2")
+				:MODEL (MODEL 
+				       	      :NAME "switch-1"
+					      :FUNCTION-NAME "simple-switch-2"
+					      :CLASS "function"
+					      :PARAMETERS-LIST (:UPPER-THRESHOLD 6d0 :LOWER-THRESHOLD 4d0 :ON-CONDUCTANCE 1d3 :OFF-CONDUCTANCE 1d-3 :ON-TIME 0d0 :OFF-TIME 0d0) 
+					      :PROBES-LIST ((PROBE
+									:NAME "Sp1"
+									:CLASS "voltage-probe"
+									:NODES-LIST ("SP"))
+							
+							    (PROBE
+									:NAME "C"
+									:CLASS "voltage-probe"
+									:NODES-LIST ("C")))
+					      :VALUE 1d-3))
+
+			(PASSIVE
+				:NAME "S2"
+				:CLASS "conductance"
+				:NODES-LIST ("B1" "B2")
+				:MODEL (MODEL 
+				       	      :NAME "switch-2"
+					      :FUNCTION-NAME "simple-switch-2"
+					      :CLASS "function"
+					      :PARAMETERS-LIST (:UPPER-THRESHOLD 6d0 :LOWER-THRESHOLD 4d0 :ON-CONDUCTANCE 1d3 :OFF-CONDUCTANCE 1d-3 :ON-TIME 0d0 :OFF-TIME 0d0) 
+					      :PROBES-LIST ((PROBE
+									:NAME "Sp2"
+									:CLASS "voltage-probe"
+									:NODES-LIST ("SP"))
+							
+							    (PROBE
+									:NAME "C"
+									:CLASS "voltage-probe"
+									:NODES-LIST ("C")))
+					      :VALUE 1d-3))
+
+			(PASSIVE
+				:NAME "S3"
+				:CLASS "conductance"
+				:NODES-LIST ("C1" "C2")
+				:MODEL (MODEL 
+				       	      :NAME "switch-3"
+					      :FUNCTION-NAME "simple-switch-2"
+					      :CLASS "function"
+					      :PARAMETERS-LIST (:UPPER-THRESHOLD 6d0 :LOWER-THRESHOLD 4d0 :ON-CONDUCTANCE 1d3 :OFF-CONDUCTANCE 1d-3 :ON-TIME 0d0 :OFF-TIME 0d0) 
+					      :PROBES-LIST ((PROBE
+									:NAME "Sp3"
+									:CLASS "voltage-probe"
+									:NODES-LIST ("SP"))
+							
+							    (PROBE
+									:NAME "C"
+									:CLASS "voltage-probe"
+									:NODES-LIST ("C")))
+					      :VALUE 1d-3))
+
+				(PASSIVE
+					:NAME "Rc"
+					:CLASS "resistance"
+					:NODES-LIST ("SP" "C")
+					:VALUE 1d5)
+
+				(NODE
+					:NAME "A1"
+					:CLASS "v-i")
+
+				(NODE
+					:NAME "B1"
+					:CLASS "v-i")
+
+				(NODE
+					:NAME "C1"
+					:CLASS "v-i")
+
+				(NODE
+					:NAME "A2"
+					:CLASS "v-i")
+
+				(NODE
+					:NAME "B2"
+					:CLASS "v-i")
+
+				(NODE
+					:NAME "C2"
+					:CLASS "v-i")
+
+				(NODE
+					:NAME "SP"
+					:CLASS "v-i")
+
+				(NODE
+					:NAME "C"
+					:CLASS "v-i")))
+
+
+

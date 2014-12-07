@@ -1,0 +1,69 @@
+(NETLIST
+	:NAME "a"
+	:ELEMENTS-LIST ((SOURCE 
+				:NAME "V1"
+				:CLASS "voltage-source"
+				:NODES-LIST ("GND" "N1")
+				:MODEL (MODEL :NAME "sinusoidal-voltage-1"
+					:FUNCTION-NAME "sinusoidal-function"
+					:CLASS "function"
+					:PARAMETERS-LIST (:AMPLITUDE 311d0 :FREQUENCY 50d0 :PHASE 0d0)
+					:VALUE 0d0))
+
+			(PASSIVE
+				:NAME "D1"
+				:CLASS "conductance"
+				:NODES-LIST ("N1" "N2")
+				:MODEL (MODEL :NAME "simple-diode-1"
+				       	      :FUNCTION-NAME "simple-diode-2"
+					      :CLASS "function"
+					      :PARAMETERS-LIST (:VT 252d-3 :N 1d0 :IS 1d-12)
+					      :PROBES-LIST ((PROBE 
+					      		   	   :NAME "diode-a-1"
+								   :CLASS "voltage-probe"
+								   :NODES-LIST ("N1"))
+
+							    (PROBE 
+					      		   	   :NAME "diode-k-1"
+								   :CLASS "voltage-probe"
+								   :NODES-LIST ("N2")))	
+					      :VALUE 0d0))
+					      		  
+			(PASSIVE
+				:NAME "R1"
+				:CLASS "resistance"
+				:NODES-LIST ("N2" "N3")
+				:VALUE 6.8d0)
+
+			(PASSIVE
+				:NAME "L1"
+				:CLASS "inductance"
+				:NODES-LIST ("N3" "GND")
+				:VALUE 2.2d-9)
+
+							
+			(NODE
+				:NAME "GND"
+				:CLASS "reference")
+
+			(NODE
+				:NAME "N1"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "N2"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "N3"
+				:CLASS "v-i")
+			
+			(PROBE
+			       :NAME "resistance-current"
+			       :CLASS "current-probe"
+			       :ELEMENTS-LIST ("R1"))
+
+			(PROBE
+			       :NAME "resistance-voltage"
+			       :CLASS "voltage-probe"
+			       :NODES-LIST ("N2" "N3"))))

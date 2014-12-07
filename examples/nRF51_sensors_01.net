@@ -1,0 +1,154 @@
+;;
+;; pay attention to three-phase machine abduction phenomena
+;;
+
+(NETLIST
+ :NAME "nRF51822_pressure_sensor_noload"
+ :ELEMENTS-LIST ((SOURCE 
+		  :NAME "V1"
+		  :CLASS "voltage-source"
+		  :NODES-LIST ("N1" "GND")
+		  :VALUE 3d0)
+
+		 (SOURCE 
+		  :NAME "V2"
+		  :CLASS "voltage-source"
+		  :NODES-LIST ("N4" "GND")
+		  :VALUE 4.2d0)
+
+		 (SOURCE
+		  :NAME "Vb"
+		  :CLASS "voltage-source"
+		  :NODES-LIST ("N10" "GND")
+		  :MODEL (MODEL
+			  :NAME "square-voltage-1"
+			  :FUNCTION-NAME "bistable-function-1"
+			  :CLASS "function"
+			  :PARAMETERS-LIST (:POLARITY nil :T0 500d-3 :LOW-VALUE 0d0 :HIGH-VALUE 3d0)))
+
+		 (PASSIVE
+		  :NAME "Rb"
+		  :CLASS "resistance"
+		  :NODES-LIST ("N10" "GND")
+		  :VALUE 1d6)
+
+		 (PASSIVE
+		  :NAME "Rbatt"
+		  :CLASS "resistance"
+		  :NODES-LIST ("N4" "N6")
+		  :VALUE 10d0)
+
+		 (PASSIVE
+		  :NAME "R1"
+		  :CLASS "resistance"
+		  :NODES-LIST ("N1" "N2")
+		  :VALUE 240d6)
+
+		 (PASSIVE
+		  :NAME "R2"
+		  :CLASS "resistance"
+		  :NODES-LIST ("N2" "N3")
+		  :VALUE 3d3)
+
+		 (PASSIVE
+		  :NAME "R3"
+		  :CLASS "resistance"
+		  :NODES-LIST ("N6" "N5")
+		  :VALUE 147d3)
+
+		 (PASSIVE
+		  :NAME "R4"
+		  :CLASS "resistance"
+		  :NODES-LIST ("N5" "N3")
+		  :VALUE 470d3)
+
+		 (PASSIVE
+		  :NAME "I1"
+		  :CLASS "conductance"
+		  :NODES-LIST ("N3" "GND")
+		  :MODEL (MODEL
+			  :NAME "breaker"
+			  :FUNCTION-NAME "simple-switch-2"
+			  :CLASS "function"
+			  :PARAMETERS-LIST (:ON-CONDUCTANCE 2d0 :OFF-CONDUCTANCE 4.166d-9 :ON-TIME 1d-6 :OFF-TIME 1d-6 :UPPER-THRESHOLD 2.5d0 :LOWER-THRESHOLD 0.5d0)
+			  :PROBES-LIST ((PROBE
+					 :NAME "P1"
+					 :CLASS "voltage-probe"
+					 :NODES-LIST ("GND"))
+					(PROBE
+					 :NAME "P2"
+					 :CLASS "voltage-probe"
+					 :NODES-LIST ("N10")))
+			  :VALUE 1d-6))
+
+		 (PASSIVE
+		  :NAME "Radc1"
+		  :CLASS "resistance"
+		  :NODES-LIST ("N2" "GND")
+		  :VALUE 550d3)
+
+		 (PASSIVE
+		  :NAME "Cadc1"
+		  :CLASS "capacitance"
+		  :NODES-LIST ("N2" "GND")
+		  :VALUE 3.3d-12)
+
+		 (PASSIVE
+		  :NAME "Radc2"
+		  :CLASS "resistance"
+		  :NODES-LIST ("N5" "GND")
+		  :VALUE 550d3)
+
+		 (PASSIVE
+		  :NAME "Cadc2"
+		  :CLASS "capacitance"
+		  :NODES-LIST ("N5" "GND")
+		  :VALUE 3.3d-12)
+
+		 (PASSIVE
+		  :NAME "C1"
+		  :CLASS "capacitance"
+		  :NODES-LIST ("N2" "GND")
+		  :VALUE 47d-12)
+
+		 (NODE
+		  :NAME "GND"
+		  :CLASS "reference")
+
+		 (NODE
+		  :NAME "N1"
+		  :CLASS "v-i")
+
+		 (NODE
+		  :NAME "N2"
+		  :CLASS "v-i")
+
+		 (NODE
+		  :NAME "N3"
+		  :CLASS "v-i")
+
+		 (NODE
+		  :NAME "N4"
+		  :CLASS "v-i")
+
+		 (NODE
+		  :NAME "N5"
+		  :CLASS "v-i")
+
+		 (NODE
+		  :NAME "N6"
+		  :CLASS "v-i")
+
+		 (NODE
+		  :NAME "N10"
+		  :CLASS "v-i")
+
+		 (PROBE
+		  :NAME "current"
+		  :CLASS "current-probe"
+		  :ELEMENTS-LIST ("V1" "R1" "R2" "R3" "R4" "Radc1" "Radc2" "Rbatt" "C1" "I1" ))
+
+		 (PROBE
+		  :NAME "voltage"
+		  :CLASS "voltage-probe"
+		  :NODES-LIST ("N1" "N2" "N3" "N4" "N5" "N6" "N10"))))

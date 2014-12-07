@@ -1,0 +1,59 @@
+;;
+;; three phase rectifier bridge type 5
+;;
+
+(NETLIST
+	:NAME "three_phase_bridge_05"
+	:ELEMENTS-LIST ((SUBCIRCUIT
+					  :NAME "XD1"
+					  :FILE-NAME "diode_snubber_02.sub"
+					  :NODES-LIST ("A" "P"))
+					  
+					(SUBCIRCUIT
+					  :NAME "XD3"
+					  :FILE-NAME "diode_snubber_01.sub"
+					  :NODES-LIST ("B" "P"))
+					  
+					(SUBCIRCUIT
+					  :NAME "XD5"
+					  :FILE-NAME "diode_snubber_01.sub"
+					  :NODES-LIST ("C" "P"))
+					  
+					(SUBCIRCUIT
+					  :NAME "XD4"
+					  :FILE-NAME "diode_snubber_01.sub"
+					  :NODES-LIST ("N" "A"))
+					  
+					  (SUBCIRCUIT
+					  :NAME "XD6"
+					  :FILE-NAME "diode_snubber_01.sub"
+					  :NODES-LIST ("N" "B"))
+					  
+					(SUBCIRCUIT
+					  :NAME "XD2"
+					  :FILE-NAME "diode_snubber_01.sub"
+					  :NODES-LIST ("N" "C"))
+					  
+;;
+;; external connection nodes
+;;
+							
+					(NODE
+					  :NAME "A"
+					  :CLASS "v-i")
+
+					(NODE
+					  :NAME "B"
+					  :CLASS "v-i")
+			
+					(NODE
+					  :NAME "C"
+					  :CLASS "v-i")
+
+					(NODE
+					  :NAME "P"
+					  :CLASS "v-i")
+
+					(NODE
+					  :NAME "N"
+					  :CLASS "v-i")))

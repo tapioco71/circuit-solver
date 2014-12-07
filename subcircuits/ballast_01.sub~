@@ -1,0 +1,37 @@
+;;
+;; Ballast
+;;
+
+(NETLIST
+	:NAME "ballast_01"
+	:ELEMENTS-LIST ((PASSIVE
+					  :NAME "Rb"
+					  :CLASS "inductance"
+					  :NODES-LIST ("A" "N1")
+					  :VALUE 1d0)
+					  
+					(PASSIVE
+					  :NAME "Lb"
+					  :CLASS "inductance"
+					  :NODES-LIST ("N1" "B")
+					  :VALUE 47d-3)
+					  
+;;
+;; external connection nodes
+;;
+
+					(NODE
+					  :NAME "A"
+					  :CLASS "v-i")
+
+					(NODE
+					  :NAME "B"
+					  :CLASS "v-i")
+
+;;
+;; internal nodes
+;;
+
+					(NODE
+					  :NAME "N1"
+					  :CLASS "v-i")))

@@ -1,0 +1,74 @@
+(NETLIST
+	:NAME "pwm_test"
+	:ELEMENTS-LIST ((SOURCE
+				:NAME "V1"
+				:CLASS "voltage-source"
+				:NODES-LIST ("GND" "N1")
+				:VALUE 100d0)
+
+			(SOURCE 
+				:NAME "V2"
+				:CLASS "voltage-source"
+				:NODES-LIST ("GND" "Nc")
+				:MODEL (MODEL :NAME "square-voltage-1"
+					:FUNCTION-NAME "square-function"
+					:CLASS "function"
+					:PARAMETERS-LIST (:LOW-VALUE 0d0 :HIGH-VALUE 10d0 :PERIOD 2d-4 :T0 0d0 :DUTY-CYCLE 0.5d0 :RISING-TIME 0d0 :FALLING-TIME 0d0 :POLARITY t)))
+
+			(PASSIVE
+				:NAME "S1"
+				:CLASS "resistance"
+				:NODES-LIST ("N1" "N2")
+				:MODEL (MODEL 
+				       	      :NAME "simple-switch-1"
+					      :FUNCTION-NAME "simple-switch-1"
+					      :CLASS "function"
+					      :PARAMETERS-LIST (:UPPER-THRESHOLD 6d0 :LOWER-THRESHOLD 4d0 :ON-RESISTANCE 1d-3 :OFF-RESISTANCE 1d8) 
+					      :PROBES-LIST ((PROBE
+									:NAME "Sp1"
+									:CLASS "voltage-probe"
+									:NODES-LIST ("GND"))
+							
+							    (PROBE
+									:NAME "Sp2"
+									:CLASS "voltage-probe"
+									:NODES-LIST ("Nc")))
+					      :VALUE 1d8))
+					      		  
+			(PASSIVE
+				:NAME "R1"
+				:CLASS "resistance"
+				:NODES-LIST ("N2" "GND")
+				:VALUE 6.8d0)
+
+			(PASSIVE
+				:NAME "Rs"
+				:CLASS "resistance"
+				:NODES-LIST ("Nc" "GND")
+				:VALUE 68d3)
+							
+			(NODE
+				:NAME "GND"
+				:CLASS "reference")
+
+			(NODE
+				:NAME "N1"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "N2"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "Nc"
+				:CLASS "v-i")
+			
+			(PROBE
+			       :NAME "resistance-current"
+			       :CLASS "current-probe"
+			       :ELEMENTS-LIST ("R1"))
+
+			(PROBE
+			       :NAME "resistance-voltage"
+			       :CLASS "voltage-probe"
+			       :NODES-LIST ("N2" "GND"))))
