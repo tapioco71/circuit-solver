@@ -22,7 +22,7 @@
 			  :NAME "square-voltage-1"
 			  :FUNCTION-NAME "bistable-function-1"
 			  :CLASS "function"
-			  :PARAMETERS-LIST (:POLARITY nil :T0 200d-3 :LOW-VALUE 0d0 :HIGH-VALUE 10d0)))
+			  :PARAMETERS-LIST (:POLARITY nil :T0 200d-3 :LOW-VALUE 0d0 :HIGH-VALUE 5d0)))
 
 		 (PASSIVE
 		  :NAME "Rb"
@@ -31,27 +31,39 @@
 		  :VALUE 1d6)
 
 		 (PASSIVE
+		  :NAME "R1"
+		  :CLASS "resistance"
+		  :NODES-LIST ("N1" "N2")
+		  :VALUE 200d-3)
+
+		 (PASSIVE
+		  :NAME "L1"
+		  :CLASS "inductance"
+		  :NODES-LIST ("N2" "N3")
+		  :VALUE 100d-6)
+
+		 (PASSIVE
 		  :NAME "Rload"
 		  :CLASS "resistance"
-		  :NODES-LIST ("N2" "N3")
+		  :NODES-LIST ("N4" "N5")
 		  :VALUE 7d0)
 
 		 (PASSIVE
 		  :NAME "Lload"
 		  :CLASS "inductance"
-		  :NODES-LIST ("N3" "N4")
+		  :NODES-LIST ("N5" "N6")
 		  :VALUE 350d-3)
 
 		 (PASSIVE
-		  :NAME "C1"
+		  :NAME "Cload"
 		  :CLASS "capacitance"
-		  :NODES-LIST ("N2" "GND")
-		  :VALUE 10e-6)
+		  :NODES-LIST ("N4" "GND")
+		  :VALUE 22e-6)
 
 		 (PASSIVE
 		  :NAME "G1"
 		  :CLASS "conductance"
-		  :NODES-LIST ("N4" "GND")
+		  :NODES-LIST ("N6" "GND")
 		  :MODEL (MODEL
 			  :NAME "gas-discharge-lamp-1"
 			  :FUNCTION-NAME "gas-discharge-lamp"
@@ -66,12 +78,12 @@
 		 (PASSIVE
 		  :NAME "I1"
 		  :CLASS "conductance"
-		  :NODES-LIST ("N1" "N2")
+		  :NODES-LIST ("N3" "N4")
 		  :MODEL (MODEL
 			  :NAME "breaker"
 			  :FUNCTION-NAME "simple-switch-2"
 			  :CLASS "function"
-			  :PARAMETERS-LIST (:ON-CONDUCTANCE 1d3 :OFF-CONDUCTANCE 1d-12 :ON-TIME 1d-6 :OFF-TIME 1d-6 :UPPER-THRESHOLD 6d0 :LOWER-THRESHOLD 4d0)
+			  :PARAMETERS-LIST (:ON-CONDUCTANCE 1d3 :OFF-CONDUCTANCE 1d-12 :ON-TIME 1d-6 :OFF-TIME 1d-6 :UPPER-THRESHOLD 3.333d0 :LOWER-THRESHOLD 1.667d0)
 			  :PROBES-LIST ((PROBE
 					 :NAME "P1"
 					 :CLASS "voltage-probe"
@@ -104,15 +116,23 @@
 		  :CLASS "v-i")
 
 		 (NODE
+		  :NAME "N5"
+		  :CLASS "v-i")
+
+		 (NODE
+		  :NAME "N6"
+		  :CLASS "v-i")
+
+		 (NODE
 		  :NAME "N10"
 		  :CLASS "v-i")
 
 		 (PROBE
 		  :NAME "current"
 		  :CLASS "current-probe"
-		  :ELEMENTS-LIST ("V1" "Rload" "Lload" "C1" "G1" "I1"))
+		  :ELEMENTS-LIST ("V1" "Rload" "Lload" "Cload" "R1" "L1" "G1" "I1"))
 
 		 (PROBE
 		  :NAME "voltage"
 		  :CLASS "voltage-probe"
-		  :NODES-LIST ("N1" "N2" "N3" "N4" "N10"))))
+		  :NODES-LIST ("N1" "N2" "N3" "N4" "N5" "N6" "N10"))))

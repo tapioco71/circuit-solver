@@ -37,6 +37,14 @@
 ;;; exception handling
 ;;;
 
+(define-condition  wrong-number-of-elements-for-coupling-error (error)
+  ((element-name :initarg :element-name :reader element-name)))
+
+(define-condition wrong-subcircuit-nodes-list-error (error)
+  ((subcircuit-name :initarg :subcircuit-name :reader subcircuit-name)
+   (actual-nodes-count :initarg :actual-nodes-count :reader actual-nodes-count)
+   (needed-nodes-count :initarg :needed-nodes-count :reader needed-nodes-count)))
+
 (define-condition unknown-object-error (error)
   ((object :initarg :object :reader object :initform nil)))
 
@@ -73,6 +81,10 @@
 
 (define-condition file-not-found-error (error)
   ((file-pathname :initarg :file-pathname :reader file-pathname)))
+
+(define-condition repeated-node-for-element-error (error)
+  ((node-name :initarg :node-name :reader node-name)
+   (element-name :initarg :element-name :reader element-name)))
 
 (define-condition no-such-node-for-element-error (error)
   ((node-name :initarg :node-name :reader node-name)
@@ -577,8 +589,7 @@
   (string-equal (source-class-class object) "current-source"))
 
 (defmethod has-model-p ((object source-class))
-  (eql (typep (source-class-model object))
-       'model-class))
+  (typep (source-class-model object) 'model-class))
 
 (defmethod has-value-p ((object source-class))
   (null (source-class-value object)))
@@ -669,7 +680,7 @@
       (setf return-value (append return-value (list :nodes-list (passive-class-nodes-list object)))))
     (when (has-model-p object)
       (setf return-value (append return-value (list :model (sexpify (passive-class-model object))))))
-    (when (has-value object)
+    (when (has-value-p object)
       (setf return-value (append return-value (list :value (passive-class-value object)))))
     return-value))
 
@@ -790,10 +801,10 @@
 (defun where (&optional &key class-type id name number class)
   #'(lambda (object)
       (and (if class-type
-	       (eql (type-of object) class-type)
+	       (typep object class-type)
 	       t)
 	   (if id
-	       (eql (element-id object) id)
+	       (eql (element-class-id object) id)
 	       t)
 	   (if name
 	       (string-equal (element-class-name object) name)
@@ -837,41 +848,102 @@
 	  (setf selection (append selection (list element))))))
     selection))
 
+(defmethod check-element-with-selectors ((object element-class) selectors)
+  (let ((return-value nil))
+    (if (listp selectors)
+	(dolist (selector selectors)
+	  (setf return-value (or return-value
+				 (funcall selector object))))
+	(setf return-value (funcall selectors object)))
+    return-value))
+
+(defmethod check-element-with-selectors ((object source-class) selectors)
+  (let ((return-value (call-next-method object selectors)))
+    (if (listp selectors)
+	(dolist (selector selectors)
+	  (setf return-value (or return-value
+				  (funcall selector object))))
+	(setf return-value (funcall selectors object)))
+    return-value))
+
+(defmethod check-element-with-selectors ((object node-class) selectors)
+  (let ((return-value (call-next-method object selectors)))
+    (if (listp selectors)
+	(dolist (selector selectors)
+	  (setf return-value (or return-value
+				  (funcall selector object))))
+	(setf return-value (funcall selectors object)))
+    return-value))
+
+(defmethod check-element-with-selectors ((object probe-class) selectors)
+  (let ((return-value (call-next-method object selectors)))
+    (if (listp selectors)
+	(dolist (selector selectors)
+	  (setf return-value (or return-value
+				  (funcall selector object))))
+	(setf return-value (funcall selectors object)))
+    return-value))
+
+(defmethod check-element-with-selectors ((object model-class) selectors)
+  (let ((return-value (call-next-method object selectors)))
+    (if (listp selectors)
+	(dolist (selector selectors)
+	  (setf return-value (or return-value
+				  (funcall selector object))))
+	(setf return-value (funcall selectors object)))
+    return-value))
+
+(defmethod check-element-with-selectors ((object coupling-class) selectors)
+  (let ((return-value (call-next-method object selectors)))
+    (if (listp selectors)
+	(dolist (selector selectors)
+	  (setf return-value (or return-value
+				  (funcall selector object))))
+	(setf return-value (funcall selectors object)))
+    return-value))
+  
 ;;;
 ;;; find an element in a list that satisfy the WHERE clause or a list of WHERE clauses.
 ;;;
 
+;; (defun find-element (selectors netlist)
+;;   (handler-case
+;;       (let ((selector-return-value nil)
+;; 	    (found-element nil)
+;; 	    (found-element-position 0))
+;; 	(dolist (element netlist)
+;; 	  (typecase element
+;; 	    ((or source-class passive-class node-class probe-class model-class)
+;; 	     (if (listp selectors)
+;; 		 (dolist (selector selectors)
+;; 		   (setf selector-return-value (or selector-return-value
+;; 						   (funcall selector element))))
+;; 		 (setf selector-return-value (funcall selectors element)))
+;; 	     (when selector-return-value
+;; 	       (setf found-element element)
+;; 	       (return))
+;; 	     (incf found-element-position))
+;; 	    (coupling-class
+;; 	     (multiple-value-bind (coupling-inductance-element coupling-inductance-position) 
+;; 		 (find-element selectors (coupling-class-elements-list element))
+;; 	       (when coupling-inductance-element
+;; 		 (setf found-element coupling-inductance-element)
+;; 		 (incf found-element-position coupling-inductance-position)
+;; 		 (return)))
+;; 	     (incf found-element-position (length (coupling-class-elements-list element))))
+;; 	    (t
+;; 	     (error 'unknown-class-object-error :object element))))
+;; 	(values found-element found-element-position))
+;;     (unknown-class-object-error (condition)
+;;       (format *error-output* "~%Unknow object found: ~s~%" (object condition))
+;;       nil)))
+
 (defun find-element (selectors netlist)
-  (handler-case
-      (let ((selector-return-value nil)
-	    (found-element nil)
-	    (found-element-position 0))
-	(dolist (element netlist)
-	  (typecase element
-	    ((or source-class passive-class node-class probe-class model-class)
-	     (if (listp selectors)
-		 (dolist (selector selectors)
-		   (setf selector-return-value (or selector-return-value
-						   (funcall selector element))))
-		 (setf selector-return-value (funcall selectors element)))
-	     (when selector-return-value
-	       (setf found-element element)
-	       (return))
-	     (incf found-element-position))
-	    (coupling-class
-	     (multiple-value-bind (coupling-inductance-element coupling-inductance-position) 
-		 (find-element selectors (coupling-class-elements-list element))
-	       (when coupling-inductance-element
-		 (setf found-element coupling-inductance-element)
-		 (incf found-element-position coupling-inductance-position)
-		 (return)))
-	     (incf found-element-position (length (coupling-class-elements-list element))))
-	    (t
-	     (error 'unknown-class-object-error :object element))))
-	(values found-element found-element-position))
-    (unknown-class-object-error (condition)
-      (format *error-output* "~%Unknow object found: ~s~%" (object condition))
-      nil)))
+  (let ((element-position 0))
+    (dolist (element netlist)	  
+      (when (check-element-with-selectors element selectors)
+	(return (values element element-position)))
+      (incf element-position))))
 
 ;;; 
 ;;; count function
@@ -1249,82 +1321,89 @@
 ;;;
 
 (defun include-subcircuits (netlist &optional &key (debug-mode nil) (output *standard-output*))
-  (let ((return-value netlist)
-	(subcircuit-calls-list nil))
-    (format output "~%Including subcircuits.")
-    (loop do
-	 (setf subcircuit-calls-list (select (where :class-type 'subcircuit-class) 
-					     (netlist-class-elements-list return-value)))
-	 (when subcircuit-calls-list
-	   (when debug-mode
-	     (format output "~%~%Subcircuit calls: ~a~%" (mapcar #'sexpify subcircuit-calls-list)))
-	   (let ((subcircuits-list (mapcar #'(lambda (x)
-					       (read-netlist (subcircuit-class-file-pathname x) :debug-mode debug-mode :output output)) subcircuit-calls-list))
-		 (subcircuit nil)
-		 (i 0)) 
-	     (dolist (subcircuit-call subcircuit-calls-list)
-	       (setf subcircuit (nth i subcircuits-list))
+  (handler-case
+      (let ((return-value netlist)
+	    (subcircuit-calls-list nil))
+	(format output "~%Including subcircuits.")
+	(loop do
+	     (setf subcircuit-calls-list (select (where :class-type 'subcircuit-class) 
+						 (netlist-class-elements-list return-value)))
+	     (when subcircuit-calls-list
 	       (when debug-mode
-		 (format output "~%~%Original subcircuit netlist:~%~a" (sexpify subcircuit)))
-	       (setf subcircuit (rename-netlist-element subcircuit (element-class-name subcircuit-call) :debug-mode debug-mode :output output))
-	       (let ((subcircuit-nodes-list (select (where :class-type 'node-class) 
-						    (netlist-class-elements-list subcircuit))))
-		 (when (> (length (subcircuit-class-nodes-list subcircuit-call)) (length subcircuit-nodes-list))
-		   (error "~%Subcircuit ~a has got ~a instead of ~a in the include command." (element-class-name subcircuit) (length subcircuit-nodes-list) (length (subcircuit-class-nodes-list subcircuit-call))))		 
-;;;
-;;; connect subcircuit elements to the calling netlist
-;;;		 
-		 (let ((connection-nodes-list nil))
-		   (loop for i from 0 below (length (subcircuit-class-nodes-list subcircuit-call)) do
-			(setf connection-nodes-list (append connection-nodes-list (list (list (element-class-name (nth i subcircuit-nodes-list)) 
-											      (nth i (subcircuit-class-nodes-list subcircuit-call)))))))
+		 (format output "~%~%Subcircuit calls: ~a~%" (mapcar #'sexpify subcircuit-calls-list)))
+	       (let ((subcircuits-list (mapcar #'(lambda (x)
+						   (read-netlist (subcircuit-class-file-pathname x) :debug-mode debug-mode :output output)) subcircuit-calls-list))
+		     (subcircuit nil)
+		     (i 0)) 
+		 (dolist (subcircuit-call subcircuit-calls-list)
+		   (setf subcircuit (nth i subcircuits-list))
 		   (when debug-mode
-		     (format output "~%~%Connections nodes pairs ~a" connection-nodes-list))
-		   (setf return-value (connect subcircuit return-value connection-nodes-list :debug-mode debug-mode :output output))
-		   (setf (netlist-class-elements-list return-value) (exclude (where :name (element-class-name subcircuit-call) :class-type 'subcircuit-class) 
-								       (netlist-class-elements-list return-value)))
-		   (when debug-mode
-		     (format output "~%~%Resulting netlist:~%~a" (sexpify return-value)))))
-	       (incf i))))
-       until (eql subcircuit-calls-list nil))
-    (format output " Done!")
-    return-value))
+		     (format output "~%~%Original subcircuit netlist:~%~a" (sexpify subcircuit)))
+		   (setf subcircuit (rename-netlist-element subcircuit (element-class-name subcircuit-call) :debug-mode debug-mode :output output))
+		   (let ((subcircuit-nodes-list (select (where :class-type 'node-class) 
+							(netlist-class-elements-list subcircuit))))
+		     (when (> (length (subcircuit-class-nodes-list subcircuit-call)) (length subcircuit-nodes-list))
+		       (error 'wrong-subcircuit-nodes-list-error :subcircuit-name (element-class-name subcircuit) 
+			      :actual-nodes-count (length subcircuit-nodes-list) 
+			      :needed-nodes-count (length (subcircuit-class-nodes-list subcircuit-call))))
+		     (let ((connection-nodes-list nil))
+		       (loop for i from 0 below (length (subcircuit-class-nodes-list subcircuit-call)) do
+			    (setf connection-nodes-list (append connection-nodes-list (list (list (element-class-name (nth i subcircuit-nodes-list)) 
+												  (nth i (subcircuit-class-nodes-list subcircuit-call)))))))
+		       (when debug-mode
+			 (format output "~%~%Connections nodes pairs ~a" connection-nodes-list))
+		       (setf return-value (connect subcircuit return-value connection-nodes-list :debug-mode debug-mode :output output))
+		       (setf (netlist-class-elements-list return-value) (exclude (where :name (element-class-name subcircuit-call) :class-type 'subcircuit-class) 
+										 (netlist-class-elements-list return-value)))
+		       (when debug-mode
+			 (format output "~%~%Resulting netlist:~%~a" (sexpify return-value)))))
+		   (incf i))))
+	   until (eql subcircuit-calls-list nil))
+	(format output " Done!")
+	return-value)
+    (wrong-subcircuit-nodes-list-error (condition)
+      (format *error-output* "~%Subcircuit ~a has got ~a instead of ~a in the include command." (subcircuit-name condition) (actual-nodes-count condition) (needed-nodes-count condition)))))
 
 (defun check-netlist (netlist &optional &key (debug-mode nil) (output *standard-output*))
-  (let* ((elements-list (exclude (where :class-type 'node-class) (netlist-class-elements-list netlist)))
-	 (nodes-list (select (where :class-type 'node-class) (netlist-class-elements-list netlist)))
-	 (error-found 0))
-    (when (< (length nodes-list) 2)
-      (format output "Less than two nodes for netlist ~a.~%" (element-class-name netlist))
-      (setf error-found 1))
-    (let ((reference-nodes (select (list (where :class "reference")
-					 (where :class "gnd")
-					 (where :class "0")) nodes-list)))
-      (cond
-	((eql (length reference-nodes) 0)
-	 (format output "~%No reference node in netlist ~a." (element-class-name netlist))
-	 (setf error-found 2))
-	((> (length reference-nodes) 1)
-	 (format output "~%Too many reference nodes in netlist ~a: ~a." (element-class-name netlist) (mapcar #'sexpify reference-nodes))
-	 (setf error-found 3))))
-    (dolist (element elements-list)
-      (when (> (length (select (where :name (element-class-name element)) elements-list)) 1)
-	(format output "~%Object ~a defined more than once." (element-class-name element))
-	(setf error-found 4))
-      (typecase element
-	(coupling-class
-	 (when (< (length (coupling-class-elements-list element)) 2)
-	   (error "~%Coupling ~a has got only one inductance." (element-class-name element))
-	   (setf error-found 5))
-	 (unless (eql (/ (* (length (coupling-class-elements-list element))
-			    (1- (length (coupling-class-elements-list element)))) 2)
-		      (grid:dim0 (coupling-class-value element)))
-	   (error "~%Coupling ~a mismatched number of coupling values vs coupling inductances." (element-name element)))
-	 (dolist (inductance (coupling-class-elements-list element))
-	   (unless (inductance-class-p inductance)
-	     (error "~%Coupling ~a has got a non inductance element in it (~a).~%" (element-name element) (element-name inductance))
-	     (set error-found 6))))))
-    error-found))
+  (handler-case
+      (let* ((elements-list (exclude (where :class-type 'node-class) (netlist-class-elements-list netlist)))
+	     (nodes-list (select (where :class-type 'node-class) (netlist-class-elements-list netlist)))
+	     (error-found 0))
+	(when (< (length nodes-list) 2)
+	  (format output "Less than two nodes for netlist ~a.~%" (element-class-name netlist))
+	  (setf error-found 1))
+	(let ((reference-nodes (select (list (where :class "reference")
+					     (where :class "gnd")
+					     (where :class "0")) nodes-list)))
+	  (cond
+	    ((eql (length reference-nodes) 0)
+	     (format output "~%No reference node in netlist ~a." (element-class-name netlist))
+	     (setf error-found 2))
+	    ((> (length reference-nodes) 1)
+	     (format output "~%Too many reference nodes in netlist ~a: ~a." (element-class-name netlist) (mapcar #'sexpify reference-nodes))
+	     (setf error-found 3))))
+	(dolist (element elements-list)
+	  (when (> (length (select (where :name (element-class-name element)) elements-list)) 1)
+	    (format output "~%Object ~a defined more than once." (element-class-name element))
+	    (setf error-found 4))
+	  (typecase element
+	    (coupling-class
+	     (when (< (length (coupling-class-elements-list element)) 2)
+	       (error 'wrong-number-of-elements-for-coupling-error :element-name (element-class-name element))
+	       (setf error-found 5))
+	     (unless (eql (/ (* (length (coupling-class-elements-list element))
+				(1- (length (coupling-class-elements-list element)))) 2)
+			  (grid:dim0 (coupling-class-value element)))
+	       (error "~%Coupling ~a mismatched number of coupling values vs coupling inductances." (element-name element)))
+	     (dolist (inductance (coupling-class-elements-list element))
+	       (unless (inductance-class-p inductance)
+		 (error "~%Coupling ~a has got a non inductance element in it (~a).~%" (element-name element) (element-name inductance))
+		 (set error-found 6))))))
+	error-found)
+    (wrong-number-of-elements-for-coupling-error (condition)
+      (format *error-output* "~%Less than coupling elements in ~a.~%" (element-name condition))
+      nil)))
+	      
 
 ;;;
 ;;; create K or Y vector
@@ -1628,25 +1707,25 @@
 		      (inductance-class-p element))
 		  (setf k 0)
 		  (dolist (element-node-name element-node-names-list)
-		    (let ((node (find-element (where :name element-node-name) nodes-list)))
-		      (unless node
+		    (let ((found-node (find-element (where :name element-node-name) nodes-list)))
+		      (unless found-node
 			(error 'no-such-node-for-element-error :node-name element-node-name :element-name (element-class-name element)))
-		      (setf j (find-node-position (string-downcase element-node-name) (exclude (list (where :class "reference")
-												     (where :class "gnd")
-												     (where :class "0")) nodes-list)))
-		      (unless (reference-class-node-p node)
+		      (setf j (find-node-position element-node-name (exclude (list (where :class "reference")
+										   (where :class "gnd")
+										   (where :class "0")) nodes-list)))
+		      (unless (reference-class-node-p found-node)
 			(setf (grid:gref g-matrix i j) (expt -1d0 k)))
 		      (incf k))))
 		 ((conductance-class-p element)
 		  (setf k 0)
 		  (dolist (element-node-name element-node-names-list)
-		    (let ((node (find-element (where :name element-node-name) nodes-list)))
-		      (unless node
+		    (let ((found-node (find-element (where :name element-node-name) nodes-list)))
+		      (unless found-node
 			(error 'no-such-node-for-element-error :node-name element-node-name :element-name (element-class-name element)))
-		      (setf j (find-node-position (string-downcase element-node-name) (exclude (list (where :class "reference")
-												     (where :class "gnd")
-												     (where :class "0")) nodes-list)))
-		      (unless (reference-class-node-p node)
+		      (setf j (find-node-position element-node-name (exclude (list (where :class "reference")
+										   (where :class "gnd")
+										   (where :class "0")) nodes-list)))
+		      (unless (reference-class-node-p found-node)
 			(setf (grid:gref g-matrix i j) (* (expt -1d0 k) (passive-class-value element))))
 		      (incf k))))))
 	     (incf i))
@@ -1659,13 +1738,13 @@
 		      (error 'mismatched-coupling-element :element-name (element-class-name element)))
 		    (setf k 0)
 		    (dolist (element-node-name element-node-names-list)
-		      (let ((node (find-element (where :name element-node-name) nodes-list)))
-			(unless node
+		      (let ((found-node (find-element (where :name element-node-name) nodes-list)))
+			(unless found-node
 			  (error 'no-such-node-for-element :node-name element-node-name :element-name (element-class-name coupling-element)))
-			(setf j (find-node-position (string-downcase element-node-name) (exclude (list (where :class "reference")
-												       (where :class "gnd")												   
-												       (where :class "0")) nodes-list)))
-			(unless (reference-class-node-p node)
+			(setf j (find-node-position element-node-name (exclude (list (where :class "reference")
+										     (where :class "gnd")												   
+										     (where :class "0")) nodes-list)))
+			(unless (reference-class-node-p found-node)
 			  (setf (grid:gref g-matrix i j) (expt -1d0 k)))
 			(incf k)))))
 		 (t
@@ -1715,27 +1794,30 @@
 ;;;
 
 (defun update-sv-matrix (sv-matrix netlist &optional &key (debug-mode nil) (output *standard-output*))
-  (let ((sources-list (select (list (where :class-type 'source-class :class "voltage-source")) netlist))
-	(nodes-list (select (where :class-type 'node-class) netlist))
-	(i 0)
-	(j 0)
-	(k 0))
-    (when debug-mode
-      (format output "~%~%---- update-sv-matrix ----~%~%")
-      (format output "Updating Sv[~a x ~a].~%" (grid:dim0 sv-matrix) (grid:dim1 sv-matrix)))
-    (dolist (source sources-list)
-      (setf k 0)
-      (dolist (node-name (source-class-nodes-list source))
-	(unless (reference-class-node-p (find-element (where :name node-name) nodes-list))
-	  (setf j (1- (find-node-position node-name nodes-list)))
-	  (unless j
-	    (error "In ~a there's no ~a node.~%" (element-class-name source) node-name))
-	  (setf (grid:gref sv-matrix i j) (expt -1d0 k)))
-	(incf k))
-      (incf i))
-    (when debug-mode
-      (format output "Sv =~%~a~%" sv-matrix))
-    sv-matrix))
+  (handler-case
+      (let ((sources-list (select (where :class-type 'source-class :class "voltage-source") netlist))
+	    (nodes-list (select (where :class-type 'node-class) netlist))
+	    (i 0)
+	    (j 0)
+	    (k 0))
+	(when debug-mode
+	  (format output "~%~%---- update-sv-matrix ----~%~%")
+	  (format output "Updating Sv[~a x ~a].~%" (grid:dim0 sv-matrix) (grid:dim1 sv-matrix)))
+	(dolist (source sources-list)
+	  (setf k 0)
+	  (dolist (node-name (source-class-nodes-list source))	    
+	    (unless (reference-class-node-p (find-element (where :name node-name) nodes-list))
+	      (setf j (1- (find-node-position node-name nodes-list)))
+	      (unless j
+		(error 'no-such-node-for-element-error :element-name (element-class-name source) :node-name node-name))
+	      (setf (grid:gref sv-matrix i j) (expt -1d0 k)))
+	    (incf k))
+	  (incf i))
+	(when debug-mode
+	  (format output "Sv =~%~a~%" sv-matrix))
+	sv-matrix)
+    (no-such-node-for-element-error (condition)
+      (format *error-output* "No such node ~a for element ~a.~%" (node-name condition) (element-name condition)))))
 
 (defun update-l-matrix (l-matrix netlist &optional &key (debug-mode nil) (output *standard-output*))
   (let ((elements-list (select (list (where :class-type 'passive-class)
@@ -1748,7 +1830,7 @@
 	(m-value 0d0))
     (when debug-mode
       (format output "~%~%---- update-l-matrix ----~%~%")
-      (format outpuy "Updating L[~a x ~a].~%" (grid:dim0 l-matrix) (grid:dim1 l-matrix)))
+      (format output "Updating L[~a x ~a].~%" (grid:dim0 l-matrix) (grid:dim1 l-matrix)))
     (dolist (element elements-list)
       (typecase element
 	(passive-class
@@ -1931,43 +2013,6 @@
 ;;; (t0 t1 n time y)
 ;;;
 
-;; (defun evaluate-model (model &optional &key (debug-mode nil) (output *standard-output*))
-;;   (handler-case
-;;       (let* ((*package* (find-package :circuit-solver))
-;; 	     (name (element-class-name model))
-;; 	     (class (model-class-class model))
-;; 	     (value (model-class-value model))
-;; 	     (parameters-list (model-class-parameters-list model))
-;; 	     (states-list (model-class-states-list model))
-;; 	     (function-name (model-class-function-name model))
-;; 	     (function-symbol (find-symbol (string-upcase function-name)))
-;; 	     (function nil)
-;; 	     (old-function-value nil))
-;; 	(when function-symbol
-;; 	  (setf function (symbol-function function-symbol))
-;; 	  (setf old-function-value (apply function (list :parameters parameters-list :state states-list))))
-;; 	(unless function-symbol
-;; 	  (setf function-name (concatenate 'string function-name ".vcs"))
-;; 	  (if (load function-name)
-;; 	      (setf model (evaluate-model model :debug-mode debug-mode :output output))
-;; 	      (error 'unknown-function-error :function-name function-name)))
-;; 	(cond
-;; 	  ((simple-function-p model)
-;; 	   (setf (model-class-value model) old-function-value))
-;; 	  ((differential-function-p model)
-;; 	   (setf (model-class-value model) (+ value (* *h* old-function-value))))
-;; 	  (t
-;; 	   (error 'undefined-model-class-error :model-name name :model-class-name class)))
-;; 	(when debug-mode
-;; 	  (format output "Evaluated model: ~a~%" (sexpify model)))
-;; 	model)
-;;     (unknown-function-error (condition)
-;;       (format *error-output* "~%Could not find ~a function." (function-name condition))
-;;       nil)
-;;     (undefined-model-class-error (condition)
-;;       (format *error-output* "~%Undefined class ~a for model ~a.~%" (model-name condition) (model-class-name condition))
-;;       nil)))
-
 (defun evaluate-model (model &optional &key (debug-mode nil) (output *standard-output*))
   (handler-case
       (let* ((*package* (find-package :circuit-solver))
@@ -2057,7 +2102,8 @@
 			   (push (grid:gref state-vector (+ i branches-number)) state))))))
 		   ((current-probe-class-p probe)
 		    (dolist (element-name (probe-class-elements-list probe))
-		      (multiple-value-bind (found-element i-found) (find-element (where :name element-name) elements-list)
+		      (multiple-value-bind (found-element i-found) 
+			  (find-element (where :name element-name) elements-list)
 			(unless found-element
 			  (error 'no-element-for-probe-error :element-name element-name :probe-name (element-name probe)))
 			(push (grid:gref state-vector i-found) state))))
@@ -2065,7 +2111,7 @@
 		    (error 'undefined-probe-type-error :probe-name (element-class-name probe)))))))
 	   (setf (model-class-states-list element) state)
 	   (when debug-mode
-	     (format output "Evaluating model ~a:~%Parameters = ~a~%State = ~a~%" (element-class-name element) (element-parameters-list element) (element-states-list element)))
+	     (format output "Evaluating model ~a:~%Parameters = ~a~%State = ~a~%" (element-class-name element) (model-class-parameters-list element) (model-class-states-list element)))
 	   (setf element (evaluate-model element :debug-mode debug-mode :output output))))
 	element)
     (no-node-for-probe-error (condition)
@@ -2110,7 +2156,8 @@
 	  (cond
 	    ((voltage-probe-class-p probe)
 	     (dolist (node-name (probe-class-nodes-list probe))
-	       (multiple-value-bind (found-node found-node-position) (find-element (where :name node-name) nodes-list)
+	       (multiple-value-bind (found-node found-node-position) 
+		   (find-element (where :name node-name) nodes-list)
 		 (unless found-node
 		   (error 'probe-not-found-error :probe-name (element-class-name probe) :node-name node-name))
 		 (incf found-node-position (- (grid:dim0 y-vector) 
@@ -2276,15 +2323,15 @@
 		   ;;	      
 		     (dolist (element (netlist-class-elements-list netlist))
 		       (setf element (update-model element (netlist-class-elements-list netlist) y-old-vector :debug-mode debug-mode :output output)))
-		     (setf p-matrix (update-p-matrix p-matrix (netlist-class-elements-list netlist) :debug-mode debug-mode :output output))
-		     (setf r-matrix (update-r-matrix r-matrix (netlist-class-elements-list netlist) :debug-mode debug-mode :output output))
-		     (setf g-matrix (update-g-matrix g-matrix (netlist-class-elements-list netlist) :debug-mode debug-mode :output output))
-		     (setf si-matrix (update-si-matrix si-matrix (netlist-class-elements-list netlist) :debug-mode debug-mode :output output))
-		     (setf sv-matrix (update-sv-matrix sv-matrix (netlist-class-elements-list netlist) :debug-mode debug-mode :output output))
-		     (setf l-matrix (update-l-matrix l-matrix (netlist-class-elements-list netlist) :debug-mode debug-mode :output output))
-		     (setf c-matrix (update-c-matrix c-matrix (netlist-class-elements-list netlist) :debug-mode debug-mode :output output))
-		     (setf ki-vector (update-ki-vector ki-vector (netlist-class-elements-list netlist) :debug-mode debug-mode :output output))
-		     (setf kv-vector (update-kv-vector kv-vector (netlist-class-elements-list netlist) :debug-mode debug-mode :output output))
+		     (setf p-matrix (update-p-matrix p-matrix (netlist-class-elements-list netlist) :debug-mode debug-mode :output output)
+			   r-matrix (update-r-matrix r-matrix (netlist-class-elements-list netlist) :debug-mode debug-mode :output output)
+			   g-matrix (update-g-matrix g-matrix (netlist-class-elements-list netlist) :debug-mode debug-mode :output output)
+			   si-matrix (update-si-matrix si-matrix (netlist-class-elements-list netlist) :debug-mode debug-mode :output output)
+			   sv-matrix (update-sv-matrix sv-matrix (netlist-class-elements-list netlist) :debug-mode debug-mode :output output)
+			   l-matrix (update-l-matrix l-matrix (netlist-class-elements-list netlist) :debug-mode debug-mode :output output)
+			   c-matrix (update-c-matrix c-matrix (netlist-class-elements-list netlist) :debug-mode debug-mode :output output)
+			   ki-vector (update-ki-vector ki-vector (netlist-class-elements-list netlist) :debug-mode debug-mode :output output)
+			   kv-vector (update-kv-vector kv-vector (netlist-class-elements-list netlist) :debug-mode debug-mode :output output))
 		     (multiple-value-bind (a-matrix b-matrix k-vector) 
 			 (assemble-system p-matrix r-matrix g-matrix si-matrix sv-matrix l-matrix c-matrix ki-vector kv-vector :debug-mode debug-mode :output output)
 		       (let ((alpha-matrix (gsl:elt+ (gsl:elt* *h* (grid:copy-to a-matrix 'grid:foreign-array)) (grid:copy-to b-matrix 'grid:foreign-array)))
