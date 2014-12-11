@@ -1326,11 +1326,12 @@
 ;;; include all subcircuit in a netlist
 ;;;
 
-(defun include-subcircuits (netlist &optional &key (debug-mode nil) (output *standard-output*))
+(defun include-subcircuits (netlist &optional &key (verbose nil) (debug-mode nil) (output *standard-output*))
   (handler-case
       (let ((return-value netlist)
 	    (subcircuit-calls-list nil))
-	(format output "~%Including subcircuits.")
+	(when verbose
+	  (format output "~%Including subcircuits."))
 	(loop do
 	     (setf subcircuit-calls-list (select (where :class-type 'subcircuit-class) 
 						 (netlist-class-elements-list return-value)))
@@ -1365,7 +1366,8 @@
 			 (format output "~%~%Resulting netlist:~%~a" (sexpify return-value)))))
 		   (incf i))))
 	   until (eql subcircuit-calls-list nil))
-	(format output " Done!")
+	(when verbose
+	  (format output " Done!"))
 	return-value)
     (wrong-subcircuit-nodes-list-error (condition)
       (format *error-output* "~%Subcircuit ~a has got ~a instead of ~a in the include command." (subcircuit-name condition) (actual-nodes-count condition) (needed-nodes-count condition)))))
@@ -2226,16 +2228,16 @@
 ;;; print back simulation progress bar
 ;;;
 
-(defun print-progress-bar (step little-mark big-mark)
+(defun print-progress-bar (step little-mark big-mark &optional &key (output *standard-output*))
   (let ((percent (* 100 (/ step *steps-number*))))
     (cond
       ((< percent 100)
        (if (eql (mod percent big-mark) 0)
-	   (format t " %~a " percent)
+	   (format output " %~a " percent)
 	   (when (eql (mod percent little-mark) 0)
-	     (format t "="))))
+	     (format output "="))))
       ((eql percent 100)
-       (format t " 100% done!~%")))))
+       (format output " 100% done!~%")))))
 
 ;;;
 ;;; select solutions to write onto file
@@ -2369,11 +2371,12 @@
 ;; Y(n) = D(n) B(n) Y(n - 1) + h D(n) K(n)
 ;;
 
-(defun solve-problem (netlist-file-pathname t0 t1 steps &optional &key (debug-mode nil) (progress-bar nil) (output *standard-output*))
+(defun solve-problem (netlist-file-pathname t0 t1 steps &optional &key (verbose nil) (debug-mode nil) (progress-bar nil) (output *standard-output*))
   (handler-case
       (progn
-	(format output "~%Circuit Solver - Version ~a.~a.~a.~a~%Written by Dott. Ing. Angelo Rossi & Dott. Ing. Marco Maccioni.~%Released under GPL3 License (C) ~@r." major minor build revision year)
-	(format output "~%Running on ~a machine type ~a.~%" (software-type) (machine-type))
+	(when verbose
+	  (format output "~%Circuit Solver - Version ~a.~a.~a.~a~%Written by Dott. Ing. Angelo Rossi & Dott. Ing. Marco Maccioni.~%Released under GPL3 License (C) ~@r." major minor build revision year)
+	  (format output "~%Running on ~a machine type ~a.~%" (software-type) (machine-type)))
 	(unless (> t1 t0)
 	  (error 'simulation-time-interval-error :t1 t1 :t0 t0))
 	(setf *t0* t0)
@@ -2382,18 +2385,21 @@
 	    (setf *steps-number* *minimum-steps-number*)
 	    (setf *steps-number* steps))
 	(setf *h* (/ (- *t1* *t0*) (float *steps-number*)))
-	(format output "Setting steps number to ~a.~%" *steps-number*)
+	(when verbose
+	  (format output "~%Setting steps number to ~a." *steps-number*))
 	(let ((netlist (read-netlist netlist-file-pathname))
 	      (error-found 0))
-	  (setf netlist (include-subcircuits netlist :debug-mode debug-mode :output output))
+	  (setf netlist (include-subcircuits netlist :verbose verbose :debug-mode debug-mode :output output))
 	  (setf error-found (check-netlist netlist))
 	  (when (zerop error-found)
-	    (format output "~%Input file: ~a" netlist-file-pathname)
-	    (format output "~%Debug Mode: ~a" debug-mode)
-	    (format output "~%Loaded netlist: ~a" (element-class-name netlist))
+	    (when verbose
+	      (format output "~%Input file: ~a" netlist-file-pathname)
+	      (format output "~%Debug Mode: ~a" debug-mode)
+	      (format output "~%Loaded netlist: ~a" (element-class-name netlist)))
 	    (when debug-mode
 	      (format output "~%~a" (sexpify netlist)))
-	    (format output "~%Start at ~a s upto ~a s with Delta t = ~a s (~a steps)." *t0* *t1* *h* *steps-number*)
+	    (when verbose
+	      (format output "~%Start at ~a s upto ~a s with Delta t = ~a s (~a steps)." *t0* *t1* *h* *steps-number*))
 	    (when debug-mode
 	      (format output "~%Found ~a nodes and ~a elements." 
 		      (length (select (where :class-type 'node-class) (netlist-class-elements-list netlist)))
@@ -2413,7 +2419,8 @@
 	      (setf y-old-vector (setup-initial-conditions netlist y-old-vector :debug-mode debug-mode :output output))	
 	      (let* ((output-file-pathname (make-pathname :directory (pathname-directory netlist-file-pathname) :name (pathname-name netlist-file-pathname) :type "sim"))
 		     (output-file-stream (open-simulation-file netlist output-file-pathname)))
-		(format output "~&Output file: ~a~2%" output-file-pathname)
+		(when verbose
+		  (format output "~&Output file: ~a~2%" output-file-pathname))
 		(format output "~2&Solving: ")
 		(loop for i from 0 to *steps-number* do
 		     (setf *time* (+ t0 (* *h* (float i))))
@@ -2447,9 +2454,13 @@
 			   (select-probes netlist y-new-vector output-file-stream :debug-mode debug-mode :output output)
 			   (setf y-old-vector y-new-vector)))
 		       (when (and (eql nil debug-mode) progress-bar)
-			 (print-progress-bar i 2 20))))
+			 (print-progress-bar i 2 20 :output output))))
 		(when output-file-stream
-		  (close output-file-stream)))))))
+		  (close output-file-stream))
+		output-file-pathname)))))
     (simulation-time-interval-error (condition)
       (format *error-output* "Simulation final time (~a) less than or equal to start time (~a).~%" (:t0 condition) (:t1 condition))
       nil)))
+
+(defun kst (netlist-file-pathname t0 t1 steps &optional &key (verbose nil) (debug-mode nil) (progress-bar nil) (output *standard-output*))
+  (asdf:run-shell-command "kst2 ~S" (solve-problem netlist-file-pathname t0 t1 steps :verbose verbose :debug-mode debug-mode :output output)))

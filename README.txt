@@ -3,7 +3,7 @@ This is the stub README.txt for the "circuit_solver" project.
 
 What is "circuit-solver"?
 =========================
-It is a common lisp program that simulates complex electromechanical systems. An electromechanical system is a physical one in which 
+It is a Common Lisp program that simulates complex electromechanical systems. An electromechanical system is a physical one in which 
 energy conversion could occur from electrical to mechanical and viceversa. For example a synchronous machine driven by a prime mover
 would convert mechanical energy into electrical in the form of a voltage difference and an electrical current.
 
@@ -50,8 +50,8 @@ Solving:  %0 ========= %20 ========= %40 ========= %60 ========= %80 ========= 1
 T
 CIRCUIT-SOLVER>
 
-it means that simulation apparently went well and You can inspect the solution, by using, for example kst and load the file 
-"test-trafo-gdl-01.kst".
+it means that simulation apparently went well and You can inspect the solution, by using, for example kst (https://kst-plot.kde.org/)
+that it is available on Debian too (sudo apt-get install kst) and load the file "test-trafo-gdl-01.kst". 
 
 May I write a netlist?
 ======================
