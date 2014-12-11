@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kst version="2.0">
+    <data>
+        <source reader="ASCII file" file="/home/angel/Development/lisp/circuit-solver/examples/test_1ph_fault_02.sim" fileRelative="test_1ph_fault_02.sim">
+            <properties vector="INDEX" interpretation="1" delimiters="#" columntype="0" headerstart="2" fields="0" readfields="true" usedot="true" columnwidthisconst="false" readunits="false" units="0"/>
+        </source>
+    </data>
+    <variables>
+        <datavector file="/home/angel/Development/lisp/circuit-solver/examples/test_1ph_fault_02.sim" fileRelative="test_1ph_fault_02.sim" field="time" start="0" count="-1" skip="-1" doAve="false" initialVNum="13" initialXNum="145"/>
+        <datavector file="/home/angel/Development/lisp/circuit-solver/examples/test_1ph_fault_02.sim" fileRelative="test_1ph_fault_02.sim" field="current-V1" start="0" count="-1" skip="-1" doAve="false" initialVNum="14" initialXNum="157"/>
+        <datavector file="/home/angel/Development/lisp/circuit-solver/examples/test_1ph_fault_02.sim" fileRelative="test_1ph_fault_02.sim" field="current-Rload" start="0" count="-1" skip="-1" doAve="false" initialVNum="15" initialXNum="169"/>
+        <datavector file="/home/angel/Development/lisp/circuit-solver/examples/test_1ph_fault_02.sim" fileRelative="test_1ph_fault_02.sim" field="current-Lload" start="0" count="-1" skip="-1" doAve="false" initialVNum="16" initialXNum="181"/>
+        <datavector file="/home/angel/Development/lisp/circuit-solver/examples/test_1ph_fault_02.sim" fileRelative="test_1ph_fault_02.sim" field="current-Cload" start="0" count="-1" skip="-1" doAve="false" initialVNum="17" initialXNum="193"/>
+        <datavector file="/home/angel/Development/lisp/circuit-solver/examples/test_1ph_fault_02.sim" fileRelative="test_1ph_fault_02.sim" field="current-R1" start="0" count="-1" skip="-1" doAve="false" initialVNum="18" initialXNum="205"/>
+        <datavector file="/home/angel/Development/lisp/circuit-solver/examples/test_1ph_fault_02.sim" fileRelative="test_1ph_fault_02.sim" field="current-L1" start="0" count="-1" skip="-1" doAve="false" initialVNum="19" initialXNum="217"/>
+        <datavector file="/home/angel/Development/lisp/circuit-solver/examples/test_1ph_fault_02.sim" fileRelative="test_1ph_fault_02.sim" field="current-G1" start="0" count="-1" skip="-1" doAve="false" initialVNum="20" initialXNum="229"/>
+        <datavector file="/home/angel/Development/lisp/circuit-solver/examples/test_1ph_fault_02.sim" fileRelative="test_1ph_fault_02.sim" field="current-I1" start="0" count="-1" skip="-1" doAve="false" initialVNum="21" initialXNum="241"/>
+        <datavector file="/home/angel/Development/lisp/circuit-solver/examples/test_1ph_fault_02.sim" fileRelative="test_1ph_fault_02.sim" field="voltage-N1" start="0" count="-1" skip="-1" doAve="false" initialVNum="22" initialXNum="253"/>
+        <datavector file="/home/angel/Development/lisp/circuit-solver/examples/test_1ph_fault_02.sim" fileRelative="test_1ph_fault_02.sim" field="voltage-N2" start="0" count="-1" skip="-1" doAve="false" initialVNum="23" initialXNum="265"/>
+        <datavector file="/home/angel/Development/lisp/circuit-solver/examples/test_1ph_fault_02.sim" fileRelative="test_1ph_fault_02.sim" field="voltage-N3" start="0" count="-1" skip="-1" doAve="false" initialVNum="24" initialXNum="277"/>
+        <datavector file="/home/angel/Development/lisp/circuit-solver/examples/test_1ph_fault_02.sim" fileRelative="test_1ph_fault_02.sim" field="voltage-N4" start="0" count="-1" skip="-1" doAve="false" initialVNum="25" initialXNum="289"/>
+        <datavector file="/home/angel/Development/lisp/circuit-solver/examples/test_1ph_fault_02.sim" fileRelative="test_1ph_fault_02.sim" field="voltage-N5" start="0" count="-1" skip="-1" doAve="false" initialVNum="26" initialXNum="301"/>
+        <datavector file="/home/angel/Development/lisp/circuit-solver/examples/test_1ph_fault_02.sim" fileRelative="test_1ph_fault_02.sim" field="voltage-N6" start="0" count="-1" skip="-1" doAve="false" initialVNum="27" initialXNum="313"/>
+        <datavector file="/home/angel/Development/lisp/circuit-solver/examples/test_1ph_fault_02.sim" fileRelative="test_1ph_fault_02.sim" field="voltage-N10" start="0" count="-1" skip="-1" doAve="false" initialVNum="28" initialXNum="325"/>
+        <string value="2014-12-08 15:05:29" initialTNum="6"/>
+        <string value="2014-12-08 15:05:29" initialTNum="7"/>
+        <string value="test_1ph_fault_02.sim" initialTNum="8"/>
+        <string value="/home/angel/Development/lisp/circuit-solver/examples" initialTNum="9"/>
+        <string value="" initialTNum="10"/>
+    </variables>
+    <objects/>
+    <relations>
+        <curve xvector="time (V13)" yvector="current-V1 (V14)" color="#2e5778" headcolor="#000000" haslines="true" linewidth="0" linestyle="0" haspoints="false" pointtype="0" pointdensity="0" hasbars="false" barstyle="0" ignoreautoscale="false" hashead="false" headtype="2146959360" initialCNum="12"/>
+        <curve xvector="time (V13)" yvector="current-Rload (V15)" color="#350a0a" headcolor="#000000" haslines="true" linewidth="0" linestyle="0" haspoints="false" pointtype="1" pointdensity="0" hasbars="false" barstyle="0" ignoreautoscale="false" hashead="false" headtype="2146959360" initialCNum="13"/>
+        <curve xvector="time (V13)" yvector="current-Lload (V16)" color="#0a350a" headcolor="#000000" haslines="true" linewidth="0" linestyle="0" haspoints="false" pointtype="2" pointdensity="0" hasbars="false" barstyle="0" ignoreautoscale="false" hashead="false" headtype="2146959360" initialCNum="14"/>
+        <curve xvector="time (V13)" yvector="current-Cload (V17)" color="#ff0000" headcolor="#000000" haslines="true" linewidth="0" linestyle="0" haspoints="false" pointtype="3" pointdensity="0" hasbars="false" barstyle="0" ignoreautoscale="false" hashead="false" headtype="2146959360" initialCNum="15"/>
+        <curve xvector="time (V13)" yvector="current-R1 (V18)" color="#0000ff" headcolor="#000000" haslines="true" linewidth="0" linestyle="0" haspoints="false" pointtype="4" pointdensity="0" hasbars="false" barstyle="0" ignoreautoscale="false" hashead="false" headtype="2146959360" initialCNum="16"/>
+        <curve xvector="time (V13)" yvector="current-L1 (V19)" color="#008000" headcolor="#000000" haslines="true" linewidth="0" linestyle="0" haspoints="false" pointtype="5" pointdensity="0" hasbars="false" barstyle="0" ignoreautoscale="false" hashead="false" headtype="2146959360" initialCNum="17"/>
+        <curve xvector="time (V13)" yvector="current-G1 (V20)" color="#000000" headcolor="#000000" haslines="true" linewidth="0" linestyle="0" haspoints="false" pointtype="6" pointdensity="0" hasbars="false" barstyle="0" ignoreautoscale="false" hashead="false" headtype="2146959360" initialCNum="18"/>
+        <curve xvector="time (V13)" yvector="current-I1 (V21)" color="#ff00ff" headcolor="#000000" haslines="true" linewidth="0" linestyle="0" haspoints="false" pointtype="7" pointdensity="0" hasbars="false" barstyle="0" ignoreautoscale="false" hashead="false" headtype="2146959360" initialCNum="19"/>
+        <curve xvector="time (V13)" yvector="voltage-N1 (V22)" color="#4682b4" headcolor="#000000" haslines="true" linewidth="0" linestyle="0" haspoints="false" pointtype="8" pointdensity="0" hasbars="false" barstyle="0" ignoreautoscale="false" hashead="false" headtype="2146959360" initialCNum="20"/>
+        <curve xvector="time (V13)" yvector="voltage-N2 (V23)" color="#501010" headcolor="#000000" haslines="true" linewidth="0" linestyle="0" haspoints="false" pointtype="9" pointdensity="0" hasbars="false" barstyle="0" ignoreautoscale="false" hashead="false" headtype="1069720021" initialCNum="21"/>
+        <curve xvector="time (V13)" yvector="voltage-N3 (V24)" color="#105010" headcolor="#000000" haslines="true" linewidth="0" linestyle="0" haspoints="false" pointtype="10" pointdensity="0" hasbars="false" barstyle="0" ignoreautoscale="false" hashead="false" headtype="-1075221276" initialCNum="22"/>
+        <curve xvector="time (V13)" yvector="voltage-N4 (V25)" color="#aa0000" headcolor="#000000" haslines="true" linewidth="0" linestyle="0" haspoints="false" pointtype="11" pointdensity="0" hasbars="false" barstyle="0" ignoreautoscale="false" hashead="false" headtype="1072006491" initialCNum="23"/>
+        <curve xvector="time (V13)" yvector="voltage-N5 (V26)" color="#0000aa" headcolor="#000000" haslines="true" linewidth="0" linestyle="0" haspoints="false" pointtype="12" pointdensity="0" hasbars="false" barstyle="0" ignoreautoscale="false" hashead="false" headtype="1071477837" initialCNum="24"/>
+        <curve xvector="time (V13)" yvector="voltage-N6 (V27)" color="#005500" headcolor="#000000" haslines="true" linewidth="0" linestyle="0" haspoints="false" pointtype="0" pointdensity="0" hasbars="false" barstyle="0" ignoreautoscale="false" hashead="false" headtype="-1076486091" initialCNum="25"/>
+        <curve xvector="time (V13)" yvector="voltage-N10 (V28)" color="#000000" headcolor="#000000" haslines="true" linewidth="0" linestyle="0" haspoints="false" pointtype="1" pointdensity="0" hasbars="false" barstyle="0" ignoreautoscale="false" hashead="false" headtype="1072326252" initialCNum="26"/>
+    </relations>
+    <graphics>
+        <view name="View &amp;1" width="1679" height="915">
+            <plot tiedxzoom="false" tiedyzoom="false" leftlabelvisible="true" bottomlabelvisible="true" rightlabelvisible="true" toplabelvisible="true" globalfont="Sans Serif,11,-1,5,50,0,0,0,0,0" globalfontscale="8.13118223595458" globalfontcolor="#000000" showlegend="true" hidebottomaxislabel="false" hidetopaxislabel="false" hideleftaxislabel="false" hiderightaxislabel="false" initialPlotNum="25" name="Plot">
+                <position x="560.666666666667" y="730.2"/>
+                <rect x="0" y="0" width="557.666666666667" height="181.8"/>
+                <relativesize width="0.331944444444444" height="0.198471615720524" centerx="0.499702380952381" centery="0.896397379912664" posx="0.333730158730159" posy="0.797161572052402"/>
+                <transform m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1"/>
+                <pen style="1" width="0" miterlimit="2" cap="16" joinStyle="64">
+                    <brush color="#000000" style="1"/>
+                </pen>
+                <brush color="#ffffff" style="1"/>
+                <legend auto="true" title="" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="4.87870934157275" verticaldisplay="false" name="Legend">
+                    <position x="85.8833333333333" y="22.1744117647059"/>
+                    <rect x="0" y="0" width="96" height="13"/>
+                    <relativesize width="0.200976971388695" height="0.104585679806919" centerx="0.150488485694348" centery="0.122078936160144" posx="0.05" posy="0.0697860962566845"/>
+                    <transform m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1"/>
+                    <pen style="1" width="0" miterlimit="2" cap="16" joinStyle="64">
+                        <brush color="#000000" style="1"/>
+                    </pen>
+                    <brush color="#ffffff" style="1"/>
+                </legend>
+                <cartesianrender name="Cartesian Plot" type="1">
+                    <relation tag="voltage-N6 vs time (C25)"/>
+                </cartesianrender>
+                <plotaxis id="xaxis" visible="true" log="false" reversed="false" autobaseoffset="true" baseoffset="false" interpret="false" interpretation="1" display="4" majortickmode="5" minortickcount="5" autominortickcount="true" drawmajorticks="true" drawminorticks="true" drawmajorgridlines="true" drawminorgridlines="false" drawmajorgridlinecolor="#a0a0a4" drawminorgridlinecolor="#a0a0a4" drawmajorgridlinestyle="2" drawminorgridlinestyle="2" drawmajorgridlinewidth="1" drawminorgridlinewidth="1" significantdigits="9" rotation="0" zoommode="0">
+                    <plotmarkers xaxis="true" linecolor="#000000" linestyle="1" linewidth="1" curvemode="-2071044456"/>
+                </plotaxis>
+                <plotaxis id="yaxis" visible="true" log="false" reversed="false" autobaseoffset="true" baseoffset="false" interpret="false" interpretation="1" display="4" majortickmode="5" minortickcount="5" autominortickcount="true" drawmajorticks="true" drawminorticks="true" drawmajorgridlines="true" drawminorgridlines="false" drawmajorgridlinecolor="#a0a0a4" drawminorgridlinecolor="#a0a0a4" drawmajorgridlinestyle="2" drawminorgridlinestyle="2" drawmajorgridlinewidth="1" drawminorgridlinewidth="1" significantdigits="9" rotation="0" zoommode="1">
+                    <plotmarkers xaxis="false" linecolor="#000000" linestyle="1" linewidth="1" curvemode="127446702"/>
+                </plotaxis>
+                <plotlabel id="leftlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="rightlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="toplabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="bottomlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="numberlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <projectionrect x="0" y="-182.254087380035" width="0.4" height="271.964013593177"/>
+            </plot>
+            <plot tiedxzoom="false" tiedyzoom="false" leftlabelvisible="true" bottomlabelvisible="true" rightlabelvisible="true" toplabelvisible="true" globalfont="Sans Serif,11,-1,5,50,0,0,0,0,0" globalfontscale="8.13118223595458" globalfontcolor="#000000" showlegend="true" hidebottomaxislabel="false" hidetopaxislabel="false" hideleftaxislabel="false" hiderightaxislabel="false" initialPlotNum="23" name="Plot">
+                <position x="1118.33333333333" y="548.4"/>
+                <rect x="0" y="0" width="557.666666666667" height="181.8"/>
+                <relativesize width="0.331944444444444" height="0.198471615720524" centerx="0.831646825396825" centery="0.69792576419214" posx="0.665674603174603" posy="0.598689956331878"/>
+                <transform m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1"/>
+                <pen style="1" width="0" miterlimit="2" cap="16" joinStyle="64">
+                    <brush color="#000000" style="1"/>
+                </pen>
+                <brush color="#ffffff" style="1"/>
+                <legend auto="true" title="" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="4.87870934157275" verticaldisplay="false" name="Legend">
+                    <position x="85.8833333333333" y="22.1744117647059"/>
+                    <rect x="0" y="0" width="96" height="13"/>
+                    <relativesize width="0.200976971388695" height="0.104585679806919" centerx="0.150488485694348" centery="0.122078936160144" posx="0.05" posy="0.0697860962566845"/>
+                    <transform m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1"/>
+                    <pen style="1" width="0" miterlimit="2" cap="16" joinStyle="64">
+                        <brush color="#000000" style="1"/>
+                    </pen>
+                    <brush color="#ffffff" style="1"/>
+                </legend>
+                <cartesianrender name="Cartesian Plot" type="1">
+                    <relation tag="voltage-N4 vs time (C23)"/>
+                </cartesianrender>
+                <plotaxis id="xaxis" visible="true" log="false" reversed="false" autobaseoffset="true" baseoffset="false" interpret="false" interpretation="1" display="4" majortickmode="5" minortickcount="5" autominortickcount="true" drawmajorticks="true" drawminorticks="true" drawmajorgridlines="true" drawminorgridlines="false" drawmajorgridlinecolor="#a0a0a4" drawminorgridlinecolor="#a0a0a4" drawmajorgridlinestyle="2" drawminorgridlinestyle="2" drawmajorgridlinewidth="1" drawminorgridlinewidth="1" significantdigits="9" rotation="0" zoommode="0">
+                    <plotmarkers xaxis="true" linecolor="#000000" linestyle="1" linewidth="1" curvemode="0"/>
+                </plotaxis>
+                <plotaxis id="yaxis" visible="true" log="false" reversed="false" autobaseoffset="true" baseoffset="false" interpret="false" interpretation="1" display="4" majortickmode="5" minortickcount="5" autominortickcount="true" drawmajorticks="true" drawminorticks="true" drawmajorgridlines="true" drawminorgridlines="false" drawmajorgridlinecolor="#a0a0a4" drawminorgridlinecolor="#a0a0a4" drawmajorgridlinestyle="2" drawminorgridlinestyle="2" drawmajorgridlinewidth="1" drawminorgridlinewidth="1" significantdigits="9" rotation="0" zoommode="1">
+                    <plotmarkers xaxis="false" linecolor="#000000" linestyle="1" linewidth="1" curvemode="0"/>
+                </plotaxis>
+                <plotlabel id="leftlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="rightlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="toplabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="bottomlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="numberlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <projectionrect x="0" y="-326.38439911175" width="0.4" height="652.861744359239"/>
+            </plot>
+            <plot tiedxzoom="false" tiedyzoom="false" leftlabelvisible="true" bottomlabelvisible="true" rightlabelvisible="true" toplabelvisible="true" globalfont="Sans Serif,11,-1,5,50,0,0,0,0,0" globalfontscale="8.13118223595458" globalfontcolor="#000000" showlegend="true" hidebottomaxislabel="false" hidetopaxislabel="false" hideleftaxislabel="false" hiderightaxislabel="false" initialPlotNum="21" name="Plot">
+                <position x="3" y="548.4"/>
+                <rect x="0" y="0" width="557.666666666667" height="181.8"/>
+                <relativesize width="0.331944444444444" height="0.198471615720524" centerx="0.167757936507936" centery="0.69792576419214" posx="0.00178571428571429" posy="0.598689956331878"/>
+                <transform m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1"/>
+                <pen style="1" width="0" miterlimit="2" cap="16" joinStyle="64">
+                    <brush color="#000000" style="1"/>
+                </pen>
+                <brush color="#ffffff" style="1"/>
+                <legend auto="true" title="" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="4.87870934157275" verticaldisplay="false" name="Legend">
+                    <position x="85.8833333333333" y="22.1744117647059"/>
+                    <rect x="0" y="0" width="96" height="13"/>
+                    <relativesize width="0.200976971388695" height="0.104585679806919" centerx="0.150488485694348" centery="0.122078936160144" posx="0.05" posy="0.0697860962566845"/>
+                    <transform m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1"/>
+                    <pen style="1" width="0" miterlimit="2" cap="16" joinStyle="64">
+                        <brush color="#000000" style="1"/>
+                    </pen>
+                    <brush color="#ffffff" style="1"/>
+                </legend>
+                <cartesianrender name="Cartesian Plot" type="1">
+                    <relation tag="voltage-N2 vs time (C21)"/>
+                </cartesianrender>
+                <plotaxis id="xaxis" visible="true" log="false" reversed="false" autobaseoffset="true" baseoffset="false" interpret="false" interpretation="1" display="4" majortickmode="5" minortickcount="5" autominortickcount="true" drawmajorticks="true" drawminorticks="true" drawmajorgridlines="true" drawminorgridlines="false" drawmajorgridlinecolor="#a0a0a4" drawminorgridlinecolor="#a0a0a4" drawmajorgridlinestyle="2" drawminorgridlinestyle="2" drawmajorgridlinewidth="1" drawminorgridlinewidth="1" significantdigits="9" rotation="0" zoommode="0">
+                    <plotmarkers xaxis="true" linecolor="#000000" linestyle="1" linewidth="1" curvemode="1974005462"/>
+                </plotaxis>
+                <plotaxis id="yaxis" visible="true" log="false" reversed="false" autobaseoffset="true" baseoffset="false" interpret="false" interpretation="1" display="4" majortickmode="5" minortickcount="5" autominortickcount="true" drawmajorticks="true" drawminorticks="true" drawmajorgridlines="true" drawminorgridlines="false" drawmajorgridlinecolor="#a0a0a4" drawminorgridlinecolor="#a0a0a4" drawmajorgridlinestyle="2" drawminorgridlinestyle="2" drawmajorgridlinewidth="1" drawminorgridlinewidth="1" significantdigits="9" rotation="0" zoommode="1">
+                    <plotmarkers xaxis="false" linecolor="#000000" linestyle="1" linewidth="1" curvemode="-2068770895"/>
+                </plotaxis>
+                <plotlabel id="leftlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="rightlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="toplabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="bottomlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="numberlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <projectionrect x="0" y="-326.549999999935" width="0.4" height="653.099999999869"/>
+            </plot>
+            <plot tiedxzoom="false" tiedyzoom="false" leftlabelvisible="true" bottomlabelvisible="true" rightlabelvisible="true" toplabelvisible="true" globalfont="Sans Serif,11,-1,5,50,0,0,0,0,0" globalfontscale="8.13118223595458" globalfontcolor="#000000" showlegend="true" hidebottomaxislabel="false" hidetopaxislabel="false" hideleftaxislabel="false" hiderightaxislabel="false" initialPlotNum="19" name="Plot">
+                <position x="560.666666666667" y="366.6"/>
+                <rect x="0" y="0" width="557.666666666667" height="181.8"/>
+                <relativesize width="0.331944444444444" height="0.198471615720524" centerx="0.499702380952381" centery="0.499454148471616" posx="0.333730158730159" posy="0.400218340611354"/>
+                <transform m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1"/>
+                <pen style="1" width="0" miterlimit="2" cap="16" joinStyle="64">
+                    <brush color="#000000" style="1"/>
+                </pen>
+                <brush color="#ffffff" style="1"/>
+                <legend auto="true" title="" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="4.87870934157275" verticaldisplay="false" name="Legend">
+                    <position x="85.8833333333333" y="22.1744117647059"/>
+                    <rect x="0" y="0" width="90" height="13"/>
+                    <relativesize width="0.188415910676902" height="0.104585679806919" centerx="0.144207955338451" centery="0.122078936160144" posx="0.05" posy="0.0697860962566845"/>
+                    <transform m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1"/>
+                    <pen style="1" width="0" miterlimit="2" cap="16" joinStyle="64">
+                        <brush color="#000000" style="1"/>
+                    </pen>
+                    <brush color="#ffffff" style="1"/>
+                </legend>
+                <cartesianrender name="Cartesian Plot" type="1">
+                    <relation tag="current-I1 vs time (C19)"/>
+                </cartesianrender>
+                <plotaxis id="xaxis" visible="true" log="false" reversed="false" autobaseoffset="true" baseoffset="false" interpret="false" interpretation="1" display="4" majortickmode="5" minortickcount="5" autominortickcount="true" drawmajorticks="true" drawminorticks="true" drawmajorgridlines="true" drawminorgridlines="false" drawmajorgridlinecolor="#a0a0a4" drawminorgridlinecolor="#a0a0a4" drawmajorgridlinestyle="2" drawminorgridlinestyle="2" drawmajorgridlinewidth="1" drawminorgridlinewidth="1" significantdigits="9" rotation="0" zoommode="0">
+                    <plotmarkers xaxis="true" linecolor="#000000" linestyle="1" linewidth="1" curvemode="19911680"/>
+                </plotaxis>
+                <plotaxis id="yaxis" visible="true" log="false" reversed="false" autobaseoffset="true" baseoffset="false" interpret="false" interpretation="1" display="4" majortickmode="5" minortickcount="5" autominortickcount="true" drawmajorticks="true" drawminorticks="true" drawmajorgridlines="true" drawminorgridlines="false" drawmajorgridlinecolor="#a0a0a4" drawminorgridlinecolor="#a0a0a4" drawmajorgridlinestyle="2" drawminorgridlinestyle="2" drawmajorgridlinewidth="1" drawminorgridlinewidth="1" significantdigits="9" rotation="0" zoommode="1">
+                    <plotmarkers xaxis="false" linecolor="#000000" linestyle="1" linewidth="1" curvemode="0"/>
+                </plotaxis>
+                <plotlabel id="leftlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="rightlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="toplabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="bottomlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="numberlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <projectionrect x="0" y="-2.67561304693449" width="0.4" height="3.5569136853155"/>
+            </plot>
+            <plot tiedxzoom="false" tiedyzoom="false" leftlabelvisible="true" bottomlabelvisible="true" rightlabelvisible="true" toplabelvisible="true" globalfont="Sans Serif,11,-1,5,50,0,0,0,0,0" globalfontscale="8.13118223595458" globalfontcolor="#000000" showlegend="true" hidebottomaxislabel="false" hidetopaxislabel="false" hideleftaxislabel="false" hiderightaxislabel="false" initialPlotNum="17" name="Plot">
+                <position x="1118.33333333333" y="184.8"/>
+                <rect x="0" y="0" width="557.666666666667" height="181.8"/>
+                <relativesize width="0.331944444444444" height="0.198471615720524" centerx="0.831646825396825" centery="0.300982532751092" posx="0.665674603174603" posy="0.20174672489083"/>
+                <transform m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1"/>
+                <pen style="1" width="0" miterlimit="2" cap="16" joinStyle="64">
+                    <brush color="#000000" style="1"/>
+                </pen>
+                <brush color="#ffffff" style="1"/>
+                <legend auto="true" title="" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="4.87870934157275" verticaldisplay="false" name="Legend">
+                    <position x="85.8833333333333" y="22.1744117647059"/>
+                    <rect x="0" y="0" width="93" height="13"/>
+                    <relativesize width="0.194696441032798" height="0.104585679806919" centerx="0.147348220516399" centery="0.122078936160144" posx="0.05" posy="0.0697860962566845"/>
+                    <transform m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1"/>
+                    <pen style="1" width="0" miterlimit="2" cap="16" joinStyle="64">
+                        <brush color="#000000" style="1"/>
+                    </pen>
+                    <brush color="#ffffff" style="1"/>
+                </legend>
+                <cartesianrender name="Cartesian Plot" type="1">
+                    <relation tag="current-L1 vs time (C17)"/>
+                </cartesianrender>
+                <plotaxis id="xaxis" visible="true" log="false" reversed="false" autobaseoffset="true" baseoffset="false" interpret="false" interpretation="1" display="4" majortickmode="5" minortickcount="5" autominortickcount="true" drawmajorticks="true" drawminorticks="true" drawmajorgridlines="true" drawminorgridlines="false" drawmajorgridlinecolor="#a0a0a4" drawminorgridlinecolor="#a0a0a4" drawmajorgridlinestyle="2" drawminorgridlinestyle="2" drawmajorgridlinewidth="1" drawminorgridlinewidth="1" significantdigits="9" rotation="0" zoommode="0">
+                    <plotmarkers xaxis="true" linecolor="#000000" linestyle="1" linewidth="1" curvemode="26591584"/>
+                </plotaxis>
+                <plotaxis id="yaxis" visible="true" log="false" reversed="false" autobaseoffset="true" baseoffset="false" interpret="false" interpretation="1" display="4" majortickmode="5" minortickcount="5" autominortickcount="true" drawmajorticks="true" drawminorticks="true" drawmajorgridlines="true" drawminorgridlines="false" drawmajorgridlinecolor="#a0a0a4" drawminorgridlinecolor="#a0a0a4" drawmajorgridlinestyle="2" drawminorgridlinestyle="2" drawmajorgridlinewidth="1" drawminorgridlinewidth="1" significantdigits="9" rotation="0" zoommode="1">
+                    <plotmarkers xaxis="false" linecolor="#000000" linestyle="1" linewidth="1" curvemode="128"/>
+                </plotaxis>
+                <plotlabel id="leftlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="rightlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="toplabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="bottomlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="numberlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <projectionrect x="0" y="-2.67561304693449" width="0.4" height="3.5569136853155"/>
+            </plot>
+            <plot tiedxzoom="false" tiedyzoom="false" leftlabelvisible="true" bottomlabelvisible="true" rightlabelvisible="true" toplabelvisible="true" globalfont="Sans Serif,11,-1,5,50,0,0,0,0,0" globalfontscale="8.13118223595458" globalfontcolor="#000000" showlegend="true" hidebottomaxislabel="false" hidetopaxislabel="false" hideleftaxislabel="false" hiderightaxislabel="false" initialPlotNum="15" name="Plot">
+                <position x="3" y="184.8"/>
+                <rect x="0" y="0" width="557.666666666667" height="181.8"/>
+                <relativesize width="0.331944444444444" height="0.198471615720524" centerx="0.167757936507936" centery="0.300982532751092" posx="0.00178571428571429" posy="0.20174672489083"/>
+                <transform m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1"/>
+                <pen style="1" width="0" miterlimit="2" cap="16" joinStyle="64">
+                    <brush color="#000000" style="1"/>
+                </pen>
+                <brush color="#ffffff" style="1"/>
+                <legend auto="true" title="" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="4.87870934157275" verticaldisplay="false" name="Legend">
+                    <position x="85.8833333333333" y="22.1744117647059"/>
+                    <rect x="0" y="0" width="109" height="13"/>
+                    <relativesize width="0.228192602930914" height="0.104585679806919" centerx="0.164096301465457" centery="0.122078936160144" posx="0.05" posy="0.0697860962566845"/>
+                    <transform m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1"/>
+                    <pen style="1" width="0" miterlimit="2" cap="16" joinStyle="64">
+                        <brush color="#000000" style="1"/>
+                    </pen>
+                    <brush color="#ffffff" style="1"/>
+                </legend>
+                <cartesianrender name="Cartesian Plot" type="1">
+                    <relation tag="current-Cload vs time (C15)"/>
+                </cartesianrender>
+                <plotaxis id="xaxis" visible="true" log="false" reversed="false" autobaseoffset="true" baseoffset="false" interpret="false" interpretation="1" display="4" majortickmode="5" minortickcount="5" autominortickcount="true" drawmajorticks="true" drawminorticks="true" drawmajorgridlines="true" drawminorgridlines="false" drawmajorgridlinecolor="#a0a0a4" drawminorgridlinecolor="#a0a0a4" drawmajorgridlinestyle="2" drawminorgridlinestyle="2" drawmajorgridlinewidth="1" drawminorgridlinewidth="1" significantdigits="9" rotation="0" zoommode="0">
+                    <plotmarkers xaxis="true" linecolor="#000000" linestyle="1" linewidth="1" curvemode="6"/>
+                </plotaxis>
+                <plotaxis id="yaxis" visible="true" log="false" reversed="false" autobaseoffset="true" baseoffset="false" interpret="false" interpretation="1" display="4" majortickmode="5" minortickcount="5" autominortickcount="true" drawmajorticks="true" drawminorticks="true" drawmajorgridlines="true" drawminorgridlines="false" drawmajorgridlinecolor="#a0a0a4" drawminorgridlinecolor="#a0a0a4" drawmajorgridlinestyle="2" drawminorgridlinestyle="2" drawmajorgridlinewidth="1" drawminorgridlinewidth="1" significantdigits="9" rotation="0" zoommode="1">
+                    <plotmarkers xaxis="false" linecolor="#000000" linestyle="1" linewidth="1" curvemode="64"/>
+                </plotaxis>
+                <plotlabel id="leftlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="rightlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="toplabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="bottomlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="numberlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <projectionrect x="0" y="-2.70940427944631" width="0.4" height="4.97614547315534"/>
+            </plot>
+            <plot tiedxzoom="false" tiedyzoom="false" leftlabelvisible="true" bottomlabelvisible="true" rightlabelvisible="true" toplabelvisible="true" globalfont="Sans Serif,11,-1,5,50,0,0,0,0,0" globalfontscale="8.13118223595458" globalfontcolor="#000000" showlegend="true" hidebottomaxislabel="false" hidetopaxislabel="false" hideleftaxislabel="false" hiderightaxislabel="false" initialPlotNum="13" name="Plot">
+                <position x="560.666666666667" y="3"/>
+                <rect x="0" y="0" width="557.666666666667" height="181.8"/>
+                <relativesize width="0.331944444444444" height="0.198471615720524" centerx="0.499702380952381" centery="0.102510917030568" posx="0.333730158730159" posy="0.00327510917030568"/>
+                <transform m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1"/>
+                <pen style="1" width="0" miterlimit="2" cap="16" joinStyle="64">
+                    <brush color="#000000" style="1"/>
+                </pen>
+                <brush color="#ffffff" style="1"/>
+                <legend auto="true" title="" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="4.87870934157275" verticaldisplay="false" name="Legend">
+                    <position x="85.8833333333333" y="22.1744117647059"/>
+                    <rect x="0" y="0" width="108" height="13"/>
+                    <relativesize width="0.226099092812282" height="0.104585679806919" centerx="0.163049546406141" centery="0.122078936160144" posx="0.05" posy="0.0697860962566845"/>
+                    <transform m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1"/>
+                    <pen style="1" width="0" miterlimit="2" cap="16" joinStyle="64">
+                        <brush color="#000000" style="1"/>
+                    </pen>
+                    <brush color="#ffffff" style="1"/>
+                </legend>
+                <cartesianrender name="Cartesian Plot" type="1">
+                    <relation tag="current-Rload vs time (C13)"/>
+                </cartesianrender>
+                <plotaxis id="xaxis" visible="true" log="false" reversed="false" autobaseoffset="true" baseoffset="false" interpret="false" interpretation="1" display="4" majortickmode="5" minortickcount="5" autominortickcount="true" drawmajorticks="true" drawminorticks="true" drawmajorgridlines="true" drawminorgridlines="false" drawmajorgridlinecolor="#a0a0a4" drawminorgridlinecolor="#a0a0a4" drawmajorgridlinestyle="2" drawminorgridlinestyle="2" drawmajorgridlinewidth="1" drawminorgridlinewidth="1" significantdigits="9" rotation="0" zoommode="0">
+                    <plotmarkers xaxis="true" linecolor="#000000" linestyle="1" linewidth="1" curvemode="3"/>
+                </plotaxis>
+                <plotaxis id="yaxis" visible="true" log="false" reversed="false" autobaseoffset="true" baseoffset="false" interpret="false" interpretation="1" display="4" majortickmode="5" minortickcount="5" autominortickcount="true" drawmajorticks="true" drawminorticks="true" drawmajorgridlines="true" drawminorgridlines="false" drawmajorgridlinecolor="#a0a0a4" drawminorgridlinecolor="#a0a0a4" drawmajorgridlinestyle="2" drawminorgridlinestyle="2" drawmajorgridlinewidth="1" drawminorgridlinewidth="1" significantdigits="9" rotation="0" zoommode="1">
+                    <plotmarkers xaxis="false" linecolor="#000000" linestyle="1" linewidth="1" curvemode="64"/>
+                </plotaxis>
+                <plotlabel id="leftlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="rightlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="toplabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="bottomlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="numberlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <projectionrect x="0" y="-3.54296591187224" width="0.4" height="6.29883633472888"/>
+            </plot>
+            <plot tiedxzoom="false" tiedyzoom="false" leftlabelvisible="true" bottomlabelvisible="true" rightlabelvisible="true" toplabelvisible="true" globalfont="Sans Serif,11,-1,5,50,0,0,0,0,0" globalfontscale="8.13118223595458" globalfontcolor="#000000" showlegend="true" hidebottomaxislabel="false" hidetopaxislabel="false" hideleftaxislabel="false" hiderightaxislabel="false" initialPlotNum="12" name="Plot">
+                <position x="3" y="3"/>
+                <rect x="0" y="0" width="557.666666666667" height="181.8"/>
+                <relativesize width="0.331944444444444" height="0.198471615720524" centerx="0.167757936507936" centery="0.102510917030568" posx="0.00178571428571429" posy="0.00327510917030568"/>
+                <transform m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1"/>
+                <pen style="1" width="0" miterlimit="2" cap="16" joinStyle="64">
+                    <brush color="#000000" style="1"/>
+                </pen>
+                <brush color="#ffffff" style="1"/>
+                <legend auto="true" title="" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="4.87870934157275" verticaldisplay="false" name="Legend">
+                    <position x="85.8833333333333" y="22.1744117647059"/>
+                    <rect x="0" y="0" width="93" height="13"/>
+                    <relativesize width="0.194696441032798" height="0.104585679806919" centerx="0.147348220516399" centery="0.122078936160144" posx="0.05" posy="0.0697860962566845"/>
+                    <transform m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1"/>
+                    <pen style="1" width="0" miterlimit="2" cap="16" joinStyle="64">
+                        <brush color="#000000" style="1"/>
+                    </pen>
+                    <brush color="#ffffff" style="1"/>
+                </legend>
+                <cartesianrender name="Cartesian Plot" type="1">
+                    <relation tag="current-V1 vs time (C12)"/>
+                </cartesianrender>
+                <plotaxis id="xaxis" visible="true" log="false" reversed="false" autobaseoffset="true" baseoffset="false" interpret="false" interpretation="1" display="4" majortickmode="5" minortickcount="5" autominortickcount="true" drawmajorticks="true" drawminorticks="true" drawmajorgridlines="true" drawminorgridlines="false" drawmajorgridlinecolor="#a0a0a4" drawminorgridlinecolor="#a0a0a4" drawmajorgridlinestyle="2" drawminorgridlinestyle="2" drawmajorgridlinewidth="1" drawminorgridlinewidth="1" significantdigits="9" rotation="0" zoommode="0">
+                    <plotmarkers xaxis="true" linecolor="#000000" linestyle="1" linewidth="1" curvemode="3"/>
+                </plotaxis>
+                <plotaxis id="yaxis" visible="true" log="false" reversed="false" autobaseoffset="true" baseoffset="false" interpret="false" interpretation="1" display="4" majortickmode="5" minortickcount="5" autominortickcount="true" drawmajorticks="true" drawminorticks="true" drawmajorgridlines="true" drawminorgridlines="false" drawmajorgridlinecolor="#a0a0a4" drawminorgridlinecolor="#a0a0a4" drawmajorgridlinestyle="2" drawminorgridlinestyle="2" drawmajorgridlinewidth="1" drawminorgridlinewidth="1" significantdigits="9" rotation="0" zoommode="1">
+                    <plotmarkers xaxis="false" linecolor="#000000" linestyle="1" linewidth="1" curvemode="12263072"/>
+                </plotaxis>
+                <plotlabel id="leftlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="rightlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="toplabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="bottomlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="numberlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <projectionrect x="0" y="-2.67561304693449" width="0.4" height="3.5569136853155"/>
+            </plot>
+            <plot tiedxzoom="false" tiedyzoom="false" leftlabelvisible="true" bottomlabelvisible="true" rightlabelvisible="true" toplabelvisible="true" globalfont="Sans Serif,11,-1,5,50,0,0,0,0,0" globalfontscale="8.13118223595458" globalfontcolor="#000000" showlegend="true" hidebottomaxislabel="false" hidetopaxislabel="false" hideleftaxislabel="false" hiderightaxislabel="false" initialPlotNum="14" name="Plot">
+                <position x="1118.33333333333" y="3"/>
+                <rect x="0" y="0" width="557.666666666667" height="181.8"/>
+                <relativesize width="0.331944444444444" height="0.198471615720524" centerx="0.831646825396825" centery="0.102510917030568" posx="0.665674603174603" posy="0.00327510917030568"/>
+                <transform m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1"/>
+                <pen style="1" width="0" miterlimit="2" cap="16" joinStyle="64">
+                    <brush color="#000000" style="1"/>
+                </pen>
+                <brush color="#ffffff" style="1"/>
+                <legend auto="true" title="" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="4.87870934157275" verticaldisplay="false" name="Legend">
+                    <position x="85.8833333333333" y="22.1744117647059"/>
+                    <rect x="0" y="0" width="107" height="13"/>
+                    <relativesize width="0.22400558269365" height="0.104585679806919" centerx="0.162002791346825" centery="0.122078936160144" posx="0.05" posy="0.0697860962566845"/>
+                    <transform m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1"/>
+                    <pen style="1" width="0" miterlimit="2" cap="16" joinStyle="64">
+                        <brush color="#000000" style="1"/>
+                    </pen>
+                    <brush color="#ffffff" style="1"/>
+                </legend>
+                <cartesianrender name="Cartesian Plot" type="1">
+                    <relation tag="current-Lload vs time (C14)"/>
+                </cartesianrender>
+                <plotaxis id="xaxis" visible="true" log="false" reversed="false" autobaseoffset="true" baseoffset="false" interpret="false" interpretation="1" display="4" majortickmode="5" minortickcount="5" autominortickcount="true" drawmajorticks="true" drawminorticks="true" drawmajorgridlines="true" drawminorgridlines="false" drawmajorgridlinecolor="#a0a0a4" drawminorgridlinecolor="#a0a0a4" drawmajorgridlinestyle="2" drawminorgridlinestyle="2" drawmajorgridlinewidth="1" drawminorgridlinewidth="1" significantdigits="9" rotation="0" zoommode="0">
+                    <plotmarkers xaxis="true" linecolor="#000000" linestyle="1" linewidth="1" curvemode="3"/>
+                </plotaxis>
+                <plotaxis id="yaxis" visible="true" log="false" reversed="false" autobaseoffset="true" baseoffset="false" interpret="false" interpretation="1" display="4" majortickmode="5" minortickcount="5" autominortickcount="true" drawmajorticks="true" drawminorticks="true" drawmajorgridlines="true" drawminorgridlines="false" drawmajorgridlinecolor="#a0a0a4" drawminorgridlinecolor="#a0a0a4" drawmajorgridlinestyle="2" drawminorgridlinestyle="2" drawmajorgridlinewidth="1" drawminorgridlinewidth="1" significantdigits="9" rotation="0" zoommode="1">
+                    <plotmarkers xaxis="false" linecolor="#000000" linestyle="1" linewidth="1" curvemode="27434144"/>
+                </plotaxis>
+                <plotlabel id="leftlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="rightlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="toplabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="bottomlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="numberlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <projectionrect x="0" y="-3.54296591187223" width="0.4" height="6.29883633472888"/>
+            </plot>
+            <plot tiedxzoom="false" tiedyzoom="false" leftlabelvisible="true" bottomlabelvisible="true" rightlabelvisible="true" toplabelvisible="true" globalfont="Sans Serif,11,-1,5,50,0,0,0,0,0" globalfontscale="8.13118223595458" globalfontcolor="#000000" showlegend="true" hidebottomaxislabel="false" hidetopaxislabel="false" hideleftaxislabel="false" hiderightaxislabel="false" initialPlotNum="16" name="Plot">
+                <position x="560.666666666667" y="184.8"/>
+                <rect x="0" y="0" width="557.666666666667" height="181.8"/>
+                <relativesize width="0.331944444444444" height="0.198471615720524" centerx="0.499702380952381" centery="0.300982532751092" posx="0.333730158730159" posy="0.20174672489083"/>
+                <transform m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1"/>
+                <pen style="1" width="0" miterlimit="2" cap="16" joinStyle="64">
+                    <brush color="#000000" style="1"/>
+                </pen>
+                <brush color="#ffffff" style="1"/>
+                <legend auto="true" title="" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="4.87870934157275" verticaldisplay="false" name="Legend">
+                    <position x="85.8833333333333" y="22.1744117647059"/>
+                    <rect x="0" y="0" width="94" height="13"/>
+                    <relativesize width="0.196789951151431" height="0.104585679806919" centerx="0.148394975575715" centery="0.122078936160144" posx="0.05" posy="0.0697860962566845"/>
+                    <transform m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1"/>
+                    <pen style="1" width="0" miterlimit="2" cap="16" joinStyle="64">
+                        <brush color="#000000" style="1"/>
+                    </pen>
+                    <brush color="#ffffff" style="1"/>
+                </legend>
+                <cartesianrender name="Cartesian Plot" type="1">
+                    <relation tag="current-R1 vs time (C16)"/>
+                </cartesianrender>
+                <plotaxis id="xaxis" visible="true" log="false" reversed="false" autobaseoffset="true" baseoffset="false" interpret="false" interpretation="1" display="4" majortickmode="5" minortickcount="5" autominortickcount="true" drawmajorticks="true" drawminorticks="true" drawmajorgridlines="true" drawminorgridlines="false" drawmajorgridlinecolor="#a0a0a4" drawminorgridlinecolor="#a0a0a4" drawmajorgridlinestyle="2" drawminorgridlinestyle="2" drawmajorgridlinewidth="1" drawminorgridlinewidth="1" significantdigits="9" rotation="0" zoommode="0">
+                    <plotmarkers xaxis="true" linecolor="#000000" linestyle="1" linewidth="1" curvemode="4"/>
+                </plotaxis>
+                <plotaxis id="yaxis" visible="true" log="false" reversed="false" autobaseoffset="true" baseoffset="false" interpret="false" interpretation="1" display="4" majortickmode="5" minortickcount="5" autominortickcount="true" drawmajorticks="true" drawminorticks="true" drawmajorgridlines="true" drawminorgridlines="false" drawmajorgridlinecolor="#a0a0a4" drawminorgridlinecolor="#a0a0a4" drawmajorgridlinestyle="2" drawminorgridlinestyle="2" drawmajorgridlinewidth="1" drawminorgridlinewidth="1" significantdigits="9" rotation="0" zoommode="1">
+                    <plotmarkers xaxis="false" linecolor="#000000" linestyle="1" linewidth="1" curvemode="49"/>
+                </plotaxis>
+                <plotlabel id="leftlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="rightlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="toplabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="bottomlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="numberlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <projectionrect x="0" y="-2.67561304693449" width="0.4" height="3.5569136853155"/>
+            </plot>
+            <plot tiedxzoom="false" tiedyzoom="false" leftlabelvisible="true" bottomlabelvisible="true" rightlabelvisible="true" toplabelvisible="true" globalfont="Sans Serif,11,-1,5,50,0,0,0,0,0" globalfontscale="8.13118223595458" globalfontcolor="#000000" showlegend="true" hidebottomaxislabel="false" hidetopaxislabel="false" hideleftaxislabel="false" hiderightaxislabel="false" initialPlotNum="18" name="Plot">
+                <position x="3" y="366.6"/>
+                <rect x="0" y="0" width="557.666666666667" height="181.8"/>
+                <relativesize width="0.331944444444444" height="0.198471615720524" centerx="0.167757936507936" centery="0.499454148471616" posx="0.00178571428571429" posy="0.400218340611354"/>
+                <transform m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1"/>
+                <pen style="1" width="0" miterlimit="2" cap="16" joinStyle="64">
+                    <brush color="#000000" style="1"/>
+                </pen>
+                <brush color="#ffffff" style="1"/>
+                <legend auto="true" title="" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="4.87870934157275" verticaldisplay="false" name="Legend">
+                    <position x="85.8833333333333" y="22.1744117647059"/>
+                    <rect x="0" y="0" width="95" height="13"/>
+                    <relativesize width="0.198883461270063" height="0.104585679806919" centerx="0.149441730635031" centery="0.122078936160144" posx="0.05" posy="0.0697860962566845"/>
+                    <transform m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1"/>
+                    <pen style="1" width="0" miterlimit="2" cap="16" joinStyle="64">
+                        <brush color="#000000" style="1"/>
+                    </pen>
+                    <brush color="#ffffff" style="1"/>
+                </legend>
+                <cartesianrender name="Cartesian Plot" type="1">
+                    <relation tag="current-G1 vs time (C18)"/>
+                </cartesianrender>
+                <plotaxis id="xaxis" visible="true" log="false" reversed="false" autobaseoffset="true" baseoffset="false" interpret="false" interpretation="1" display="4" majortickmode="5" minortickcount="5" autominortickcount="true" drawmajorticks="true" drawminorticks="true" drawmajorgridlines="true" drawminorgridlines="false" drawmajorgridlinecolor="#a0a0a4" drawminorgridlinecolor="#a0a0a4" drawmajorgridlinestyle="2" drawminorgridlinestyle="2" drawmajorgridlinewidth="1" drawminorgridlinewidth="1" significantdigits="9" rotation="0" zoommode="0">
+                    <plotmarkers xaxis="true" linecolor="#000000" linestyle="1" linewidth="1" curvemode="0"/>
+                </plotaxis>
+                <plotaxis id="yaxis" visible="true" log="false" reversed="false" autobaseoffset="true" baseoffset="false" interpret="false" interpretation="1" display="4" majortickmode="5" minortickcount="5" autominortickcount="true" drawmajorticks="true" drawminorticks="true" drawmajorgridlines="true" drawminorgridlines="false" drawmajorgridlinecolor="#a0a0a4" drawminorgridlinecolor="#a0a0a4" drawmajorgridlinestyle="2" drawminorgridlinestyle="2" drawmajorgridlinewidth="1" drawminorgridlinewidth="1" significantdigits="9" rotation="0" zoommode="1">
+                    <plotmarkers xaxis="false" linecolor="#000000" linestyle="1" linewidth="1" curvemode="0"/>
+                </plotaxis>
+                <plotlabel id="leftlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="rightlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="toplabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="bottomlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="numberlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <projectionrect x="0" y="-3.54296591187223" width="0.4" height="6.29883633472888"/>
+            </plot>
+            <plot tiedxzoom="false" tiedyzoom="false" leftlabelvisible="true" bottomlabelvisible="true" rightlabelvisible="true" toplabelvisible="true" globalfont="Sans Serif,11,-1,5,50,0,0,0,0,0" globalfontscale="8.13118223595458" globalfontcolor="#000000" showlegend="true" hidebottomaxislabel="false" hidetopaxislabel="false" hideleftaxislabel="false" hiderightaxislabel="false" initialPlotNum="20" name="Plot">
+                <position x="1118.33333333333" y="366.6"/>
+                <rect x="0" y="0" width="557.666666666667" height="181.8"/>
+                <relativesize width="0.331944444444444" height="0.198471615720524" centerx="0.831646825396825" centery="0.499454148471616" posx="0.665674603174603" posy="0.400218340611354"/>
+                <transform m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1"/>
+                <pen style="1" width="0" miterlimit="2" cap="16" joinStyle="64">
+                    <brush color="#000000" style="1"/>
+                </pen>
+                <brush color="#ffffff" style="1"/>
+                <legend auto="true" title="" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="4.87870934157275" verticaldisplay="false" name="Legend">
+                    <position x="85.8833333333333" y="22.1744117647059"/>
+                    <rect x="0" y="0" width="96" height="13"/>
+                    <relativesize width="0.200976971388695" height="0.104585679806919" centerx="0.150488485694348" centery="0.122078936160144" posx="0.05" posy="0.0697860962566845"/>
+                    <transform m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1"/>
+                    <pen style="1" width="0" miterlimit="2" cap="16" joinStyle="64">
+                        <brush color="#000000" style="1"/>
+                    </pen>
+                    <brush color="#ffffff" style="1"/>
+                </legend>
+                <cartesianrender name="Cartesian Plot" type="1">
+                    <relation tag="voltage-N1 vs time (C20)"/>
+                </cartesianrender>
+                <plotaxis id="xaxis" visible="true" log="false" reversed="false" autobaseoffset="true" baseoffset="false" interpret="false" interpretation="1" display="4" majortickmode="5" minortickcount="5" autominortickcount="true" drawmajorticks="true" drawminorticks="true" drawmajorgridlines="true" drawminorgridlines="false" drawmajorgridlinecolor="#a0a0a4" drawminorgridlinecolor="#a0a0a4" drawmajorgridlinestyle="2" drawminorgridlinestyle="2" drawmajorgridlinewidth="1" drawminorgridlinewidth="1" significantdigits="9" rotation="0" zoommode="0">
+                    <plotmarkers xaxis="true" linecolor="#000000" linestyle="1" linewidth="1" curvemode="-1150003815"/>
+                </plotaxis>
+                <plotaxis id="yaxis" visible="true" log="false" reversed="false" autobaseoffset="true" baseoffset="false" interpret="false" interpretation="1" display="4" majortickmode="5" minortickcount="5" autominortickcount="true" drawmajorticks="true" drawminorticks="true" drawmajorgridlines="true" drawminorgridlines="false" drawmajorgridlinecolor="#a0a0a4" drawminorgridlinecolor="#a0a0a4" drawmajorgridlinestyle="2" drawminorgridlinestyle="2" drawmajorgridlinewidth="1" drawminorgridlinewidth="1" significantdigits="9" rotation="0" zoommode="1">
+                    <plotmarkers xaxis="false" linecolor="#000000" linestyle="1" linewidth="1" curvemode="45189970"/>
+                </plotaxis>
+                <plotlabel id="leftlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="rightlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="toplabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="bottomlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="numberlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <projectionrect x="0" y="-326.55" width="0.4" height="653.1"/>
+            </plot>
+            <plot tiedxzoom="false" tiedyzoom="false" leftlabelvisible="true" bottomlabelvisible="true" rightlabelvisible="true" toplabelvisible="true" globalfont="Sans Serif,11,-1,5,50,0,0,0,0,0" globalfontscale="8.13118223595458" globalfontcolor="#000000" showlegend="true" hidebottomaxislabel="false" hidetopaxislabel="false" hideleftaxislabel="false" hiderightaxislabel="false" initialPlotNum="22" name="Plot">
+                <position x="560.666666666667" y="548.4"/>
+                <rect x="0" y="0" width="557.666666666667" height="181.8"/>
+                <relativesize width="0.331944444444444" height="0.198471615720524" centerx="0.499702380952381" centery="0.69792576419214" posx="0.333730158730159" posy="0.598689956331878"/>
+                <transform m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1"/>
+                <pen style="1" width="0" miterlimit="2" cap="16" joinStyle="64">
+                    <brush color="#000000" style="1"/>
+                </pen>
+                <brush color="#ffffff" style="1"/>
+                <legend auto="true" title="" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="4.87870934157275" verticaldisplay="false" name="Legend">
+                    <position x="85.8833333333333" y="22.1744117647059"/>
+                    <rect x="0" y="0" width="96" height="13"/>
+                    <relativesize width="0.200976971388695" height="0.104585679806919" centerx="0.150488485694348" centery="0.122078936160144" posx="0.05" posy="0.0697860962566845"/>
+                    <transform m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1"/>
+                    <pen style="1" width="0" miterlimit="2" cap="16" joinStyle="64">
+                        <brush color="#000000" style="1"/>
+                    </pen>
+                    <brush color="#ffffff" style="1"/>
+                </legend>
+                <cartesianrender name="Cartesian Plot" type="1">
+                    <relation tag="voltage-N3 vs time (C22)"/>
+                </cartesianrender>
+                <plotaxis id="xaxis" visible="true" log="false" reversed="false" autobaseoffset="true" baseoffset="false" interpret="false" interpretation="1" display="4" majortickmode="5" minortickcount="5" autominortickcount="true" drawmajorticks="true" drawminorticks="true" drawmajorgridlines="true" drawminorgridlines="false" drawmajorgridlinecolor="#a0a0a4" drawminorgridlinecolor="#a0a0a4" drawmajorgridlinestyle="2" drawminorgridlinestyle="2" drawmajorgridlinewidth="1" drawminorgridlinewidth="1" significantdigits="9" rotation="0" zoommode="0">
+                    <plotmarkers xaxis="true" linecolor="#000000" linestyle="1" linewidth="1" curvemode="3"/>
+                </plotaxis>
+                <plotaxis id="yaxis" visible="true" log="false" reversed="false" autobaseoffset="true" baseoffset="false" interpret="false" interpretation="1" display="4" majortickmode="5" minortickcount="5" autominortickcount="true" drawmajorticks="true" drawminorticks="true" drawmajorgridlines="true" drawminorgridlines="false" drawmajorgridlinecolor="#a0a0a4" drawminorgridlinecolor="#a0a0a4" drawmajorgridlinestyle="2" drawminorgridlinestyle="2" drawmajorgridlinewidth="1" drawminorgridlinewidth="1" significantdigits="9" rotation="0" zoommode="1">
+                    <plotmarkers xaxis="false" linecolor="#000000" linestyle="1" linewidth="1" curvemode="1962975094"/>
+                </plotaxis>
+                <plotlabel id="leftlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="rightlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="toplabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="bottomlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="numberlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <projectionrect x="0" y="-326.549999999935" width="0.4" height="653.099999999869"/>
+            </plot>
+            <plot tiedxzoom="false" tiedyzoom="false" leftlabelvisible="true" bottomlabelvisible="true" rightlabelvisible="true" toplabelvisible="true" globalfont="Sans Serif,11,-1,5,50,0,0,0,0,0" globalfontscale="8.13118223595458" globalfontcolor="#000000" showlegend="true" hidebottomaxislabel="false" hidetopaxislabel="false" hideleftaxislabel="false" hiderightaxislabel="false" initialPlotNum="24" name="Plot">
+                <position x="3" y="730.2"/>
+                <rect x="0" y="0" width="557.666666666667" height="181.8"/>
+                <relativesize width="0.331944444444444" height="0.198471615720524" centerx="0.167757936507936" centery="0.896397379912664" posx="0.00178571428571429" posy="0.797161572052402"/>
+                <transform m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1"/>
+                <pen style="1" width="0" miterlimit="2" cap="16" joinStyle="64">
+                    <brush color="#000000" style="1"/>
+                </pen>
+                <brush color="#ffffff" style="1"/>
+                <legend auto="true" title="" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="4.87870934157275" verticaldisplay="false" name="Legend">
+                    <position x="85.8833333333333" y="22.1744117647059"/>
+                    <rect x="0" y="0" width="96" height="13"/>
+                    <relativesize width="0.200976971388695" height="0.104585679806919" centerx="0.150488485694348" centery="0.122078936160144" posx="0.05" posy="0.0697860962566845"/>
+                    <transform m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1"/>
+                    <pen style="1" width="0" miterlimit="2" cap="16" joinStyle="64">
+                        <brush color="#000000" style="1"/>
+                    </pen>
+                    <brush color="#ffffff" style="1"/>
+                </legend>
+                <cartesianrender name="Cartesian Plot" type="1">
+                    <relation tag="voltage-N5 vs time (C24)"/>
+                </cartesianrender>
+                <plotaxis id="xaxis" visible="true" log="false" reversed="false" autobaseoffset="true" baseoffset="false" interpret="false" interpretation="1" display="4" majortickmode="5" minortickcount="5" autominortickcount="true" drawmajorticks="true" drawminorticks="true" drawmajorgridlines="true" drawminorgridlines="false" drawmajorgridlinecolor="#a0a0a4" drawminorgridlinecolor="#a0a0a4" drawmajorgridlinestyle="2" drawminorgridlinestyle="2" drawmajorgridlinewidth="1" drawminorgridlinewidth="1" significantdigits="9" rotation="0" zoommode="0">
+                    <plotmarkers xaxis="true" linecolor="#000000" linestyle="1" linewidth="1" curvemode="-86946239"/>
+                </plotaxis>
+                <plotaxis id="yaxis" visible="true" log="false" reversed="false" autobaseoffset="true" baseoffset="false" interpret="false" interpretation="1" display="4" majortickmode="5" minortickcount="5" autominortickcount="true" drawmajorticks="true" drawminorticks="true" drawmajorgridlines="true" drawminorgridlines="false" drawmajorgridlinecolor="#a0a0a4" drawminorgridlinecolor="#a0a0a4" drawmajorgridlinestyle="2" drawminorgridlinestyle="2" drawmajorgridlinewidth="1" drawminorgridlinewidth="1" significantdigits="9" rotation="0" zoommode="1">
+                    <plotmarkers xaxis="false" linecolor="#000000" linestyle="1" linewidth="1" curvemode="1071943941"/>
+                </plotaxis>
+                <plotlabel id="leftlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="rightlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="toplabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="bottomlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="numberlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <projectionrect x="0" y="-321.173955962647" width="0.4" height="645.60402677375"/>
+            </plot>
+            <plot tiedxzoom="false" tiedyzoom="false" leftlabelvisible="true" bottomlabelvisible="true" rightlabelvisible="true" toplabelvisible="true" globalfont="Sans Serif,11,-1,5,50,0,0,0,0,0" globalfontscale="8.13118223595458" globalfontcolor="#000000" showlegend="true" hidebottomaxislabel="false" hidetopaxislabel="false" hideleftaxislabel="false" hiderightaxislabel="false" initialPlotNum="26" name="Plot">
+                <position x="1118.33333333333" y="730.2"/>
+                <rect x="0" y="0" width="557.666666666667" height="181.8"/>
+                <relativesize width="0.331944444444444" height="0.198471615720524" centerx="0.831646825396825" centery="0.896397379912664" posx="0.665674603174603" posy="0.797161572052402"/>
+                <transform m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1"/>
+                <pen style="1" width="0" miterlimit="2" cap="16" joinStyle="64">
+                    <brush color="#000000" style="1"/>
+                </pen>
+                <brush color="#ffffff" style="1"/>
+                <legend auto="true" title="" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="4.87870934157275" verticaldisplay="false" name="Legend">
+                    <position x="85.8833333333333" y="22.1744117647059"/>
+                    <rect x="0" y="0" width="102" height="13"/>
+                    <relativesize width="0.213538032100488" height="0.104585679806919" centerx="0.156769016050244" centery="0.122078936160144" posx="0.05" posy="0.0697860962566845"/>
+                    <transform m11="1" m12="0" m13="0" m21="0" m22="1" m23="0" m31="0" m32="0" m33="1"/>
+                    <pen style="1" width="0" miterlimit="2" cap="16" joinStyle="64">
+                        <brush color="#000000" style="1"/>
+                    </pen>
+                    <brush color="#ffffff" style="1"/>
+                </legend>
+                <cartesianrender name="Cartesian Plot" type="1">
+                    <relation tag="voltage-N10 vs time (C26)"/>
+                </cartesianrender>
+                <plotaxis id="xaxis" visible="true" log="false" reversed="false" autobaseoffset="true" baseoffset="false" interpret="false" interpretation="1" display="4" majortickmode="5" minortickcount="5" autominortickcount="true" drawmajorticks="true" drawminorticks="true" drawmajorgridlines="true" drawminorgridlines="false" drawmajorgridlinecolor="#a0a0a4" drawminorgridlinecolor="#a0a0a4" drawmajorgridlinestyle="2" drawminorgridlinestyle="2" drawmajorgridlinewidth="1" drawminorgridlinewidth="1" significantdigits="9" rotation="0" zoommode="0">
+                    <plotmarkers xaxis="true" linecolor="#000000" linestyle="1" linewidth="1" curvemode="-4015176"/>
+                </plotaxis>
+                <plotaxis id="yaxis" visible="true" log="false" reversed="false" autobaseoffset="true" baseoffset="false" interpret="false" interpretation="1" display="4" majortickmode="5" minortickcount="5" autominortickcount="true" drawmajorticks="true" drawminorticks="true" drawmajorgridlines="true" drawminorgridlines="false" drawmajorgridlinecolor="#a0a0a4" drawminorgridlinecolor="#a0a0a4" drawmajorgridlinestyle="2" drawminorgridlinestyle="2" drawmajorgridlinewidth="1" drawminorgridlinewidth="1" significantdigits="9" rotation="0" zoommode="1">
+                    <plotmarkers xaxis="false" linecolor="#000000" linestyle="1" linewidth="1" curvemode="-4015176"/>
+                </plotaxis>
+                <plotlabel id="leftlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="rightlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="toplabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="bottomlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <plotlabel id="numberlabel" visible="true" overridetext="" autolabel="true" font="Sans Serif,11,-1,5,50,0,0,0,0,0" fontscale="8.13118223595458" fontcolor="#000000" fontuseglobal="true"/>
+                <projectionrect x="0" y="-0.125" width="0.4" height="5.25"/>
+            </plot>
+        </view>
+    </graphics>
+</kst>

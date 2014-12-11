@@ -37,6 +37,12 @@
 ;;; exception handling
 ;;;
 
+(define-condition invalid-passive-element-in-coupling (error)
+  ((coupling-name :initarg :coupling-name :reader coupling-name)))
+
+(define-condition mismatched-number-of-coupling-values-vs-coupling-inductances-error (error)
+  ((coupling-name :initarg :coupling-name :reader coupling-name)))
+
 (define-condition  wrong-number-of-elements-for-coupling-error (error)
   ((element-name :initarg :element-name :reader element-name)))
 
@@ -308,7 +314,7 @@
 (defclass subcircuit-class (element-class)
   ((file-pathname
     :documentation "FILE-NAME for subcircuit definition."
-    :initarg :file-name
+    :initarg :file-pathname
     :initform ""
     :accessor subcircuit-class-file-pathname
     :accessor element-class-file-pathname)
@@ -429,16 +435,16 @@
     :initarg :date
     :initform (get-decoded-time)
     :accessor problem-class-date)
-   (netlist-file-name
+   (netlist-file-pathname
     :documentation "Main netlist file name."
-    :initarg :netlist-file-name
+    :initarg :netlist-file-pathname
     :initform ""
-    :accessor problem-class-netlist-file-name)
-   (log-file-name
+    :accessor problem-class-netlist-file-pathname)
+   (log-file-pathname
     :documentation "Log file name for simulation errors/info."
-    :initarg :log-file-name
+    :initarg :log-file-pathname
     :initform ""
-    :accessor problem-class-log-file-name)
+    :accessor problem-class-log-file-pathname)
    (netlist
     :documentation "Main netlist."
     :initarg :netlist
@@ -722,7 +728,7 @@
   "Create a sexp for subcircuit element: :NAME name [ :ID id ] :FILE-NAME file-name :NODES-LIST nodes-list"
   (let ((return-value (call-next-method object)))
     (when (pathnamep (subcircuit-class-file-pathname object))
-      (setf return-value (append return-value  (list :file-name (subcircuit-class-file-pathname object)))))
+      (setf return-value (append return-value  (list :file-pathname (subcircuit-class-file-pathname object)))))
     (when (subcircuit-class-nodes-list object)
       (setf return-value (append return-value (list :nodes-list (subcircuit-class-nodes-list object)))))
     return-value))
@@ -1169,7 +1175,7 @@
   (handler-case
       (let ((*package* (find-package :circuit-solver)))
 	(when debug-mode
-	  (format output "~a~%" file-name))
+	  (format output "~a~%" file-pathname))
 	(with-open-file (input-file-stream file-pathname :direction :input :if-does-not-exist nil)
 	  (if input-file-stream
 	      (objectify (read input-file-stream))
@@ -1394,14 +1400,19 @@
 	     (unless (eql (/ (* (length (coupling-class-elements-list element))
 				(1- (length (coupling-class-elements-list element)))) 2)
 			  (grid:dim0 (coupling-class-value element)))
-	       (error "~%Coupling ~a mismatched number of coupling values vs coupling inductances." (element-name element)))
-	     (dolist (inductance (coupling-class-elements-list element))
-	       (unless (inductance-class-p inductance)
-		 (error "~%Coupling ~a has got a non inductance element in it (~a).~%" (element-name element) (element-name inductance))
-		 (set error-found 6))))))
+	       (error 'mismatched-number-of-coupling-values-vs-coupling-inductances-error :coupling-name (element-class-name element)))
+	     (unless (check-objects (coupling-class-elements-list element) (list (where :class "inductance")
+										 (where :class "capacitance")))
+	       (error 'invalid-passive-element-in-coupling :coupling-name (element-class-name element))))))
 	error-found)
     (wrong-number-of-elements-for-coupling-error (condition)
       (format *error-output* "~%Less than coupling elements in ~a.~%" (element-name condition))
+      nil)
+    (mismatched-number-of-coupling-values-vs-coupling-inductances-error (condition)
+      (format *error-output "~%Coupling ~a mismatched number of coupling values vs coupling inductances." (coupling-name condition))
+      nil)
+    (invalid-passive-element-in-coupling (condition)
+      (format *error-output* "~%Invalid passive element in coupling ~a~%" (coupling-name condition))
       nil)))
 	      
 
@@ -1682,6 +1693,95 @@
       (format output "R =~%~a~%" r-matrix))
     r-matrix))
 
+(defmethod submatrix-update ((element passive-class) i matrix &optional &key (debug-mode nil) (output *standard-output*))
+  (handler-case
+      (let ((element-node-names-list (passive-class-nodes-list element))	   
+	    (j 0)
+	    (k 0))
+	(cond
+	  ((or (resistance-class-p element)
+	       (inductance-class-p element))
+	   (setf k 0)
+	   (dolist (element-node-name element-node-names-list)
+	     (let ((found-node (find-element (where :name element-node-name) nodes-list)))
+	       (unless found-node
+		 (error 'no-such-node-for-element-error :node-name element-node-name :element-name (element-class-name element)))
+	       (setf j (find-node-position element-node-name (exclude (list (where :class "reference")
+									    (where :class "gnd")
+									    (where :class "0")) nodes-list)))
+	       (unless (reference-class-node-p found-node)
+		 (setf (grid:gref g-matrix i j) (expt -1d0 k)))
+	       (incf k))))
+	  ((conductance-class-p element)
+	   (setf k 0)
+	   (dolist (element-node-name element-node-names-list)
+	     (let ((found-node (find-element (where :name element-node-name) nodes-list)))
+	       (unless found-node
+		 (error 'no-such-node-for-element-error :node-name element-node-name :element-name (element-class-name element)))
+	       (setf j (find-node-position element-node-name (exclude (list (where :class "reference")
+									    (where :class "gnd")
+									    (where :class "0")) nodes-list)))
+	       (unless (reference-class-node-p found-node)
+		 (setf (grid:gref g-matrix i j) (* (expt -1d0 k) (passive-class-value element))))
+	       (incf k)))))
+	matrix)
+    (no-such-node-for-element-error (condition)
+      (format *error-output* "No such node ~a for element ~a.~%" (node-name condition) (element-name condition))
+      nil)))    
+
+(defmethod submatrix-update ((element coupling-class) i matrix &optional &key (debug-mode nil) (output *standard-output*))
+  (handler-case
+      (let ((element-node-names-list (passive-class-nodes-list element))	   
+	    (j 0)
+	    (k 0))
+	(dolist (coupling-element (coupling-class-elements-list element))
+	  (typecase coupling-element
+	    (passive-class
+	     (let ((element-node-names-list (passive-class-nodes-list coupling-element)))
+	       (unless (and (inductance-class-p coupling-element)
+			    (capacitance-class-p coupling-element))
+		 (error 'mismatched-coupling-element :element-name (element-class-name element)))
+	       (setf k 0)
+	       (dolist (element-node-name element-node-names-list)
+		 (let ((found-node (find-element (where :name element-node-name) nodes-list)))
+		   (unless found-node
+		     (error 'no-such-node-for-element :node-name element-node-name :element-name (element-class-name coupling-element)))
+		   (setf j (find-node-position element-node-name (exclude (list (where :class "reference")
+										(where :class "gnd")												   
+										(where :class "0")) nodes-list)))
+		   (unless (reference-class-node-p found-node)
+		     (setf (grid:gref g-matrix i j) (expt -1d0 k)))
+		   (incf k)))))
+	    (t
+	     (error 'mismatched-coupling-element :element-name (element-class-name element)))))
+	matrix)
+    (no-such-node-for-element-error (condition)
+      (format *error-output* "No such node ~a for element ~a.~%" (node-name condition) (element-name condition))
+      nil)
+    (mismatched-coupling-element (condition)
+      (format *error-output* "Coupling ~a must contains only inductances or capacitances.~%" (element-name condition))
+      nil)))
+
+(defun apply-selectors (object selectors)
+  (cond
+    ((null selectors)
+     nil)
+    ((listp selectors)
+     (or (apply-selectors object (first selectors))
+	 (apply-selectors object (rest selectors))))
+    (t
+     (funcall selectors object))))
+
+(defun check-objects (objects selectors)
+  (cond
+    ((null objects)
+     t)
+    ((listp objects)
+     (and (check-objects (rest objects) selectors)
+	  (apply-selectors (first objects) selectors)))
+    (t
+     (apply-selectors (first objects) selectors))))
+	   
 ;;
 ;; update G matrix
 ;;
@@ -1734,7 +1834,8 @@
 	       (typecase coupling-element
 		 (passive-class
 		  (let ((element-node-names-list (passive-class-nodes-list coupling-element)))
-		    (unless (inductance-class-p coupling-element)
+		    (unless (or (inductance-class-p coupling-element)
+				(capacitance-class-p coupling-element))
 		      (error 'mismatched-coupling-element :element-name (element-class-name element)))
 		    (setf k 0)
 		    (dolist (element-node-name element-node-names-list)
@@ -2115,7 +2216,7 @@
 	   (setf element (evaluate-model element :debug-mode debug-mode :output output))))
 	element)
     (no-node-for-probe-error (condition)
-      (format *error-output* "No ~a node for probe ~a.~%" (node-name condition) (probe-name-condition)))
+      (format *error-output* "No ~a node for probe ~a.~%" (node-name condition) (probe-name condition)))
     (no-element-for-probe-error (condition)
       (format *error-output* "No ~a element for probe ~a.~%" (element-name condition) (probe-name-condition)))
     (undefined-probe-type-error (condition)

@@ -1,0 +1,94 @@
+;;
+;; single phase transformer
+;; Sn = 25000 VA
+;; V1n = 3000 V
+;; V2n = 250 V 
+;;
+
+(NETLIST
+	:NAME "t_250_380_60"
+	:ELEMENTS-LIST ((PASSIVE
+				:NAME "G0"
+				:CLASS "conductance"
+				:NODES-LIST ("N1" "N0")
+				:VALUE 1.731d-3)
+
+			(PASSIVE
+				:NAME "R1cc"
+				:CLASS "resistance"
+				:NODES-LIST ("N1" "N2")
+				:VALUE 7.5d0)
+
+			(PASSIVE
+				:NAME "L1cc"
+				:CLASS "inductance"
+				:NODES-LIST ("N2" "N3")
+				:VALUE 54.749d-3)
+
+			(PASSIVE
+				:NAME "R2cc"
+				:CLASS "resistance"
+				:NODES-LIST ("N4" "N5")
+				:VALUE 187d-3)
+
+			(PASSIVE
+				:NAME "L2cc"
+				:CLASS "inductance"
+				:NODES-LIST ("N5" "N6")
+				:VALUE 1.365d-3)
+
+			(COUPLING
+				:NAME "M"
+				:CLASS "transformational"
+				:VALUE #(1d0)
+				:ELEMENTS-LIST ((PASSIVE
+							:NAME "L1"
+							:CLASS "inductance"
+							:NODES-LIST ("N0" "N3")
+							:VALUE 1851d-3)
+
+						(PASSIVE
+							:NAME "L2"
+							:CLASS "inductance"
+							:NODES-LIST ("N7" "N4")
+							:VALUE 46.105d-3)))
+
+;;
+;; external connection nodes
+;;
+							
+			(NODE
+				:NAME "N0"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "N1"
+				:CLASS "v-i")
+			
+			(NODE
+				:NAME "N6"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "N7"
+				:CLASS "v-i")
+
+;;
+;; internal nodes
+;;
+
+			(NODE
+				:NAME "N2"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "N3"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "N4"
+				:CLASS "v-i")
+
+			(NODE
+				:NAME "N5"
+				:CLASS "v-i")))
