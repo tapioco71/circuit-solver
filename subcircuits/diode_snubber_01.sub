@@ -3,61 +3,61 @@
 ;;
 
 (NETLIST
-	:NAME "diode_snubber_01"
-	:ELEMENTS-LIST ((PASSIVE
-					  :NAME "D"
-					  :CLASS "conductance"
-					  :NODES-LIST ("A" "K")
-					  :MODEL (MODEL 
-							  :NAME "simple-diode"
-							  :FUNCTION-NAME "simple-diode-4"
-							  :CLASS "function"
-							  :PARAMETERS-LIST (:VT 252d-3 :N 1d0 :IS 1d-6 :ORDER 1)
-							  :PROBES-LIST ((PROBE 
-											  :NAME "diode-a"
-											  :CLASS "voltage-probe"
-											  :NODES-LIST ("A"))
+ :NAME "diode_snubber_01"
+ :ELEMENTS-LIST ((PASSIVE
+		  :NAME "D"
+		  :CLASS "conductance"
+		  :NODES-LIST ("A" "K")
+		  :MODEL (MODEL 
+			  :NAME "simple-diode"
+			  :FUNCTION-NAME "simple-diode-4"
+			  :CLASS "function"
+			  :PARAMETERS-LIST (:VT 252d-3 :N 1d0 :IS 1d-6 :ORDER 1)
+			  :PROBES-LIST ((PROBE 
+					 :NAME "diode-a"
+					 :CLASS "voltage-probe"
+					 :NODES-LIST ("A"))
 
-											(PROBE 
-											  :NAME "diode-k"
-											  :CLASS "voltage-probe"
-											  :NODES-LIST ("K")))
-					  :VALUE 0d0))
-					      
-					(PASSIVE
-					  :NAME "R"
-					  :CLASS "resistance"
-					  :NODES-LIST ("A" "N1")
-					  :VALUE 1d3)
+					(PROBE 
+					 :NAME "diode-k"
+					 :CLASS "voltage-probe"
+					 :NODES-LIST ("K")))
+			  :VALUE 0d0))
 					
-					(PASSIVE
-					  :NAME "C"
-					  :CLASS "capacitance"
-					  :NODES-LIST ("N1" "K")
-					  :VALUE 100d-9)
-					  
-					(PASSIVE
-					  :NAME "Cj"
-					  :CLASS "capacitance"
-					  :NODES-LIST ("A" "K")
-					  :VALUE 100d-12)
+		 (PASSIVE
+		  :NAME "R"
+		  :CLASS "resistance"
+		  :NODES-LIST ("A" "N1")
+		  :VALUE 1d3)
+		 
+		 (PASSIVE
+		  :NAME "C"
+		  :CLASS "capacitance"
+		  :NODES-LIST ("N1" "K")
+		  :VALUE 100d-9)
+		 
+		 (PASSIVE
+		  :NAME "Cj"
+		  :CLASS "capacitance"
+		  :NODES-LIST ("A" "K")
+		  :VALUE 100d-12)
 
-;;
-;; external connection nodes
-;;
+		 ;;
+		 ;; external connection nodes
+		 ;;
 
-					(NODE
-					  :NAME "A"
-					  :CLASS "v-i")
+		 (NODE
+		  :NAME "A"
+		  :CLASS "v-i")
 
-					(NODE
-					  :NAME "K"
-					  :CLASS "v-i")
+		 (NODE
+		  :NAME "K"
+		  :CLASS "v-i")
 
-;;
-;; internal nodes
-;;
+		 ;;
+		 ;; internal nodes
+		 ;;
 
-					(NODE
-					  :NAME "N1"
-					  :CLASS "v-i")))
+		 (NODE
+		  :NAME "N1"
+		  :CLASS "v-i")))

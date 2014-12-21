@@ -1,0 +1,81 @@
+;;
+;; diode with snubber R1 = 1 kOhm, C1 = 100 nF
+;;
+
+(NETLIST
+ :NAME "diode_snubber_01"
+ :ELEMENTS-LIST ((PASSIVE
+		  :NAME "Dc"
+		  :CLASS "conductance"
+		  :NODES-LIST ("B" "C")
+		  :MODEL (MODEL 
+			  :NAME "simple-diode"
+			  :FUNCTION-NAME "simple-diode-4"
+			  :CLASS "function"
+			  :PARAMETERS-LIST (:VT 252d-3 :N 1d0 :IS 1d-6 :ORDER 1)
+			  :PROBES-LIST ((PROBE 
+					 :NAME "diode-a"
+					 :CLASS "voltage-probe"
+					 :NODES-LIST ("B"))
+					(PROBE 
+					 :NAME "diode-k"
+					 :CLASS "voltage-probe"
+					 :NODES-LIST ("C")))
+			  :VALUE 0d0))
+
+		 (PASSIVE
+		  :NAME "De"
+		  :CLASS "conductance"
+		  :NODES-LIST ("B" "E")
+		  :MODEL (MODEL 
+			  :NAME "simple-diode"
+			  :FUNCTION-NAME "simple-diode-4"
+			  :CLASS "function"
+			  :PARAMETERS-LIST (:VT 252d-3 :N 1d0 :IS 1d-6 :ORDER 1)
+			  :PROBES-LIST ((PROBE 
+					 :NAME "diode-a"
+					 :CLASS "voltage-probe"
+					 :NODES-LIST ("B"))
+					(PROBE 
+					 :NAME "diode-k"
+					 :CLASS "voltage-probe"
+					 :NODES-LIST ("E")))
+			  :VALUE 0d0))
+					 
+		 (SOURCE
+		  :NAME "It"
+		  :CLASS "current-source"
+		  :MODEL (MODEL :NAME "ebers-moll"
+				:FUNCTION-NAME "ebers-moll"
+				:CLASS "function"
+				:PARAMETERS-LIST (:IS 1d-12 :VT 0.6d0)
+				:PROBES-LIST ((PROBE
+					       :NAME "P1"
+					       :CLASS "voltage-probe"
+					       :NODES-LIST ("C"))
+					      (PROBE
+					       :NAME "P2"
+					       :CLASS "voltage-probe"
+					       :NODES-LIST ("B"))
+					      (PROBE
+					       :NAME "P3"
+					       :CLASS "voltage-probe"
+					       :NODES-LIST ("E"))))		 
+		  :NODES-LIST ("C" "E"))
+		 
+		 ;;
+		 ;; external connection nodes
+		 ;;
+
+		 (NODE
+		  :NAME "C"
+		  :CLASS "v-i")
+
+		 (NODE
+		  :NAME "B"
+		  :CLASS "v-i")
+
+		 (NODE
+		  :NAME "E"
+		  :CLASS "v-i")))
+		

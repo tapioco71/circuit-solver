@@ -313,3 +313,15 @@
     (when (< return-value off-conductance)
       (setf return-value off-conductance))
     return-value))
+
+(defun ebers-moll (&optional &key parameters state)
+  (let* ((vc (pop state))
+	 (vb (pop state))
+	 (ve (pop state))
+	 (is (pop state))
+	 (vt (pop state))
+	 (vbe (- vb ve))
+	 (vbc (- vb vc)))
+    (* is (- (exp (/ vbe vt)) (exp (/ vbc vt))))))
+	      
+	     

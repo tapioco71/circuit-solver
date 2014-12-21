@@ -2426,9 +2426,9 @@
 		     (setf *time* (+ t0 (* *h* (float i))))
 		     (when (and debug-mode (not progress-bar))
 		       (format output "~2%----~%Iteration #~a~%time = ~a~%----~2%" i *time*))       
-		   ;;
-		   ;; Update matrices 
-		   ;;	      
+		     ;;
+		     ;; Update matrices 
+		     ;;	      
 		     (dolist (element (netlist-class-elements-list netlist))
 		       (setf element (update-model element (netlist-class-elements-list netlist) y-old-vector :debug-mode debug-mode :output output)))
 		     (setf p-matrix (update-p-matrix p-matrix (netlist-class-elements-list netlist) :debug-mode debug-mode :output output)
@@ -2453,7 +2453,8 @@
 			     (format output "~&Y(n) =~%~a~%" y-old-vector))
 			   (select-probes netlist y-new-vector output-file-stream :debug-mode debug-mode :output output)
 			   (setf y-old-vector y-new-vector)))
-		       (when (and (eql nil debug-mode) progress-bar)
+		       (when (and (not debug-mode) 
+				  progress-bar)
 			 (print-progress-bar i 2 20 :output output))))
 		(when output-file-stream
 		  (close output-file-stream))
