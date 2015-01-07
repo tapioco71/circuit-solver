@@ -65,7 +65,7 @@
 		  :NAME "Cl"
 		  :CLASS "capacitance"
 		  :NODES-LIST ("N5" "N6")
-		  :VALUE 10d-6)
+		  :VALUE 22d-6)
 
 		 (PASSIVE
 		  :NAME "Rload"
