@@ -1,4 +1,4 @@
-;;;; circuit_solver.asd
+;;;; circuit-solver.asd
 
 (asdf:defsystem #:circuit-solver
   :name "circuit-solver"
