@@ -6,7 +6,7 @@
 				:NODES-LIST ("GND" "N1")
 				:VALUE 2.4d0)
 
-			(SOURCE 
+			(SOURCE
 				:NAME "V2"
 				:CLASS "voltage-source"
 				:NODES-LIST ("GND" "Nc")
@@ -25,16 +25,16 @@
 				:NAME "S1"
 				:CLASS "resistance"
 				:NODES-LIST ("GND" "N2")
-				:MODEL (MODEL 
+				:MODEL (MODEL
 				       	      :NAME "simple-switch-1"
 					      :FUNCTION-NAME "simple-switch-2"
 					      :CLASS "function"
-					      :PARAMETERS-LIST (:UPPER-THRESHOLD 6d0 :LOWER-THRESHOLD 4d0 :ON-CONDUCTANCE 1d4 :OFF-CONDUCTANCE 1d-4 :ON-TIME 1d-8 :OFF-TIME 1d-8) 
+					      :PARAMETERS-LIST (:UPPER-THRESHOLD 6d0 :LOWER-THRESHOLD 4d0 :ON-CONDUCTANCE 1d4 :OFF-CONDUCTANCE 1d-4 :ON-TIME 1d-8 :OFF-TIME 1d-8)
 					      :PROBES-LIST ((PROBE
 									:NAME "Sp1"
 									:CLASS "voltage-probe"
 									:NODES-LIST ("GND"))
-							
+
 							    (PROBE
 									:NAME "Sp2"
 									:CLASS "voltage-probe"
@@ -49,15 +49,15 @@
 				       	      :FUNCTION-NAME "simple-diode-4"
 					      :CLASS "function"
 					      :PARAMETERS-LIST (:VT 252d-3 :N 1d0 :IS 1d-6 :ORDER 2)
-					      :PROBES-LIST ((PROBE 
+					      :PROBES-LIST ((PROBE
 					      		   	   :NAME "diode-a-1"
 								   :CLASS "voltage-probe"
 								   :NODES-LIST ("N2"))
 
-							    (PROBE 
+							    (PROBE
 					      		   	   :NAME "diode-k-1"
 								   :CLASS "voltage-probe"
-								   :NODES-LIST ("N3")))	
+								   :NODES-LIST ("N3")))
 					      :VALUE 0d0))
 
 			(PASSIVE
@@ -68,17 +68,17 @@
 				       	      :FUNCTION-NAME "simple-diode-4"
 					      :CLASS "function"
 					      :PARAMETERS-LIST (:VT 252d-3 :N 1d0 :IS 1d-6 :ORDER 2)
-					      :PROBES-LIST ((PROBE 
+					      :PROBES-LIST ((PROBE
 					      		   	   :NAME "diode-a-2"
 								   :CLASS "voltage-probe"
 								   :NODES-LIST ("GND"))
 
-							    (PROBE 
+							    (PROBE
 					      		   	   :NAME "diode-k-2"
 								   :CLASS "voltage-probe"
-								   :NODES-LIST ("N2")))	
+								   :NODES-LIST ("N2")))
 					      :VALUE 0d0))
-					      		  
+
 			(PASSIVE
 				:NAME "R1"
 				:CLASS "resistance"
@@ -96,7 +96,7 @@
 				:CLASS "resistance"
 				:NODES-LIST ("Nc" "GND")
 				:VALUE 10d0)
-							
+
 			(NODE
 				:NAME "GND"
 				:CLASS "reference")
@@ -116,7 +116,7 @@
 			(NODE
 				:NAME "Nc"
 				:CLASS "v-i")
-			
+
 			(PROBE
 			       :NAME "current"
 			       :CLASS "current-probe"

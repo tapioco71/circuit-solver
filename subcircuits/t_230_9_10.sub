@@ -6,7 +6,7 @@
 ;;
 
 (NETLIST
- :NAME "t_25000_3000_250"
+ :NAME "t_230_9_10"
  :ELEMENTS-LIST ((PASSIVE
 		  :NAME "G0"
 		  :CLASS "conductance"
@@ -17,25 +17,25 @@
 		  :NAME "R1cc"
 		  :CLASS "resistance"
 		  :NODES-LIST ("N1" "N2")
-		  :VALUE 7.5d0)
+		  :VALUE 7.5d-3)
 
 		 (PASSIVE
 		  :NAME "L1cc"
 		  :CLASS "inductance"
 		  :NODES-LIST ("N2" "N3")
-		  :VALUE 54.749d-3)
+		  :VALUE 54.749d-6)
 
 		 (PASSIVE
 		  :NAME "R2cc"
 		  :CLASS "resistance"
 		  :NODES-LIST ("N4" "N5")
-		  :VALUE 187d-3)
+		  :VALUE 18.7d-3)
 
 		 (PASSIVE
 		  :NAME "L2cc"
 		  :CLASS "inductance"
 		  :NODES-LIST ("N5" "N6")
-		  :VALUE 1.365d-3)
+		  :VALUE 1.365d-6)
 
 		 (COUPLING
 		  :NAME "M"
@@ -45,13 +45,13 @@
 				   :NAME "L1"
 				   :CLASS "inductance"
 				   :NODES-LIST ("N0" "N3")
-				   :VALUE 1851d-3)
+				   :VALUE 1851d-6)
 
 				  (PASSIVE
 				   :NAME "L2"
 				   :CLASS "inductance"
 				   :NODES-LIST ("N7" "N4")
-				   :VALUE 46.105d-3)))
+				   :VALUE 46.105d-6)))
 
 		 ;;
 		 ;; external connection nodes

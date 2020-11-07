@@ -1,4 +1,25 @@
-;;;; circuit_solver.lisp
+;;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; indent-tabs-mode: nil; coding: utf-8; show-trailing-whitespace: t -*-
+;;;; circuit-solver.lisp
+;;;;
+;;;; Copyright (c) 2020 Angelo Rossi
+;;;
+;;; Permission is hereby granted, free of charge, to any person obtaining a copy
+;;; of this software and associated documentation files (the "Software"), to deal
+;;; in the Software without restriction, including without limitation the rights
+;;; to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+;;; copies of the Software, and to permit persons to whom the Software is
+;;; furnished to do so, subject to the following conditions:
+;;;
+;;; The above copyright notice and this permission notice shall be included in all
+;;; copies or substantial portions of the Software.
+;;;
+;;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+;;; AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+;;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+;;; SOFTWARE.
 
 (in-package :circuit-solver)
 
@@ -2412,18 +2433,28 @@
 			 (assemble-system p-matrix r-matrix g-matrix si-matrix sv-matrix l-matrix c-matrix ki-vector kv-vector :debug-mode debug-mode :output output)
 		       (let ((alpha-matrix (gsl:elt+ (gsl:elt* *h* (grid:copy-to a-matrix 'grid:foreign-array)) (grid:copy-to b-matrix 'grid:foreign-array)))
 			     (beta-matrix (gsl:elt+ (gsl:elt* *h* (grid:copy-to k-vector 'grid:foreign-array)) (gsl:matrix-product (grid:copy-to b-matrix 'grid:foreign-array) (grid:copy-to y-old-vector 'grid:foreign-array)))))
-			 (multiple-value-bind (decomposition-matrix permutation-matrix sign) (gsl:lu-decomposition (grid:copy-to alpha-matrix 'grid:foreign-array))
-			   (when debug-mode
+			 (multiple-value-bind (decomposition-matrix permutation-matrix sign)
+                             (gsl:lu-decomposition (grid:copy-to alpha-matrix 'grid:foreign-array))
+                           (declare (ignore sign))
+                           (when debug-mode
 			     (format output "~&Permutation sign: ~a" sign))
-			   (gsl:lu-solve decomposition-matrix beta-matrix permutation-matrix y-new-vector)
-			   (when debug-mode
-			     (format output "~&Y(n+1) =~%~a~%" y-new-vector)
-			     (format output "~&Y(n) =~%~a~%" y-old-vector))
-			   (select-probes netlist y-new-vector output-file-stream :debug-mode debug-mode :output output)
-			   (setq y-old-vector y-new-vector)))
-		       (when (and (not debug-mode)
-				  progress-bar)
-			 (print-progress-bar i 2 20 :output output))))
+                           (let ((initial-solution (gsl:lu-solve (grid:copy-to decomposition-matrix 'grid:foreign-array)
+                                                                 (grid:copy-to beta-matrix 'grid:foreign-array)
+                                                                 permutation-matrix
+                                                                 t)))
+			     (setq y-new-vector (gsll:lu-refine (grid:copy-to alpha-matrix 'grid:foreign-array)
+                                                                (grid:copy-to decomposition-matrix 'grid:foreign-array)
+                                                                permutation-matrix
+                                                                (grid:copy-to beta-matrix 'grid:foreign-array)
+                                                                initial-solution))
+			     (when debug-mode
+			       (format output "~&Y(n+1) =~%~a~%" y-new-vector)
+			       (format output "~&Y(n) =~%~a~%" y-old-vector))
+			     (select-probes netlist y-new-vector output-file-stream :debug-mode debug-mode :output output)
+			     (setq y-old-vector y-new-vector)))
+		         (when (and (not debug-mode)
+				    progress-bar)
+			   (print-progress-bar i 2 20 :output output)))))
 		(when output-file-stream
 		  (close output-file-stream))
 		output-file-pathname)))))

@@ -1,9 +1,9 @@
-This is the stub README.txt for the "circuit_solver" project.
+This is the stub README for the "circuit_solver" project.
 =============================================================
 
 What is "circuit-solver"?
 =========================
-It is a Common Lisp program that simulates complex electromechanical systems. An electromechanical system is a physical one in which 
+It is a Common Lisp program that simulates complex electromechanical systems. An electromechanical system is a physical one in which
 energy conversion could occur from electrical to mechanical and viceversa. For example a synchronous machine driven by a prime mover
 would convert mechanical energy into electrical in the form of a voltage difference and an electrical current.
 
@@ -11,7 +11,7 @@ How to test the examples provided.
 ==================================
 All the examples are into .net files. This kind of file reppresent a netlist for an electrical circuit: at this time only electrical
 circuit could be simulated. For example test-trafo-gdl-01.net is a netlist about a circuit with an ac generator feeding a monophase
-transformer that feeds a gas discharge lamp. To test the program use SBCL (alas it should work on other CL too), from a slime REPL, 
+transformer that feeds a gas discharge lamp. To test the program use SBCL (alas it should work on other CL too), from a slime REPL,
 You can:
 
 CL-USER> (ql:quickload :circuit-solver)
@@ -51,7 +51,7 @@ T
 CIRCUIT-SOLVER>
 
 it means that simulation apparently went well and You can inspect the solution, by using, for example kst (https://kst-plot.kde.org/)
-that it is available on Debian too (sudo apt-get install kst) and load the file "test-trafo-gdl-01.kst". 
+that it is available on Debian too (sudo apt-get install kst) and load the file "test-trafo-gdl-01.kst".
 
 May I write a netlist?
 ======================
@@ -66,9 +66,9 @@ is based on sexps. This is an example of a netlist for an RLC circuit feeded by 
 		  :MODEL (MODEL :NAME "sinusoidal-voltage-1"
 				:FUNCTION-NAME "sinusoidal-function"
 				:CLASS "function"
-				:PARAMETERS-LIST (:AMPLITUDE 4243d0 :FREQUENCY 50d0 :PHASE 0d0))	
+				:PARAMETERS-LIST (:AMPLITUDE 4243d0 :FREQUENCY 50d0 :PHASE 0d0))
 		  :NODES-LIST ("GND" "N1"))
-		
+
 		 (PASSIVE
 		  :NAME "R1"
 		  :CLASS "resistance"
@@ -80,29 +80,29 @@ is based on sexps. This is an example of a netlist for an RLC circuit feeded by 
 		  :CLASS "inductance"
 		  :NODES-LIST ("N2" "N3")
 		  :VALUE 10d-6)
-		 		 
+
 		 (PASSIVE
 		  :NAME "C1"
 		  :CLASS "capacitance"
 		  :NODES-LIST ("N3" "GND")
 		  :VALUE 33d-6)
-		 
+
 		 (NODE
 		  :NAME "GND"
 		  :CLASS "reference")
-		 
+
 		 (NODE
 		  :NAME "N1"
 		  :CLASS "v-i")
-		 
+
 		 (NODE
 		  :NAME "N2"
 		  :CLASS "v-i")
-		 
+
 		 (NODE
 		  :NAME "N3"
 		  :CLASS "v-i")
-		 		 
+
 		 (PROBE
 		  :NAME "current"
 		  :CLASS "current-probe"

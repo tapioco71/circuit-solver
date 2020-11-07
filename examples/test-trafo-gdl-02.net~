@@ -1,5 +1,5 @@
 (NETLIST
- :NAME "test-trafo-gdl-01"
+ :NAME "test-trafo-gdl-02"
  :ELEMENTS-LIST ((SOURCE
 		  :NAME "V1"
 		  :CLASS "voltage-source"

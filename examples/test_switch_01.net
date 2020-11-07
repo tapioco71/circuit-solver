@@ -6,7 +6,7 @@
 				:NODES-LIST ("GND" "N1")
 				:VALUE 100d0)
 
-			(SOURCE 
+			(SOURCE
 				:NAME "V2"
 				:CLASS "voltage-source"
 				:NODES-LIST ("GND" "Nc")
@@ -19,22 +19,22 @@
 				:NAME "S1"
 				:CLASS "resistance"
 				:NODES-LIST ("N1" "N2")
-				:MODEL (MODEL 
+				:MODEL (MODEL
 				       	      :NAME "simple-switch-1"
 					      :FUNCTION-NAME "simple-switch-1"
 					      :CLASS "function"
-					      :PARAMETERS-LIST (:UPPER-THRESHOLD 6d0 :LOWER-THRESHOLD 4d0 :ON-RESISTANCE 1d-3 :OFF-RESISTANCE 1d8) 
+					      :PARAMETERS-LIST (:UPPER-THRESHOLD 6d0 :LOWER-THRESHOLD 4d0 :ON-RESISTANCE 1d-3 :OFF-RESISTANCE 1d8)
 					      :PROBES-LIST ((PROBE
 									:NAME "Sp1"
 									:CLASS "voltage-probe"
 									:NODES-LIST ("GND"))
-							
+
 							    (PROBE
 									:NAME "Sp2"
 									:CLASS "voltage-probe"
 									:NODES-LIST ("Nc")))
 					      :VALUE 1d8))
-					      		  
+
 			(PASSIVE
 				:NAME "R1"
 				:CLASS "resistance"
@@ -46,7 +46,7 @@
 				:CLASS "resistance"
 				:NODES-LIST ("Nc" "GND")
 				:VALUE 68d3)
-							
+
 			(NODE
 				:NAME "GND"
 				:CLASS "reference")
@@ -62,7 +62,7 @@
 			(NODE
 				:NAME "Nc"
 				:CLASS "v-i")
-			
+
 			(PROBE
 			       :NAME "resistance-current"
 			       :CLASS "current-probe"

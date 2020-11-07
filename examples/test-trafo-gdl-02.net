@@ -1,5 +1,6 @@
+;;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; indent-tabs-mode: nil; coding: utf-8; show-trailing-whitespace: t -*-
 (NETLIST
- :NAME "test-trafo-gdl-01"
+ :NAME "test-trafo-gdl-02"
  :ELEMENTS-LIST ((SOURCE
 		  :NAME "V1"
 		  :CLASS "voltage-source"
@@ -27,7 +28,7 @@
 
 		 (SUBCIRCUIT
 		  :NAME "T"
-		  :FILE-PATHNAME #p"/home/angel/Development/lisp/circuit-solver/subcircuits/t_25000_3000_250.sub"
+		  :FILE-PATHNAME #p"/home/angel/Development/lisp/circuit-solver/subcircuits/t_230_9_10.sub"
 		  :NODES-LIST ("N4" "GND" "N5" "N6"))
 
 		 (PASSIVE
