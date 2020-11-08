@@ -1,0 +1,89 @@
+;;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; indent-tabs-mode: nil; coding: utf-8; show-trailing-whitespace: t -*-
+(netlist :name "test-trafo-mov-03"
+         :elements-list ((source :name "Vb"
+		                 :class "voltage-source"
+		                 :nodes-list ("N99" "GND")
+		                 :model (model :name "square-voltage-1"
+			                       :function-name "bistable-function-1"
+			                       :class "function"
+			                       :parameters-list (:polarity nil :t0 200d-3 :low-value 0d0 :high-value 5d0)))
+
+		         (passive :name "Rb"
+		                  :class "resistance"
+		                  :nodes-list ("N99" "GND")
+		                  :value 1d6)
+
+                         (source :name "V1"
+		                 :class "voltage-source"
+		                 :model (model :name "sinusoidal-voltage-1"
+				               :function-name "sinusoidal-function"
+				               :class "function"
+				               :parameters-list (:amplitude 4243d0 :frequency 50d0 :phase 0d0))
+		                 :nodes-list ("N1" "GND"))
+
+                         		         (passive :name "R1"
+		                  :class "resistance"
+		                  :nodes-list ("N1" "N2")
+		                  :value 100d-3)
+
+		         (passive :name "L1"
+		                  :class "inductance"
+		                  :nodes-list ("N2" "N3")
+		                  :value 4.7d-6)
+
+		         (passive :name "I1"
+		                  :class "conductance"
+		                  :nodes-list ("N3" "N4")
+		                  :model (model :name "breaker"
+			                        :function-name "simple-switch-2"
+			                        :class "function"
+			                        :parameters-list (:on-conductance 1d3 :off-conductance 1d-12 :on-time 1d-6 :off-time 1d-6 :upper-threshold 3.333d0 :lower-threshold 1.667d0)
+			                        :probes-list ((probe :name "P1"
+					                             :class "voltage-probe"
+					                             :nodes-list ("GND"))
+					                      (probe :name "P2"
+					                             :class "voltage-probe"
+					                             :nodes-list ("N99")))
+			                        :value 1d-12))
+
+		         (subcircuit :name "T1"
+		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/t_10_230_9.sub"
+		                     :nodes-list ("N4" "GND" "N5" "N6"))
+
+		         (passive
+		          :name "Rload"
+		          :class "resistance"
+		          :nodes-list ("N5" "N6")
+		          :value 330d0)
+
+		         (node :name "GND"
+		               :class "reference")
+
+		         (node :name "N1"
+		               :class "v-i")
+
+		         (node :name "N2"
+		               :class "v-i")
+
+		         (node :name "N3"
+		               :class "v-i")
+
+		         (node :name "N4"
+		               :class "v-i")
+
+		         (node :name "N5"
+		               :class "v-i")
+
+		         (node :name "N6"
+		               :class "v-i")
+
+		         (node :name "N99"
+		               :class "v-i")
+
+		         (probe :name "current"
+		                :class "current-probe"
+		                :elements-list ("V1" "R1" "L1" "I1" "Rload"))
+
+		         (probe :name "voltage"
+		                :class "voltage-probe"
+		                :nodes-list ("N1" "N2" "N3" "N4" "N5" "N6" "N99"))))

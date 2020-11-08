@@ -1,8 +1,9 @@
+;;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; indent-tabs-mode: nil; coding: utf-8; show-trailing-whitespace: t -*-
 ;;
 ;; single phase transformer
-;; Sn = 25000 VA
-;; V1n = 3000 V
-;; V2n = 250 V
+;; Sn = 10 VA
+;; V1n = 230 V
+;; V2n = 9 V
 ;;
 
 (NETLIST

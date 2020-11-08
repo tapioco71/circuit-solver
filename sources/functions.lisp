@@ -337,7 +337,10 @@
       (setf return-value off-conductance))
     return-value))
 
+;; Ebers-Moll transistor model.
+
 (defun ebers-moll (&optional &key parameters state)
+  "Ebers-Moll transistor model."
   (let* ((vc (pop state))
 	 (vb (pop state))
 	 (ve (pop state))
@@ -346,3 +349,20 @@
 	 (vbe (- vb ve))
 	 (vbc (- vb vc)))
     (* is (- (exp (/ vbe vt)) (exp (/ vbc vt))))))
+
+;; Simple MOV model.
+
+(defun simple-mov (&optional &key parameters state)
+  "Simple MOV model."
+  (let* ((va (pop state))
+         (vb (pop state))
+         (vmax (getf parameters :vmax))
+         (gmax (getf parameters :gmax))
+         (gmin (getf parameters :gmin)))
+    (if (< (abs (- va vb))
+           (abs vmax))
+        (* gmin
+           (- va vb))
+        (* gmax
+           (signum (- va vb))
+           (abs vmax)))))

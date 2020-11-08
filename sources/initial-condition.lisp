@@ -1,5 +1,5 @@
 ;;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; indent-tabs-mode: nil; coding: utf-8; show-trailing-whitespace: t -*-
-;;;; circuit-solver.asd
+;;;; initial-condition.lisp
 ;;;;
 ;;;; Copyright (c) 2020 Angelo Rossi
 ;;;
@@ -21,27 +21,26 @@
 ;;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ;;; SOFTWARE.
 
-(asdf:defsystem #:circuit-solver
-  :name "circuit-solver"
-  :author "Angelo Rossi <angelo.rossi.homelab@gmail.com>, Marco Maccioni <marco.maccioni@uniroma1.it>"
-  :license "GPL v3.0"
-  :version "0.2.6"
-  :description "Electrical circuits solver using gsll."
-  :serial t
-  :depends-on (#:gsll)
-  :components ((:file "sources/package")
-               (:file "sources/conditions")
-	       (:file "sources/functions")
-               (:file "sources/element")
-               (:file "sources/netlist")
-               (:file "sources/node")
-               (:file "sources/passive")
-               (:file "sources/coupling")
-               (:file "sources/sources")
-               (:file "sources/subcircuit")
-               (:file "sources/model")
-               (:file "sources/probe")
-               (:file "sources/initial-condition")
-               (:file "sources/problem")
-               (:file "sources/spline")
-               (:file "sources/circuit-solver")))
+(in-package :circuit-solver)
+
+;; Classes.
+
+;;;
+;;; initial condition specifier
+;;;
+
+(defclass initial-condition-class (element-class)
+  ((target-name
+    :documentation "name for element initial conditions: branch (current), node (voltage) or model (quantity)."
+    :initarg :target-name
+    :initform nil
+    :accessor initial-condition-class-target-name
+    :accessor element-class-target-name)
+   (value
+    :documentation "value for initial condition."
+    :initarg :value
+    :initform nil
+    :accessor initial-condition-class-value
+    :accessor element-class-value)))
+
+;; End initial-condition.lisp

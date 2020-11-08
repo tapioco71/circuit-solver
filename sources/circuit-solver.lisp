@@ -53,113 +53,6 @@
 (defparameter *h* 0d0)
 
 ;;;
-;;; 05/12/2014 - 23:15:00
-;;;
-;;; exception handling
-;;;
-
-(define-condition invalid-passive-element-in-coupling (error)
-  ((coupling-name :initarg :coupling-name :reader coupling-name)))
-
-(define-condition mismatched-number-of-coupling-values-vs-coupling-inductances-error (error)
-  ((coupling-name :initarg :coupling-name :reader coupling-name)))
-
-(define-condition  wrong-number-of-elements-for-coupling-error (error)
-  ((element-name :initarg :element-name :reader element-name)))
-
-(define-condition wrong-subcircuit-nodes-list-error (error)
-  ((subcircuit-name :initarg :subcircuit-name :reader subcircuit-name)
-   (actual-nodes-count :initarg :actual-nodes-count :reader actual-nodes-count)
-   (needed-nodes-count :initarg :needed-nodes-count :reader needed-nodes-count)))
-
-(define-condition unknown-object-error (error)
-  ((object :initarg :object :reader object :initform nil)))
-
-(define-condition unknown-function-error (error)
-  ((function-name :initarg :function-name :reader function-name :initform nil)))
-
-(define-condition undefined-model-class-error (error)
-  ((model-name :initarg :model-name :reader model-name :initform nil)
-   (model-class-name :initarg :model-class-name :reader model-class-name :initform nil)))
-
-(define-condition initial-condition-error (error)
-  ((initial-condition-name :initarg :initial-condition-name :reader initial-condition-name :initform nil)
-   (element-name :initarg :element-name :reader element-name :initform nil)
-   (coupling-name :initarg :coupling-name :reader coupling-name :initform nil)
-   (node-name :initarg :node-name :reader node-name :initform nil)))
-
-(define-condition unknow-element-for-initial-condition-error (error)
-  ((element-name :initarg :element-name :reader element-name :initform nil)
-   (initial-condition-name :initarg :initial-condition-name :reader initial-condition-name :initform nil)))
-
-(define-condition unknow-object-error (error)
-  ((object :initarg :object :reader object :initform nil)))
-
-(define-condition file-writing-error (error)
-  ((file-pathname :initarg :file-pathname :reader file-pathname)))
-
-(define-condition file-not-opened-error (error)
-  ())
-
-(define-condition probe-not-found-error (error)
-  ((probe-name :initarg :probe-name :reader probe-name :initform nil)
-   (node-name :initarg :node-name :reader node-name :initform nil)
-   (element-name :initarg :element-name :reader element-name :initform nil)))
-
-(define-condition file-not-found-error (error)
-  ((file-pathname :initarg :file-pathname :reader file-pathname)))
-
-(define-condition repeated-node-for-element-error (error)
-  ((node-name :initarg :node-name :reader node-name)
-   (element-name :initarg :element-name :reader element-name)))
-
-(define-condition no-such-node-for-element-error (error)
-  ((node-name :initarg :node-name :reader node-name)
-   (element-name :initarg :element-name :reader element-name)))
-
-(define-condition mismatched-coupling-element (error)
-  ((element-name :initarg :element-name :reader element-name)))
-
-(define-condition no-node-for-probe-error (error)
-  ((node-name :initarg :node-name :reader node-name)
-   (probe-name :initarg :probe-name :reader probe-name)))
-
-(define-condition no-element-for-probe-error (error)
-  ((element-name :initarg :element-name :reader element-name)
-   (probe-name :initarg :probe-name :reader probe-name)))
-
-(define-condition undefined-probe-type-error (error)
-  ((probe-name :initarg :probe-name :reader probe-name)
-   (probe-type :initarg :probe-type :reader probe-type)))
-
-(define-condition simulation-time-interval-error (error)
-  ((t0 :initarg :t0 :reader t0)
-   (t1 :initarg :t1 :reader t1)))
-
-(define-condition value-or-model-entry-error (error)
-  ((text :initarg :text :reader text)))
-
-(define-condition parser-error (error)
-  ((file-pathname
-    :initarg :file-pathname
-    :accessor file-pathname
-    :initform nil
-    :documentation "Name of the file where error is.")))
-
-(define-condition solver-error (error)
-  ((numerical
-    :initarg :message
-    :accessor numerical-error
-    :initform nil
-    :documentation "Numerical problem solving problem.")
-   (time-step
-    :initarg
-    :message
-    :accessor time-step-error
-    :initform nil
-    :documentation "Time step at which there is an error.")))
-
-;;;
 ;;; data structures:
 ;;; classes for circuital elements and problem description
 ;;;
@@ -167,346 +60,6 @@
 ;;; - netlist is the set of circuital elements and netlists
 ;;; - node is the object for describing circuital elements junction
 ;;;
-
-;;;
-;;; basic netlist element class definition:
-;;;
-;;; - a numerical ID;
-;;; - a characters string for NAME.
-;;;
-
-(defclass element-class ()
-  ((id
-    :initarg :id
-    :initform -1
-    :accessor element-class-id)
-   (name
-    :initarg :name
-    :initform ""
-    :accessor element-class-name)))
-
-;;;
-;;; netlist as element:
-;;;
-;;; - a characters string to hold FILE-NAME for the netlist;
-;;; - an ELEMENTS-LIST holding subcircuits, bipoles, nodes, probes and so on.
-;;;
-
-(defclass netlist-class (element-class)
-  ((file-pathname
-    :initarg :file-pathname
-    :initform #p""
-    :accessor netlist-class-file-pathname
-    :accessor element-class-file-pathname)
-   (author
-    :initarg :author
-    :initform ""
-    :accessor netlist-class-author
-    :accessor element-class-author)
-   (date
-    :initarg :date
-    :initform ""
-    :accessor netlist-class-date
-    :accessor element-class-date)
-   (elements-list
-    :initarg :elements-list
-    :initform nil
-    :accessor netlist-class-elements-list
-    :accessor element-class-elements-list)))
-
-;;;
-;;; node element class
-;;;
-
-(defclass node-class (element-class)
-  ((class
-    :documentation "node CLASS: reference, voltage-current, active-reactive-power or undefined."
-    :initarg :class
-    :initform ""
-    :accessor node-class-class
-    :accessor element-class-class)
-   (state
-    :documentation "node STATE: undiscovered, discovered and processed."
-    :initarg :state
-    :initform nil
-    :accessor node-class-state
-    :accessor element-class-state)
-   (number
-    :documentation "node NUMBER: 0 = reference, n = other nodes."
-    :initarg :number
-    :initform -1
-    :accessor node-class-number
-    :accessor element-class-number)))
-
-;;;
-;;; passive circuital element
-;;;
-
-(defclass passive-class (element-class)
-  ((class
-    :documentation "passive CLASS: resistance, conductance, inductance, capacitance or undefined."
-    :initarg :class
-    :initform "undefined"
-    :accessor passive-class-class
-    :accessor element-class-class)
-   (nodes-list
-    :documentation "NODES-LIST are the pin connections for the element: (\"N1\" \"N2\")"
-    :initarg :nodes-list
-    :initform ()
-    :accessor passive-class-nodes-list
-    :accessor element-class-nodes-list)
-   (model
-    :documentation "passive MODEL."
-    :initarg :model
-    :initform nil
-    :accessor passive-class-model
-    :accessor element-class-model)
-   (value
-    :documentation "passive constant VALUE e.g. R1 = 10 Ohm: VALUE = 10 Ohm."
-    :initarg :value
-    :initform 0d0
-    :accessor passive-class-value
-    :accessor element-class-value)))
-
-;;;
-;;; inductances coupling element class
-;;;
-
-(defclass coupling-class (element-class)
-  ((class
-    :documentation "coupling CLASS: motional or transformational."
-    :initarg :class
-    :initform "undefined"
-    :accessor coupling-class-class
-    :accessor element-class-class)
-   (elements-list
-    :documentation "list of the inductances taking part in the coupling."
-    :initarg :elements-list
-    :initform ()
-    :accessor coupling-class-elements-list
-    :accessor element-class-elements-list)
-   (model
-    :documentation "model definition for k parameter."
-    :initarg :model
-    :initform nil
-    :accessor coupling-class-model
-    :accessor element-class-model)
-   (value
-    :documentation "k parameter constant value."
-    :initarg :value
-    :initform 0d0
-    :accessor coupling-class-value
-    :accessor element-class-value)))
-
-;;;
-;;; current/voltage source class definition
-;;;
-
-(defclass source-class (element-class)
-  ((class
-    :documentation "source CLASS: current, voltage or undefined."
-    :initarg :class
-    :initform "undefined"
-    :accessor source-class-class
-    :accessor element-class-class)
-   (nodes-list
-    :documentation "source connection nodes to the circuit."
-    :initarg :nodes-list
-    :initform ()
-    :accessor source-class-nodes-list
-    :accessor element-class-nodes-list)
-   (model
-    :documentation "source model."
-    :initarg :model
-    :initform nil
-    :accessor source-class-model
-    :accessor element-class-model)
-   (value
-    :documentation "source constant value e.g. 10 A or 1000 V."
-    :initarg :value
-    :initform nil
-    :accessor source-class-value
-    :accessor element-class-value)))
-
-;;;
-;;; subcircuit class definition
-;;;
-
-(defclass subcircuit-class (element-class)
-  ((file-pathname
-    :documentation "FILE-NAME for subcircuit definition."
-    :initarg :file-pathname
-    :initform ""
-    :accessor subcircuit-class-file-pathname
-    :accessor element-class-file-pathname)
-   (nodes-list
-    :documentation "list of connection nodes."
-    :initarg :nodes-list
-    :initform nil
-    :accessor subcircuit-class-nodes-list
-    :accessor element-class-nodes-list)))
-
-;;;
-;;; model class definition
-;;;
-
-(defclass model-class (element-class)
-  ((class
-    :documentation "model CLASS: function, differential, lisp-function, lisp-differential or undefined."
-    :initarg :class
-    :initform "undefined"
-    :accessor model-class-class
-    :accessor element-class-class)
-   (parameters-list
-    :documentation "PARAMETERS-LIST of model input parameters."
-    :initarg :parameters-list
-    :initform nil
-    :accessor model-class-parameters-list
-    :accessor element-class-parameters-list)
-   (function-name
-    :documentation "hardcoded lisp function name."
-    :initarg :function-name
-    :initform ""
-    :accessor model-class-function-name
-    :accessor element-class-function-name)
-   (external-function-name
-    :documentation "external lisp function for model."
-    :initarg :function
-    :initform nil
-    :accessor model-class-external-function-name
-    :accessor element-class-external-function-name)
-   (probes-list
-    :documentation "list of probes to sample circuital quantities."
-    :initarg :probes-list
-    :initform nil
-    :accessor model-class-probes-list
-    :accessor element-class-probes-list)
-   (states-list
-    :documentation "model state vector."
-    :initarg :states-list
-    :initform nil
-    :accessor model-class-states-list
-    :accessor element-class-states-list)
-   (value
-    :documentation "model value."
-    :initarg :value
-    :initform 0d0
-    :accessor model-class-value
-    :accessor element-class-value)))
-
-;;;
-;;; probe class definition
-;;;
-
-(defclass probe-class (element-class)
-  ((class
-    :documentation "probe CLASS: voltage, current or undefined probe type."
-    :initarg :class
-    :initform "undefined"
-    :accessor probe-class-class
-    :accessor element-class-class)
-   (elements-list
-    :documentation "if probe = current then currents flowing in the elements in the list are take in account."
-    :initarg :elements-list
-    :initform nil
-    :accessor probe-class-elements-list
-    :accessor element-class-elements-list)
-   (nodes-list
-    :documentation " If probe = voltage voltage across two nodes will be taken in account."
-    :initarg :nodes-list
-    :initform nil
-    :accessor probe-class-nodes-list
-    :accessor element-class-nodes-list)))
-
-;;;
-;;; initial condition specifier
-;;;
-
-(defclass initial-condition-class (element-class)
-  ((target-name
-    :documentation "name for element initial conditions: branch (current), node (voltage) or model (quantity)."
-    :initarg :target-name
-    :initform nil
-    :accessor initial-condition-class-target-name
-    :accessor element-class-target-name)
-   (value
-    :documentation "value for initial condition."
-    :initarg :value
-    :initform nil
-    :accessor initial-condition-class-value
-    :accessor element-class-value)))
-
-;;;
-;;; general problem class
-;;;
-
-(defclass problem-class ()
-  ((id
-    :documentation "ID value of problem."
-    :initarg :id
-    :initform -1
-    :accessor problem-class-id)
-   (name
-    :documentation "Problem name."
-    :initarg :name
-    :initform ""
-    :accessor problem-class-name)
-   (date
-    :documentation "Problem date creation."
-    :initarg :date
-    :initform (get-decoded-time)
-    :accessor problem-class-date)
-   (netlist-file-pathname
-    :documentation "Main netlist file name."
-    :initarg :netlist-file-pathname
-    :initform ""
-    :accessor problem-class-netlist-file-pathname)
-   (log-file-pathname
-    :documentation "Log file name for simulation errors/info."
-    :initarg :log-file-pathname
-    :initform ""
-    :accessor problem-class-log-file-pathname)
-   (netlist
-    :documentation "Main netlist."
-    :initarg :netlist
-    :initform ()
-    :accessor problem-class-netlist)
-   (simulation-type
-    :documentation "simulation type: time, frequency or undefined."
-    :initarg :simulation-type
-    :initform "undefined"
-    :accessor problem-class-simulation-type)
-   (x-start
-    :documentation "Start value for time or frequency."
-    :initarg :x-start
-    :initform nil
-    :accessor problem-class-x-start)
-   (x-end
-    :documentation "End value for time or frequency."
-    :initarg :x-end
-    :initform nil
-    :accessor problem-class-x-end)
-   (x-value
-    :documentation "Value for time or frequency during simulation."
-    :initarg :x-value
-    :initform nil
-    :accessor problem-class-x-value)
-   (x-steps
-    :documentation "Number of steps for time or frequency."
-    :initarg :x-steps
-    :initform 1000
-    :accessor problem-class-x-steps)))
-
-;;;
-;;; spline class
-;;;
-
-(defclass spline-data-class (element-class)
-  ((data-vectors
-    :documentation "data itself."
-    :initarg :data-vectors
-    :initform nil
-    :accessor spline-class-data-vectors)))
 
 ;;
 ;; serialization: create an object from a sexp
@@ -559,98 +112,6 @@
     (unknown-object-error (condition)
       (format *error-output* "~%Unknown object found: ~s~%" (object condition))
       nil)))
-
-;;
-;; predicate methods.
-;;
-
-;;
-;; node class.
-;;
-
-(defmethod undefined-class-p ((object node-class))
-  (or (string-equal (node-class-class object) "undefined")
-      (string-equal (node-class-class object) "")))
-
-(defmethod reference-class-node-p ((object node-class))
-  (or (string-equal (node-class-class object) "reference")
-      (string-equal (node-class-class object) "gnd")
-      (string-equal (node-class-class object) "0")))
-
-;;
-;; passive class.
-;;
-
-(defmethod undefined-class-p ((object passive-class))
-  (or (string-equal (passive-class-class object) "undefined")
-      (string-equal (passive-class-class object) "")))
-
-(defmethod has-model-p ((object passive-class))
-  (typep object 'model-class))
-
-(defmethod has-value-p ((object passive-class))
-  (null (passive-class-value object)))
-
-;;
-;; coupling class.
-;;
-
-(defmethod has-model-p ((object coupling-class))
-  (typep object 'model-class))
-
-(defmethod has-value-p ((object coupling-class))
-  (null (coupling-class-value object)))
-
-;;
-;; source class.
-;;
-
-(defmethod undefined-class-p ((object source-class))
-  (or (string-equal (source-class-class object) "undefined")
-      (string-equal (source-class-class object) "")))
-
-(defmethod voltage-source-class-p ((object source-class))
-  (string-equal (source-class-class object) "voltage-source"))
-
-(defmethod current-source-class-p ((object source-class))
-  (string-equal (source-class-class object) "current-source"))
-
-(defmethod has-model-p ((object source-class))
-  (typep (source-class-model object) 'model-class))
-
-(defmethod has-value-p ((object source-class))
-  (null (source-class-value object)))
-
-;;
-;; model class.
-;;
-
-(defmethod undefined-class-p ((object model-class))
-  (or (string-equal (model-class-class object) "undefined")
-      (string-equal (model-class-class object) "")))
-
-(defmethod simple-function-p ((object model-class))
-  (string-equal (model-class-class object) "function"))
-
-(defmethod differential-function-p ((object model-class))
-  (string-equal (model-class-class object) "differential"))
-
-(defmethod has-value-p ((object model-class))
-  (null (model-class-value object)))
-
-;;
-;; probe class.
-;;
-
-(defmethod undefined-class-p ((object probe-class))
-  (or (string-equal (probe-class-class object) "undefined")
-      (string-equal (probe-class-class object) "")))
-
-(defmethod voltage-probe-class-p ((object probe-class))
-  (string-equal (probe-class-class object) "voltage-probe"))
-
-(defmethod current-probe-class-p ((object probe-class))
-  (string-equal (probe-class-class object) "current-probe"))
 
 ;;
 ;; serialization: create a sexp from an object
@@ -791,32 +252,28 @@
     return-value))
 
 ;;
-;; name manipulators
-;;
-
-(defmethod rename-element ((object element-class) radix)
-  (setf (element-class-name object) (concatenate 'string radix ":" (element-class-name object)))
-  object)
-
-;;
 ;; Predicates.
 ;;
 
 (defun resistance-class-p (object)
   (when (typep object 'passive-class)
-    (string-equal (passive-class-class object) "resistance")))
+    (string= (string-downcase (passive-class-class object))
+             "resistance")))
 
 (defun inductance-class-p (object)
   (when (typep object 'passive-class)
-    (string-equal (passive-class-class object) "inductance")))
+    (string= (string-downcase (passive-class-class object))
+             "inductance")))
 
 (defun capacitance-class-p (object)
   (when (typep object 'passive-class)
-    (string-equal (passive-class-class object) "capacitance")))
+    (string= (string-downcase (passive-class-class object))
+             "capacitance")))
 
 (defun conductance-class-p (object)
   (when (typep object 'passive-class)
-    (string-equal (passive-class-class object) "conductance")))
+    (string= (string-downcase (passive-class-class object))
+             "conductance")))
 
 (defun coupling-class-p (object)
   (typep object 'coupling-class))
@@ -825,7 +282,8 @@
 ;; selection and exclusion criterion functions
 ;;
 
-(defun where (&optional &key class-type id name number class)
+(defun where (&rest parameters &key class-type id name number class)
+  (declare (ignorable parameters class-type id name number class))
   #'(lambda (object)
       (and (if class-type
 	       (typep object class-type)
@@ -853,7 +311,8 @@
       (let ((where-return-value nil))
 	(if (listp selectors)
 	    (dolist (selector selectors)
-	      (setq where-return-value (or (funcall selector element) where-return-value)))
+	      (setq where-return-value (or (funcall selector element)
+                                           where-return-value)))
 	    (setq where-return-value (funcall selectors element)))
 	(when (eql where-return-value t)
 	  (setq selection (append selection (list element))))))
@@ -951,30 +410,40 @@
 ;;; update element members
 ;;;
 
-(defmethod update ((object element-class) &optional &key id name)
+(defmethod update ((object element-class) &rest parameters &key id name)
+  (declare (ignorable parameters id name))
   (when id
     (setf (element-class-id object) id))
   (when name
     (setf (element-class-name object) name))
   object)
 
-(defmethod update ((object netlist-class) &optional &key id name elements-list)
-  (let ((return-value (call-next-method object :id id :name name)))
+(defmethod update ((object netlist-class) &rest parameters &key id name elements-list)
+  (declare (ignorable parameters id name elements-list))
+  (let ((return-value (call-next-method object
+                                        :id id
+                                        :name name)))
     (when elements-list
       (setf (netlist-class-elements-list return-value) elements-list))
     return-value))
 
-(defmethod update ((object node-class) &optional &key id name class number)
-  (let ((return-value (call-next-method object :id id :name name)))
+(defmethod update ((object node-class) &rest parameters &key id name class number)
+  (declare (ignorable parameters id name class number))
+  (let ((return-value (call-next-method object
+                                        :id id
+                                        :name name)))
     (when class
       (setf (node-class-class object) class))
     (when number
       (setf (node-class-number object) number))
     return-value))
 
-(defmethod update ((object passive-class) &optional &key id name class nodes-list model value)
+(defmethod update ((object passive-class) &rest parameters &key id name class nodes-list model value)
+  (declare (ignorable parameters id name class nodes-list model value))
   (handler-case
-      (let ((return-value (call-next-method object :id id :name name)))
+      (let ((return-value (call-next-method object
+                                            :id id
+                                            :name name)))
 	(when class
 	  (setf (passive-class-class return-value) class))
 	(when nodes-list
@@ -985,12 +454,18 @@
 	  (setf (passive-class-value return-value) value))
 	return-value)
     (value-or-model-entry-error (condition)
-      (format *error-output* "Only value or model shall be selected for ~a.~%" (text condition))
+      (format *error-output*
+              "Only value or model shall be selected for ~a.~%"
+              (text condition))
+      (finish-output *error-output*)
       nil)))
 
-(defmethod update ((object coupling-class) &optional &key id name elements-list model value)
+(defmethod update ((object coupling-class) &rest parameters &key id name elements-list model value)
+  (declare (ignorable parameters id name elements-list model value))
   (handler-case
-      (let ((return-value (call-next-method object :id id :name name)))
+      (let ((return-value (call-next-method object
+                                            :id id
+                                            :name name)))
 	(when elements-list
 	  (setf (coupling-class-elements-list return-value) elements-list))
 	(when model
@@ -999,11 +474,17 @@
 	  (setf (coupling-class-value object) value))
 	return-value)
     (value-or-model-entry-error (condition)
-      (format *error-output* "Only value or model shall be selected for ~a.~%" (text condition))
+      (format *error-output*
+              "Only value or model shall be selected for ~a.~%"
+              (text condition))
+      (finish-output *error-output*)
       nil)))
 
-(defmethod update ((object source-class) &optional &key id name class nodes-list model value)
-  (let ((return-value (call-next-method object :id id :name name)))
+(defmethod update ((object source-class) &rest parameters &key id name class nodes-list model value)
+  (declare (ignorable parameters id name class nodes-list model value))
+  (let ((return-value (call-next-method object
+                                        :id id
+                                        :name name)))
     (when class
       (setf (source-class-class return-value) class))
     (if nodes-list
@@ -1014,16 +495,22 @@
       (setf (source-calss-value return-value) value))
     return-value))
 
-(defmethod update ((object subcircuit-class) &optional &key id name file-pathname nodes-list)
-  (let ((return-value (call-next-method objexct :id id :name name)))
+(defmethod update ((object subcircuit-class) &rest parameters &key id name file-pathname nodes-list)
+  (declare (ignorable parameters id name file-pathname nodes-list))
+  (let ((return-value (call-next-method objexct
+                                        :id id
+                                        :name name)))
     (when file-pathname
       (setf (subcircuit-class-file-pathname return-value) file-pathname))
     (when nodes-list
       (setf (subcircuit-class-nodes-list return-value) nodes-list))
     return-value))
 
-(defmethod update ((object model-class) &optional &key id name class file-pathname parameters-list function-name value)
-  (let ((return-value (call-next-method object :id id :name name)))
+(defmethod update ((object model-class) &rest parameters &key id name class file-pathname parameters-list function-name value)
+  (declare (ignorable parameters id name class file-pathname parameters-lisr function-name value))
+  (let ((return-value (call-next-method object
+                                        :id id
+                                        :name name)))
     (when class
       (setf (model-class-class return-value) class))
     (when file-pathname
@@ -1036,8 +523,11 @@
       (setf (model-class-value return-value) value))
     return-value))
 
-(defmethod update ((object probe-class) &optional &key id name class elements-list nodes-list)
-  (let ((return-value (call-next-method object :id id :name name)))
+(defmethod update ((object probe-class) &rest parameters &key id name class elements-list nodes-list)
+  (declare (ignorable parameters id name class elements-list nodes-list))
+  (let ((return-value (call-next-method object
+                                        :id id
+                                        :name name)))
     (when class
       (setf (probe-class-class return-value) class))
     (when elements-list
@@ -1046,8 +536,11 @@
       (setf (probe-class-nodes-list return-value) nodes-list))
     return-value))
 
-(defmethod update ((object initial-condition-class) &optional &key id name target-name value)
-  (let ((return-value (call-next-method object :id id :name name)))
+(defmethod update ((object initial-condition-class) &rest parameters &key id name target-name value)
+  (declare (ignorable parameters id name target-name value))
+  (let ((return-value (call-next-method object
+                                        :id id
+                                        :name name)))
     (when target-name
       (setf (initial-condition-class-target-name return-value) target-name))
     (when value
@@ -1070,62 +563,112 @@
 ;;; merge element nodes to connect to the target netlist
 ;;;
 
-(defmethod merge-element ((object probe-class) nodes-pairs &optional &key (debug-mode nil) (output *standard-output*))
+(defmethod merge-element ((object probe-class) nodes-pairs &rest parameters &key (debug-mode nil) (output *standard-output*))
+  (declare (ignorable parameters debug-mode output))
   (let ((source-element object))
     (when debug-mode
-      (format output "~%Merging ~a -> " (sexpify source-element)))
+      (format output
+              "~%Merging ~a -> "
+              (sexpify source-element))
+      (finish-output output))
     (dolist (nodes-pair nodes-pairs)
       (when (voltage-probe-class-p source-element)
 	(setf (probe-class-nodes-list source-element) (substitute-if (second nodes-pair) #'(lambda (x)
-											     (equalp x (first nodes-pair))) (probe-class-nodes-list source-element)))))
+											     (equalp x (first nodes-pair)))
+                                                                     (probe-class-nodes-list source-element)))))
     (when debug-mode
-      (format output "~a." (sexpify source-element)))
+      (format output
+              "~a."
+              (sexpify source-element))
+      (finish-output output))
     source-element))
 
-(defmethod merge-element ((object model-class) nodes-pairs &optional &key (debug-mode nil) (output *standard-output*))
+(defmethod merge-element ((object model-class) nodes-pairs &rest parameters &key (debug-mode nil) (output *standard-output*))
+  (declare (ignorable parameters debug-mode output))
   (let ((source-element object))
     (when debug-mode
-      (format output "~%Merging ~a -> " (sexpify source-element)))
+      (format output
+              "~%Merging ~a -> "
+              (sexpify source-element))
+      (finish-output output))
     (dolist (source-element-probe (model-class-probes-list source-element))
-      (setq source-element-probe (merge-element source-element-probe nodes-pairs :debug-mode debug-mode :output output)))
+      (setq source-element-probe (merge-element source-element-probe
+                                                nodes-pairs
+                                                :debug-mode debug-mode
+                                                :output output)))
     (when debug-mode
-      (format output "~a" (sexpify source-element)))
+      (format output
+              "~a"
+              (sexpify source-element))
+      (finish-output output))
     source-element))
 
-(defmethod merge-element ((object passive-class) nodes-pairs &optional &key (debug-mode nil) (output *standard-output*))
+(defmethod merge-element ((object passive-class) nodes-pairs &rest parameters &key (debug-mode nil) (output *standard-output*))
+  (declare (ignorable parameters debug-mode output))
   (let ((source-element object))
     (when debug-mode
-      (format output "~%Merging ~a -> " (sexpify source-element)))
+      (format output
+              "~%Merging ~a -> "
+              (sexpify source-element))
+      (finish-output output))
     (dolist (nodes-pair nodes-pairs)
       (setf (passive-class-nodes-list source-element) (substitute-if (second nodes-pair) #'(lambda (x)
-										       (equalp x (first nodes-pair))) (passive-class-nodes-list source-element)))
+										             (equalp x (first nodes-pair)))
+                                                                     (passive-class-nodes-list source-element)))
       (when (passive-class-model source-element)
-	(setf (passive-class-model source-element) (merge-element (passive-class-model source-element) nodes-pairs :debug-mode debug-mode :output output))))
+	(setf (passive-class-model source-element) (merge-element (passive-class-model source-element)
+                                                                  nodes-pairs
+                                                                  :debug-mode debug-mode
+                                                                  :output output))))
     (when debug-mode
-      (format output "~a." (sexpify source-element)))
+      (format output
+              "~a."
+              (sexpify source-element))
+      (finish-output output))
     source-element))
 
-(defmethod merge-element ((object coupling-class) nodes-pairs &optional &key (debug-mode nil) (output *standard-output*))
+(defmethod merge-element ((object coupling-class) nodes-pairs &rest parameters &key (debug-mode nil) (output *standard-output*))
+  (declare (ignorable parameters debug-mode output))
   (let ((source-element object))
     (when debug-mode
-      (format output "~%Merging ~a -> " (sexpify source-element)))
+      (format output
+              "~%Merging ~a -> "
+              (sexpify source-element))
+      (finish-output output))
     (dolist (coupling-element (coupling-class-elements-list source-element))
-      (setq coupling-element (merge-element coupling-element nodes-pairs :debug-mode debug-mode :output output)))
+      (setq coupling-element (merge-element coupling-element
+                                            nodes-pairs
+                                            :debug-mode debug-mode
+                                            :output output)))
     (when (coupling-class-model source-element)
-      (setf (coupling-class-model source-element) (merge-element (coupling-class-model source-element) nodes-pairs :debug-mode debug-mode :output output)))
+      (setf (coupling-class-model source-element) (merge-element (coupling-class-model source-element)
+                                                                 nodes-pairs
+                                                                 :debug-mode debug-mode
+                                                                 :output output)))
     (when debug-mode
-      (format output "~a" (sexpify source-element)))
+      (format output
+              "~a"
+              (sexpify source-element))
+      (finish-output output))
     source-element))
 
-(defmethod merge-element ((object subcircuit-class) nodes-pairs &optional &key (debug-mode nil) (output *standard-output*))
+(defmethod merge-element ((object subcircuit-class) nodes-pairs &rest parameters &key (debug-mode nil) (output *standard-output*))
+  (declare (ignorable parameters debug-mode output))
   (let ((source-element object))
     (when debug-mode
-      (format output "~%Merging ~a -> " (sexpify source-element)))
+      (format output
+              "~%Merging ~a -> "
+              (sexpify source-element))
+      (finish-output output))
     (dolist (nodes-pair nodes-pairs)
       (setf (subcircuit-class-nodes-list source-element) (substitute-if (second nodes-pair) #'(lambda (x)
-										       (equalp x (first nodes-pair))) (subcircuit-class-nodes-list source-element))))
+										                (equalp x (first nodes-pair)))
+                                                                        (subcircuit-class-nodes-list source-element))))
     (when debug-mode
-      (format output "~a." (sexpify source-element)))
+      (format output
+              "~a."
+              (sexpify source-element))
+      (finish-output output))
     source-element))
 
 ;;;
@@ -1134,43 +677,69 @@
 ;;;               (("netlist1:N1" "netlist2:N1") ("netlist1:N2" "netlist2:N10"))
 ;;;
 
-(defun connect (source-netlist target-netlist nodes-pairs &optional &key (debug-mode nil) (output *standard-output*))
+(defun connect (source-netlist target-netlist nodes-pairs &rest parameters &key (debug-mode nil) (output *standard-output*))
+  (declare (ignorable parameters debug-mode output))
   (let ((return-value target-netlist)
-	(source-elements-list (exclude (where :class-type 'node-class) (netlist-class-elements-list source-netlist)))
-	(target-elements-list (exclude (where :class-type 'node-class) (netlist-class-elements-list target-netlist)))
-	(source-nodes-list (select (where :class-type 'node-class) (netlist-class-elements-list source-netlist)))
-	(target-nodes-list (select (where :class-type 'node-class) (netlist-class-elements-list target-netlist))))
+	(source-elements-list (exclude (where :class-type 'node-class)
+                                       (netlist-class-elements-list source-netlist)))
+	(target-elements-list (exclude (where :class-type 'node-class)
+                                       (netlist-class-elements-list target-netlist)))
+	(source-nodes-list (select (where :class-type 'node-class)
+                                   (netlist-class-elements-list source-netlist)))
+	(target-nodes-list (select (where :class-type 'node-class)
+                                   (netlist-class-elements-list target-netlist))))
     (when debug-mode
-      (format output "~%~%Connecting ~a to ~a with connections ~a." (element-class-name source-netlist) (element-class-name target-netlist) nodes-pairs))
+      (format output
+              "~%~%Connecting ~a to ~a with connections ~a."
+              (element-class-name source-netlist)
+              (element-class-name target-netlist)
+              nodes-pairs)
+      (finish-output output))
     (dolist (nodes-pair nodes-pairs)
       (setq source-nodes-list (remove-if #'(lambda (x)
-					     (equalp (first nodes-pair) (element-class-name x))) source-nodes-list)))
+					     (equalp (first nodes-pair) (element-class-name x)))
+                                         source-nodes-list)))
     (when debug-mode
-      (format output "~%~%Nodes to merge:~%~a" (mapcar #'sexpify source-nodes-list)))
+      (format output
+              "~%~%Nodes to merge:~%~a"
+              (mapcar #'sexpify source-nodes-list))
+      (finish-output output))
     (setq target-nodes-list (append target-nodes-list source-nodes-list))
     (dolist (source-element source-elements-list)
-      (setq source-element (merge-element source-element nodes-pairs :debug-mode debug-mode :output output))
-      (setq target-elements-list (append target-elements-list (list source-element))))
+      (setq source-element (merge-element source-element nodes-pairs
+                                          :debug-mode debug-mode
+                                          :output output))
+      (setq target-elements-list (append target-elements-list
+                                         (list source-element))))
     (setf (netlist-class-elements-list return-value) target-elements-list)
-    (setf (netlist-class-elements-list return-value) (append (netlist-class-elements-list return-value) target-nodes-list))
+    (setf (netlist-class-elements-list return-value) (append (netlist-class-elements-list return-value)
+                                                             target-nodes-list))
     return-value))
 
 ;;;
 ;;; read a netlist from a file
 ;;;
 
-(defun read-netlist (file-pathname &optional &key (debug-mode nil) (output *standard-output*))
+(defun read-netlist (file-pathname &rest parameters &key (debug-mode nil) (output *standard-output*))
   "Read a complete netlist from an existing file."
+  (declare (ignorable parameters debug-mode output))
   (handler-case
       (let ((*package* (find-package :circuit-solver)))
 	(when debug-mode
-	  (format output "~a~%" file-pathname))
+	  (format output
+                  "~a~%"
+                  file-pathname)
+          (finish-output output))
 	(with-open-file (input-file-stream file-pathname :direction :input :if-does-not-exist nil)
 	  (if input-file-stream
 	      (objectify (read input-file-stream))
-	      (error 'file-not-found-error :file-pathname file-pathname))))
+	      (error 'file-not-found-error
+                     :file-pathname file-pathname))))
     (file-not-found-error (condition)
-      (format *error-output* "~%file ~a does not exist.~%" (file-pathname condition))
+      (format *error-output*
+              "~%file ~a does not exist.~%"
+              (file-pathname condition))
+      (finish-output *error-output*)
       nil)))
 
 ;;;
@@ -1200,109 +769,6 @@
 ;;; rename netlist
 ;;;
 
-(defmethod rename-netlist-element ((object element-class) name &optional &key (debug-mode nil) (output *standard-output*))
-  (let ((return-value object))
-    (when debug-mode
-      (format output "~%Renaming ~a type ~a to " (element-class-name return-value) (type-of return-value)))
-    (setf (element-class-name return-value) (merge-names name (element-class-name return-value)))
-    (when debug-mode
-      (format output "~a." (element-class-name return-value)))
-    return-value))
-
-(defmethod rename-netlist-element ((object probe-class) name &optional &key (debug-mode nil) (output *standard-output*))
-  (handler-case
-      (let ((return-value (call-next-method object name :debug-mode debug-mode :output output)))
-	(cond
-	  ((voltage-probe-class-p return-value)
-	   (setf (probe-class-nodes-list return-value) (mapcar #'(lambda (x)
-								   (merge-names name x)) (probe-class-nodes-list return-value))))
-	  ((current-probe-class-p return-value)
-	   (setf (probe-class-elements-list return-value) (mapcar #'(lambda (x)
-								      (merge-names name x)) (probe-class-elements-list return-value))))
-	  (t
-	   (error 'undefined-probe-type-error :probe-type (element-class return-value) :probe-name (element-class-name return-value))))
-	return-value)
-    (undefined-probe-type-error (condition)
-      (format *error-output* "~%Undefined probe type ~a for ~a." (probe-type condition) (probe-name condition))
-      nil)))
-
-(defmethod rename-netlist-element ((object model-class) name &optional &key (debug-mode nil) (output *standard-output*))
-  (let ((return-value (call-next-method object name :debug-mode debug-mode :output output)))
-    (when (element-probes-list return-value)
-      (setf (element-probes-list return-value) (mapcar #'(lambda (x)
-							   (rename-netlist-element x name debug-mode)) (element-probes-list return-value))))
-    return-value))
-
-(defmethod rename-netlist-element ((object passive-class) name &optional &key (debug-mode nil) (output *standard-output*))
-  (let ((return-value (call-next-method object name :debug-mode debug-mode :output output)))
-    (when (passive-class-model return-value)
-      (setf (passive-class-model return-value) (rename-netlist-element (passive-class-model return-value) name debug-mode)))
-    (when (passive-class-nodes-list return-value)
-      (setf (passive-class-nodes-list return-value) (mapcar #'(lambda (x)
-							  (concatenate 'string name ":" x)) (passive-class-nodes-list return-value))))
-    return-value))
-
-(defmethod rename-netlist-element ((object source-class) name &optional &key (debug-mode nil) (output *standard-output*))
-  (let ((return-value (call-next-method object name :debug-mode debug-mode :output output)))
-    (when (source-class-model return-value)
-      (setf (source-class-model return-value) (rename-netlist-element (source-class-model return-value) name debug-mode)))
-    (when (source-class-nodes-list return-value)
-      (setf (source-class-nodes-list return-value) (mapcar #'(lambda (x)
-							  (concatenate 'string name ":" x)) (source-class-nodes-list return-value))))
-    return-value))
-
-(defmethod rename-netlist-element ((object coupling-class) name &optional &key (debug-mode nil) (output *standard-output*))
-  (let ((return-value (call-next-method object name :debug-mode debug-mode :output output)))
-    (dolist (coupling-element (coupling-class-elements-list return-value))
-      (setq coupling-element (rename-netlist-element coupling-element name :debug-mode debug-mode :output output)))
-    (when (coupling-class-model return-value)
-      (setf (coupling-class-model return-value) (rename-netlist-element (coupling-class-model return-value) name :debug-mode debug-mode :output output)))
-    return-value))
-
-(defmethod rename-netlist-element ((object subcircuit-class) name &optional &key (debug-mode nil) (output *standard-output*))
-  (let ((return-value (call-next-method object name :debug-mode debug-mode :output output)))
-    (setf (subcircuit-class-nodes-list return-value) (mapcar #'(lambda (x)
-							(concatenate 'string name ":" x)) (subcircuit-class-nodes-list return-value)))
-    return-value))
-
-(defmethod rename-netlist-element ((object netlist-class) name &optional &key (debug-mode nil) (output *standard-output*))
-  (let ((return-value object))
-    (when debug-mode
-      (format output "~%~%Renaming netlist ~a to " (element-class-name object)))
-    (setf (element-class-name return-value) (concatenate 'string name ":" (element-class-name return-value)))
-    (when debug-mode
-      (format output "~a." (element-class-name return-value)))
-    (dolist (element (netlist-class-elements-list return-value))
-      (rename-netlist-element element name :debug-mode debug-mode :output output))
-    return-value))
-
-(defmethod element-with-node ((object passive-class) node-name)
-  (when (position node-name (passive-class-nodes-list object) :test 'string-equal)
-    object))
-
-(defmethod element-with-node ((object source-class) node-name)
-  (when (position node-name (source-class-nodes-list object) :test 'string-equal)
-    object))
-
-(defmethod element-with-node ((object subcircuit-class) node-name)
-  (when (position node-name (subcircuit-class-nodes-list object) :test 'string-equal)
-    object))
-
-(defmethod element-with-node ((object probe-class) node-name)
-  (when (position node-name (probe-class-nodes-list object) :test 'string-equal)
-    object))
-
-(defmethod element-with-node ((object coupling-class) node-name)
-  (let ((return-value nil))
-    (dolist (coupling-element (coupling-class-elements-list object))
-      (when (position node-name (passive-class-nodes-list object) :test 'string-equal)
-	(push coupling-element return-value)))
-    return-value))
-
-(defmethod element-with-node ((object node-class) node-name)
-  (when (string-equal node-name (element-class-name object))
-    object))
-
 (defun find-node-occurrences (netlist node-name)
   (let ((return-value nil)
 	(elements-list (netlist-class-elements-list netlist)))
@@ -1315,31 +781,47 @@
 ;;; include all subcircuit in a netlist
 ;;;
 
-(defun include-subcircuits (netlist &optional &key (verbose nil) (debug-mode nil) (output *standard-output*))
+(defun include-subcircuits (netlist &rest parameters &key (verbose nil) (debug-mode nil) (output *standard-output*))
+  (declare (ignorable parameters verbose debug-mode output))
   (handler-case
       (let ((return-value netlist)
 	    (subcircuit-calls-list nil))
 	(when verbose
-	  (format output "~%Including subcircuits."))
+	  (format output
+                  "~%Including subcircuits.")
+          (finish-output output))
 	(loop do
 	     (setq subcircuit-calls-list (select (where :class-type 'subcircuit-class)
 						 (netlist-class-elements-list return-value)))
 	     (when subcircuit-calls-list
 	       (when debug-mode
-		 (format output "~%~%Subcircuit calls: ~a~%" (mapcar #'sexpify subcircuit-calls-list)))
+		 (format output
+                         "~%~%Subcircuit calls: ~a~%"
+                         (mapcar #'sexpify subcircuit-calls-list))
+                 (finish-output output))
 	       (let ((subcircuits-list (mapcar #'(lambda (x)
-						   (read-netlist (subcircuit-class-file-pathname x) :debug-mode debug-mode :output output)) subcircuit-calls-list))
+						   (read-netlist (subcircuit-class-file-pathname x)
+                                                                 :debug-mode debug-mode
+                                                                 :output output))
+                                               subcircuit-calls-list))
 		     (subcircuit nil)
 		     (i 0))
 		 (dolist (subcircuit-call subcircuit-calls-list)
 		   (setq subcircuit (nth i subcircuits-list))
 		   (when debug-mode
-		     (format output "~%~%Original subcircuit netlist:~%~a" (sexpify subcircuit)))
-		   (setq subcircuit (rename-netlist-element subcircuit (element-class-name subcircuit-call) :debug-mode debug-mode :output output))
+		     (format output
+                             "~%~%Original subcircuit netlist:~%~a"
+                             (sexpify subcircuit))
+                     (finish-output output))
+		   (setq subcircuit (rename-netlist-element subcircuit
+                                                            (element-class-name subcircuit-call)
+                                                            :debug-mode debug-mode
+                                                            :output output))
 		   (let ((subcircuit-nodes-list (select (where :class-type 'node-class)
 							(netlist-class-elements-list subcircuit))))
 		     (when (> (length (subcircuit-class-nodes-list subcircuit-call)) (length subcircuit-nodes-list))
-		       (error 'wrong-subcircuit-nodes-list-error :subcircuit-name (element-class-name subcircuit)
+		       (error 'wrong-subcircuit-nodes-list-error
+                              :subcircuit-name (element-class-name subcircuit)
 			      :actual-nodes-count (length subcircuit-nodes-list)
 			      :needed-nodes-count (length (subcircuit-class-nodes-list subcircuit-call))))
 		     (let ((connection-nodes-list nil))
@@ -1347,185 +829,284 @@
 			    (setq connection-nodes-list (append connection-nodes-list (list (list (element-class-name (nth i subcircuit-nodes-list))
 												  (nth i (subcircuit-class-nodes-list subcircuit-call)))))))
 		       (when debug-mode
-			 (format output "~%~%Connections nodes pairs ~a" connection-nodes-list))
-		       (setq return-value (connect subcircuit return-value connection-nodes-list :debug-mode debug-mode :output output))
-		       (setf (netlist-class-elements-list return-value) (exclude (where :name (element-class-name subcircuit-call) :class-type 'subcircuit-class)
+			 (format output
+                                 "~%~%Connections nodes pairs ~a"
+                                 connection-nodes-list)
+                         (finish-output output))
+		       (setq return-value (connect subcircuit
+                                                   return-value
+                                                   connection-nodes-list
+                                                   :debug-mode debug-mode
+                                                   :output output))
+		       (setf (netlist-class-elements-list return-value) (exclude (where :name (element-class-name subcircuit-call)
+                                                                                        :class-type 'subcircuit-class)
 										 (netlist-class-elements-list return-value)))
 		       (when debug-mode
-			 (format output "~%~%Resulting netlist:~%~a" (sexpify return-value)))))
+			 (format output
+                                 "~%~%Resulting netlist:~%~a"
+                                 (sexpify return-value))
+                         (finish-output output))))
 		   (incf i))))
 	   until (eql subcircuit-calls-list nil))
 	(when verbose
-	  (format output " Done!"))
+	  (format output
+                  " Done!")
+          (finish-output output))
 	return-value)
     (wrong-subcircuit-nodes-list-error (condition)
-      (format *error-output* "~%Subcircuit ~a has got ~a instead of ~a in the include command." (subcircuit-name condition) (actual-nodes-count condition) (needed-nodes-count condition)))))
+      (format *error-output*
+              "~%Subcircuit ~a has got ~a instead of ~a in the include command."
+              (subcircuit-name condition)
+              (actual-nodes-count condition)
+              (needed-nodes-count condition))
+      (finish-output *error-output*))))
 
-(defun check-netlist (netlist &optional &key (debug-mode nil) (output *standard-output*))
+(defun check-netlist (netlist &rest parameters &key (debug-mode nil) (output *standard-output*))
+  (declare (ignorable parameters debug-mode output))
   (handler-case
-      (let* ((elements-list (exclude (where :class-type 'node-class) (netlist-class-elements-list netlist)))
-	     (nodes-list (select (where :class-type 'node-class) (netlist-class-elements-list netlist)))
+      (let* ((elements-list (exclude (where :class-type 'node-class)
+                                     (netlist-class-elements-list netlist)))
+	     (nodes-list (select (where :class-type 'node-class)
+                                 (netlist-class-elements-list netlist)))
 	     (error-found 0))
 	(when (< (length nodes-list) 2)
-	  (format output "Less than two nodes for netlist ~a.~%" (element-class-name netlist))
+	  (format output
+                  "Less than two nodes for netlist ~a.~%"
+                  (element-class-name netlist))
+          (finish-output output)
 	  (setq error-found 1))
 	(let ((reference-nodes (select (list (where :class "reference")
 					     (where :class "gnd")
-					     (where :class "0")) nodes-list)))
+					     (where :class "0"))
+                                       nodes-list)))
 	  (cond
 	    ((eql (length reference-nodes) 0)
-	     (format output "~%No reference node in netlist ~a." (element-class-name netlist))
+	     (format output
+                     "~%No reference node in netlist ~a."
+                     (element-class-name netlist))
+             (finish-output output)
 	     (setq error-found 2))
 	    ((> (length reference-nodes) 1)
-	     (format output "~%Too many reference nodes in netlist ~a: ~a." (element-class-name netlist) (mapcar #'sexpify reference-nodes))
+	     (format output
+                     "~%Too many reference nodes in netlist ~a: ~a."
+                     (element-class-name netlist)
+                     (mapcar #'sexpify reference-nodes))
+             (finish-output output)
 	     (setq error-found 3))))
 	(dolist (element elements-list)
 	  (when (> (length (select (where :name (element-class-name element)) elements-list)) 1)
-	    (format output "~%Object ~a defined more than once." (element-class-name element))
+	    (format output
+                    "~%Object ~a defined more than once."
+                    (element-class-name element))
+            (finish-output output)
 	    (setq error-found 4))
 	  (typecase element
 	    (coupling-class
 	     (when (< (length (coupling-class-elements-list element)) 2)
-	       (error 'wrong-number-of-elements-for-coupling-error :element-name (element-class-name element))
+	       (error 'wrong-number-of-elements-for-coupling-error
+                      :element-name (element-class-name element))
 	       (setq error-found 5))
 	     (unless (eql (/ (* (length (coupling-class-elements-list element))
-				(1- (length (coupling-class-elements-list element)))) 2)
+				(1- (length (coupling-class-elements-list element))))
+                             2)
 			  (grid:dim0 (coupling-class-value element)))
-	       (error 'mismatched-number-of-coupling-values-vs-coupling-inductances-error :coupling-name (element-class-name element)))
-	     (unless (check-objects (coupling-class-elements-list element) (list (where :class "inductance")
-										 (where :class "capacitance")))
-	       (error 'invalid-passive-element-in-coupling :coupling-name (element-class-name element))))))
+	       (error 'mismatched-number-of-coupling-values-vs-coupling-inductances-error
+                      :coupling-name (element-class-name element)))
+	     (unless (check-objects (coupling-class-elements-list element)
+                                    (list (where :class "inductance")
+					  (where :class "capacitance")))
+	       (error 'invalid-passive-element-in-coupling
+                      :coupling-name (element-class-name element))))))
 	error-found)
     (wrong-number-of-elements-for-coupling-error (condition)
-      (format *error-output* "~%Less than coupling elements in ~a.~%" (element-name condition))
+      (format *error-output*
+              "~%Less than coupling elements in ~a.~%"
+              (element-name condition))
+      (finish-output *error-output*)
       nil)
     (mismatched-number-of-coupling-values-vs-coupling-inductances-error (condition)
-      (format *error-output "~%Coupling ~a mismatched number of coupling values vs coupling inductances." (coupling-name condition))
+      (format *error-output*
+              "~%Coupling ~a mismatched number of coupling values vs coupling inductances."
+              (coupling-name condition))
+      (finish-output *error-output*)
       nil)
     (invalid-passive-element-in-coupling (condition)
-      (format *error-output* "~%Invalid passive element in coupling ~a~%" (coupling-name condition))
+      (format *error-output*
+              "~%Invalid passive element in coupling ~a~%"
+              (coupling-name condition))
+      (finish-output *error-output*)
       nil)))
-
 
 ;;;
 ;;; create K or Y vector
 ;;;
 
-(defun create-k-y-vector (netlist &optional &key (debug-mode nil) (output *standard-output*))
+(defun create-k-y-vector (netlist &rest parameters &key (debug-mode nil) (output *standard-output*))
+  (declare (ignorable parameters debug-mode output))
   (let ((elements-list (select (list (where :class-type 'source-class)
-					(where :class-type 'passive-class)) netlist))
+				     (where :class-type 'passive-class))
+                               netlist))
 	(couplings-list (select (where :class-type 'coupling-class) netlist))
 	(nodes-list (exclude (list (where :class "reference")
 				   (where :class "REFERENCE")
 				   (where :class "gnd")
 				   (where :class "GND")
-				   (where :class "0")) (select (where :class-type 'node-class) netlist)))
+				   (where :class "0"))
+                             (select (where :class-type 'node-class)
+                                     netlist)))
 	(k-y-vector nil)
 	(k-y-rows 0))
     (when debug-mode
-      (format output "~%Creating K or Y vector: "))
+      (format output
+              "~%Creating K or Y vector: ")
+      (finish-output output))
     (setq k-y-rows (length nodes-list))
     (incf k-y-rows (length elements-list))
     (dolist (coupling couplings-list)
       (incf k-y-rows (length (coupling-class-elements-list coupling))))
     (when (> k-y-rows 0)
-      (setq k-y-vector (grid:make-foreign-array 'double-float :dimensions k-y-rows :initial-element 0d0)))
+      (setq k-y-vector (grid:make-foreign-array 'double-float
+                                                :dimensions k-y-rows
+                                                :initial-element 0d0)))
     (when debug-mode
       (if (> k-y-rows 0)
 	  (format output "(~a)." k-y-rows)
-	  (format output "ø.")))
+	  (format output "ø."))
+      (finish-output output))
     k-y-vector))
 
 ;;;
 ;;; create the p-matrix once for all
 ;;;
 
-(defun create-p-matrix (netlist &optional &key (debug-mode nil) (output *standard-output*))
-  (let ((nodes-list (select (where :class-type 'node-class) netlist))
-	(couplings-list (select (where :class-type 'coupling-class) netlist))
+(defun create-p-matrix (netlist &rest parameters &key (debug-mode nil) (output *standard-output*))
+  (declare (ignorable parameters debug-mode output))
+  (let ((nodes-list (select (where :class-type 'node-class)
+                            netlist))
+	(couplings-list (select (where :class-type 'coupling-class)
+                                netlist))
 	(p-matrix nil)
 	(p-rows 0)
 	(p-cols 0))
     (when debug-mode
-      (format output "~%Creating P matrix: "))
+      (format output
+              "~%Creating P matrix: ")
+      (finish-output output))
     (setq p-rows (1- (length nodes-list)))
     (setq p-cols (length (select (list (where :class-type 'source-class)
-				       (where :class-type 'passive-class)) netlist)))
+				       (where :class-type 'passive-class))
+                                 netlist)))
     (dolist (coupling couplings-list)
       (incf p-cols (length (coupling-class-elements-list coupling))))
     (when (and (> p-cols 0) (> p-rows 0))
-      (setq p-matrix (grid:make-foreign-array 'double-float :dimensions (list p-rows p-cols) :initial-element 0d0)))
+      (setq p-matrix (grid:make-foreign-array 'double-float
+                                              :dimensions (list p-rows p-cols)
+                                              :initial-element 0d0)))
     (when debug-mode
       (if (and (> p-cols 0) (> p-rows 0))
-	  (format output "P(~a x ~a)." p-rows p-cols)
-	  (format output "P = ø.")))
+          (format output "P(~a x ~a)." p-rows p-cols)
+	  (format output "P = ø."))
+      (finish-output output))
     p-matrix))
 
 ;;;
 ;;; create g-point matrix
 ;;;
 
-(defun create-g-c-matrix (netlist &optional &key (debug-mode nil) (output *standard-output*))
-  (let* ((nodes-list (select (where :class-type 'node-class) netlist))
-	 (elements-list (select (where :class-type 'passive-class) netlist))
-	 (couplings-list (select (where :class-type 'coupling-class) netlist))
+(defun create-g-c-matrix (netlist &rest parameters &key (debug-mode nil) (output *standard-output*))
+  (declare (ignorable parameters debug-mode output))
+  (let* ((nodes-list (select (where :class-type 'node-class)
+                             netlist))
+	 (elements-list (select (where :class-type 'passive-class)
+                                netlist))
+	 (couplings-list (select (where :class-type 'coupling-class)
+                                 netlist))
 	 (g-c-matrix nil)
 	 (g-c-rows 0)
 	 (g-c-cols 0))
     (when debug-mode
-      (format output "~%Creating G or C matrix: "))
+      (format output
+              "~%Creating G or C matrix: ")
+      (finish-output output))
     (setq g-c-cols (1- (length nodes-list)))
     (setq g-c-rows (length elements-list))
     (dolist (coupling couplings-list)
       (incf g-c-rows (length (coupling-class-elements-list coupling))))
     (when (and (> g-c-rows 0) (> g-c-cols 0))
-      (setq g-c-matrix (grid:make-foreign-array 'double-float :dimensions (list g-c-rows g-c-cols) :initial-element 0d0)))
+      (setq g-c-matrix (grid:make-foreign-array 'double-float
+                                                :dimensions (list g-c-rows g-c-cols)
+                                                :initial-element 0d0)))
     (when debug-mode
-      (if (and (> g-c-rows 0) (> g-c-cols 0))
-	  (format output "(~a, ~a)." g-c-rows g-c-cols)
-	  (format output "ø.")))
+      (if (and (> g-c-rows 0)
+               (> g-c-cols 0))
+	  (format output
+                  "(~a, ~a)."
+                  g-c-rows
+                  g-c-cols)
+	  (format output
+                  "ø."))
+      (finish-output output))
     g-c-matrix))
 
 ;;;
 ;;; create l-matrix for synchronous machine abduction
 ;;;
 
-(defun create-r-l-matrix (netlist &optional &key (debug-mode nil) (output *standard-output*))
+(defun create-r-l-matrix (netlist &rest parameters &key (debug-mode nil) (output *standard-output*))
+  (declare (ignorable parameters debug-mode output))
   (let* ((elements-list (select (where :class-type 'passive-class) netlist))
 	 (couplings-list (select (where :class-type 'coupling-class) netlist))
 	 (r-l-matrix nil)
 	 (r-l-rows 0)
 	 (r-l-cols 0))
     (when debug-mode
-      (format output "~%Creating R or L matrix: "))
+      (format output
+              "~%Creating R or L matrix: ")
+      (finish-output output))
     (setq r-l-cols (length (select (list (where :class-type 'passive-class)
-					 (where :class-type 'source-class)) netlist)))
+					 (where :class-type 'source-class))
+                                   netlist)))
     (setq r-l-rows (length elements-list))
     (dolist (coupling couplings-list)
       (incf r-l-rows (length (coupling-class-elements-list coupling)))
       (incf r-l-cols (length (coupling-class-elements-list coupling))))
-    (when (and (> r-l-rows 0) (> r-l-cols 0))
-      (setq r-l-matrix (grid:make-foreign-array 'double-float :dimensions (list r-l-rows r-l-cols) :initial-element 0d0)))
+    (when (and (> r-l-rows 0)
+               (> r-l-cols 0))
+      (setq r-l-matrix (grid:make-foreign-array 'double-float
+                                                :dimensions (list r-l-rows r-l-cols)
+                                                :initial-element 0d0)))
     (when debug-mode
-      (if (and (> r-l-rows 0) (> r-l-cols 0))
-	  (format output "(~a, ~a)." r-l-rows r-l-cols)
-	  (format output "ø.")))
+      (if (and (> r-l-rows 0)
+               (> r-l-cols 0))
+	  (format output
+                  "(~a, ~a)."
+                  r-l-rows
+                  r-l-cols)
+	  (format output
+                  "ø."))
+      (finish-output output))
     r-l-matrix))
 
 ;;;
 ;;; create a beautiful Si matrix
 ;;;
 
-(defun create-si-matrix (netlist &optional &key (debug-mode nil) (output *standard-output*))
+(defun create-si-matrix (netlist &rest parameters &key (debug-mode nil) (output *standard-output*))
+  (declare (ignorable parameters debug-mode output))
   (let* ((elements-list (select (list (where :class-type 'passive-class)
-				      (where :class-type 'source-class)) netlist))
-	 (current-sources-list (select (list (where :class-type 'source-class :class "current-source")) netlist))
-	 (couplings-list (select (where :class-type 'coupling-class) netlist))
+				      (where :class-type 'source-class))
+                                netlist))
+	 (current-sources-list (select (list (where :class-type 'source-class
+                                                    :class "current-source"))
+                                       netlist))
+	 (couplings-list (select (where :class-type 'coupling-class)
+                                 netlist))
 	 (si-matrix nil)
 	 (si-rows 0)
 	 (si-cols 0))
     (when debug-mode
-      (format output "~%Creating Si matrix: "))
+      (format output "~%Creating Si matrix: ")
+      (finish-output output))
     (setq si-rows (length current-sources-list))
     (setq si-cols (length elements-list))
     (dolist (coupling couplings-list)
@@ -1535,86 +1116,116 @@
     (when debug-mode
       (if (and (> si-rows 0) (> si-cols 0))
 	  (format output "Si(~a, ~a)." si-rows si-cols)
-	  (format output "Si = ø.")))
+	  (format output "Si = ø."))
+      (finish-output output))
     si-matrix))
 
 ;;;
 ;;; create the Sv matrix for your joy
 ;;;
 
-(defun create-sv-matrix (netlist &optional &key (debug-mode nil) (output *standard-output*))
-  (let ((nodes-list (select (where :class-type 'node-class) netlist))
-	(voltage-sources-list (select (list (where :class-type 'source-class :class "voltage-source")) netlist))
+(defun create-sv-matrix (netlist &rest parameters &key (debug-mode nil) (output *standard-output*))
+  (declare (ignorable parameters debug-mode output))
+  (let ((nodes-list (select (where :class-type 'node-class)
+                            netlist))
+	(voltage-sources-list (select (list (where :class-type 'source-class
+                                                   :class "voltage-source"))
+                                      netlist))
 	(sv-matrix nil)
 	(sv-rows 0)
 	(sv-cols 0))
     (when debug-mode
-      (format output "~%Creating Sv matrix: "))
+      (format output "~%Creating Sv matrix: ")
+      (finish-output output))
     (setq sv-rows (length voltage-sources-list))
     (setq sv-cols (1- (length nodes-list)))
     (when (and (> sv-rows 0) (> sv-cols 0))
-      (setq sv-matrix (grid:make-foreign-array 'double-float :dimensions (list sv-rows sv-cols) :initial-element 0d0)))
+      (setq sv-matrix (grid:make-foreign-array 'double-float
+                                               :dimensions (list sv-rows sv-cols)
+                                               :initial-element 0d0)))
     (when debug-mode
       (if (and (> sv-rows 0) (> sv-cols 0))
 	  (format output "Sv(~a, ~a)." sv-rows sv-cols)
-	  (format output "Sv = ø.")))
+	  (format output "Sv = ø."))
+      (finish-output output))
     sv-matrix))
 
 ;;
 ;; create know factor matrix (current sources part).
 ;;
 
-(defun create-ki-vector (netlist &optional &key (debug-mode nil) (output *standard-output*))
-  (let ((current-sources-list (select (list (where :class-type 'source-class :class "current-source")) netlist))
+(defun create-ki-vector (netlist &rest parameters &key (debug-mode nil) (output *standard-output*))
+  (declare (ignorable parameters debug-mode output))
+  (let ((current-sources-list (select (list (where :class-type 'source-class
+                                                   :class "current-source"))
+                                      netlist))
 	(ki-vector nil)
 	(ki-rows 0))
     (when debug-mode
-      (format output "~%Creating Ki matrix: "))
+      (format output "~%Creating Ki matrix: ")
+      (finish-output output))
     (setq ki-rows (length current-sources-list))
     (when (> ki-rows 0)
       (setq ki-vector (grid:make-foreign-array 'double-float :dimensions ki-rows :initial-element 0d0)))
     (when debug-mode
       (if (> ki-rows 0)
 	  (format output "Ki(~a)." ki-rows)
-	  (format output "Ki = ø.")))
+	  (format output "Ki = ø."))
+      (finish-output output))
     ki-vector))
 
 ;;
 ;; create the kv part of "sto cazzo".
 ;;
 
-(defun create-kv-vector (netlist &optional &key (debug-mode nil) (output *standard-output*))
-  (let ((voltage-sources-list (select (list (where :class-type 'source-class :class "voltage-source")) netlist))
+(defun create-kv-vector (netlist &rest parameters &key (debug-mode nil) (output *standard-output*))
+  (declare (ignorable parameters debug-mode output))
+  (let ((voltage-sources-list (select (list (where :class-type 'source-class
+                                                   :class "voltage-source"))
+                                      netlist))
 	(kv-vector nil)
 	(kv-rows 0))
     (when debug-mode
-      (format output "~%Creating Kv matrix: "))
+      (format output "~%Creating Kv matrix: ")
+      (finish-output output))
     (setq kv-rows (length voltage-sources-list))
     (when (> kv-rows 0)
-      (setq kv-vector (grid:make-foreign-array 'double-float :dimensions kv-rows :initial-element 0d0)))
+      (setq kv-vector (grid:make-foreign-array 'double-float
+                                               :dimensions kv-rows
+                                               :initial-element 0d0)))
     (when debug-mode
       (if (> kv-rows 0)
 	  (format output "Kv(~a)." kv-rows)
-	  (format output "Kv = ø.")))
+	  (format output "Kv = ø."))
+      (finish-output output))
     kv-vector))
 
 ;;
 ;; update functions stuff
 ;;
 
-(defun update-p-matrix (p-matrix netlist &optional &key (debug-mode nil) (output *standard-output*))
-  (let ((nodes-list (select (where :class-type 'node-class) netlist))
+(defun update-p-matrix (p-matrix netlist &rest parameters &key (debug-mode nil) (output *standard-output*))
+  (declare (ignorable parameters debug-mode output))
+  (let ((nodes-list (select (where :class-type 'node-class)
+                            netlist))
 	(elements-list (select (list (where :class-type 'source-class)
 				     (where :class-type 'passive-class)
-				     (where :class-type 'coupling-class)) netlist))
+				     (where :class-type 'coupling-class))
+                               netlist))
 	(i 0)
 	(j 0))
     (when debug-mode
-      (format output "~%~%---- update-p-matrix ---- ~%~%")
-      (format output "Updating P[~a x ~a].~%" (grid:dim0 p-matrix) (grid:dim1 p-matrix)))
+      (format output
+              "~%~%---- update-p-matrix ---- ~%~%")
+      (format output
+              "Updating P[~a x ~a].~%"
+              (grid:dim0 p-matrix)
+              (grid:dim1 p-matrix))
+      (finish-output output))
     (dolist (node (exclude (list (where :class "reference")
 				 (where :class "gnd")
-				 (where :class "0")) nodes-list))
+				 (where :class "0"))
+                           nodes-list))
       (setq j 0)
       (let ((node-name (element-class-name node)))
 	(dolist (element elements-list)
@@ -1624,7 +1235,12 @@
 	       (when (string-equal node-name (first element-node-names-list))
 		 (setf (grid:gref p-matrix i j) -1d0)
 		 (when debug-mode
-		   (format output "P(~a, ~a) = ~a.~%" i j (grid:gref p-matrix i j))))
+		   (format output
+                           "P(~a, ~a) = ~a.~%"
+                           i
+                           j
+                           (grid:gref p-matrix i j))
+                   (finish-output output)))
 	       (when (string-equal node-name (second element-node-names-list))
 		 (setf (grid:gref p-matrix i j) +1d0)))
 	     (incf j))
@@ -1642,33 +1258,50 @@
 		   (when (string-equal node-name (first element-node-names-list))
 		     (setf (grid:gref p-matrix i j) -1d0)
 		     (when debug-mode
-		       (format output "P(~a, ~a) = ~a.~%" i j (grid:gref p-matrix i j))))
+		       (format output
+                               "P(~a, ~a) = ~a.~%"
+                               i
+                               j
+                               (grid:gref p-matrix i j))
+                       (finish-output output)))
 		   (when (string-equal node-name (second element-node-names-list))
 		     (setf (grid:gref p-matrix i j) +1d0)))
 		 (incf j)))))))
       (incf i))
     (when debug-mode
-      (format output "P =~%~a~%" p-matrix))
+      (format output
+              "P =~%~a~%"
+              p-matrix)
+      (finish-output output))
     p-matrix))
 
 ;;;
 ;;; update R matrix
 ;;;
 
-(defun update-r-matrix (r-matrix netlist &optional &key (debug-mode nil) (output *standard-output*))
+(defun update-r-matrix (r-matrix netlist &rest parameters &key (debug-mode nil) (output *standard-output*))
+  (declare (ignorable parameters debug-mode output))
   (let ((elements-list (select (list (where :class-type 'passive-class)
 				     (where :class-type 'coupling-class)
-				     (where :class-type 'source-class)) netlist))
+				     (where :class-type 'source-class))
+                               netlist))
 	(i 0)
 	(j 0))
     (when debug-mode
-      (format output "~%~%---- update-r-matrix ----~%~%")
-      (format output "Updating R[~a x ~a].~%" (grid:dim0 r-matrix) (grid:dim1 r-matrix)))
+      (format output
+              "~%~%---- update-r-matrix ----~%~%")
+      (format output
+              "Updating R[~a x ~a].~%"
+              (grid:dim0 r-matrix)
+              (grid:dim1 r-matrix))
+      (finish-output output))
     (dolist (element elements-list)
       (typecase element
 	(coupling-class
-	 (setq j (+ j (length (coupling-class-elements-list element))))
-	 (setq i (+ i (length (coupling-class-elements-list element)))))
+	 (setq j (+ j
+                    (length (coupling-class-elements-list element))))
+	 (setq i (+ i
+                    (length (coupling-class-elements-list element)))))
 	(passive-class
 	 (cond
 	   ((resistance-class-p element)
@@ -1681,10 +1314,14 @@
 	(source-class
 	 (incf j))))
     (when debug-mode
-      (format output "R =~%~a~%" r-matrix))
+      (format output
+              "R =~%~a~%"
+              r-matrix)
+      (finish-output output))
     r-matrix))
 
-(defmethod submatrix-update ((element passive-class) i matrix &optional &key (debug-mode nil) (output *standard-output*))
+(defmethod submatrix-update ((element passive-class) i matrix &rest parameters &key (debug-mode nil) (output *standard-output*))
+  (declare (ignorable parameters debug-mode output))
   (handler-case
       (let ((element-node-names-list (passive-class-nodes-list element))
 	    (j 0)
@@ -1696,10 +1333,13 @@
 	   (dolist (element-node-name element-node-names-list)
 	     (let ((found-node (find-element (where :name element-node-name) nodes-list)))
 	       (unless found-node
-		 (error 'no-such-node-for-element-error :node-name element-node-name :element-name (element-class-name element)))
+		 (error 'no-such-node-for-element-error
+                        :node-name element-node-name
+                        :element-name (element-class-name element)))
 	       (setq j (find-node-position element-node-name (exclude (list (where :class "reference")
 									    (where :class "gnd")
-									    (where :class "0")) nodes-list)))
+									    (where :class "0"))
+                                                                      nodes-list)))
 	       (unless (reference-class-node-p found-node)
 		 (setf (grid:gref g-matrix i j) (expt -1d0 k)))
 	       (incf k))))
@@ -1708,19 +1348,27 @@
 	   (dolist (element-node-name element-node-names-list)
 	     (let ((found-node (find-element (where :name element-node-name) nodes-list)))
 	       (unless found-node
-		 (error 'no-such-node-for-element-error :node-name element-node-name :element-name (element-class-name element)))
+		 (error 'no-such-node-for-element-error
+                        :node-name element-node-name
+                        :element-name (element-class-name element)))
 	       (setq j (find-node-position element-node-name (exclude (list (where :class "reference")
 									    (where :class "gnd")
-									    (where :class "0")) nodes-list)))
+									    (where :class "0"))
+                                                                      nodes-list)))
 	       (unless (reference-class-node-p found-node)
 		 (setf (grid:gref g-matrix i j) (* (expt -1d0 k) (passive-class-value element))))
 	       (incf k)))))
 	matrix)
     (no-such-node-for-element-error (condition)
-      (format *error-output* "No such node ~a for element ~a.~%" (node-name condition) (element-name condition))
+      (format *error-output*
+              "No such node ~a for element ~a.~%"
+              (node-name condition)
+              (element-name condition))
+      (finish-output *error-output*)
       nil)))
 
-(defmethod submatrix-update ((element coupling-class) i matrix &optional &key (debug-mode nil) (output *standard-output*))
+(defmethod submatrix-update ((element coupling-class) i matrix &rest parameters &key (debug-mode nil) (output *standard-output*))
+  (declare (ignorable parameters debug-mode output))
   (handler-case
       (let ((element-node-names-list (passive-class-nodes-list element))
 	    (j 0)
@@ -1731,26 +1379,38 @@
 	     (let ((element-node-names-list (passive-class-nodes-list coupling-element)))
 	       (unless (and (inductance-class-p coupling-element)
 			    (capacitance-class-p coupling-element))
-		 (error 'mismatched-coupling-element :element-name (element-class-name element)))
+		 (error 'mismatched-coupling-element
+                        :element-name (element-class-name element)))
 	       (setq k 0)
 	       (dolist (element-node-name element-node-names-list)
 		 (let ((found-node (find-element (where :name element-node-name) nodes-list)))
 		   (unless found-node
-		     (error 'no-such-node-for-element :node-name element-node-name :element-name (element-class-name coupling-element)))
+		     (error 'no-such-node-for-element
+                            :node-name element-node-name
+                            :element-name (element-class-name coupling-element)))
 		   (setq j (find-node-position element-node-name (exclude (list (where :class "reference")
 										(where :class "gnd")
-										(where :class "0")) nodes-list)))
+										(where :class "0"))
+                                                                          nodes-list)))
 		   (unless (reference-class-node-p found-node)
 		     (setf (grid:gref g-matrix i j) (expt -1d0 k)))
 		   (incf k)))))
 	    (t
-	     (error 'mismatched-coupling-element :element-name (element-class-name element)))))
+	     (error 'mismatched-coupling-element
+                    :element-name (element-class-name element)))))
 	matrix)
     (no-such-node-for-element-error (condition)
-      (format *error-output* "No such node ~a for element ~a.~%" (node-name condition) (element-name condition))
+      (format *error-output*
+              "No such node ~a for element ~a.~%"
+              (node-name condition)
+              (element-name condition))
+      (finish-output *error-output*)
       nil)
     (mismatched-coupling-element (condition)
-      (format *error-output* "Coupling ~a must contains only inductances or capacitances.~%" (element-name condition))
+      (format *error-output*
+              "Coupling ~a must contains only inductances or capacitances.~%"
+              (element-name condition))
+      (finish-output *error-output*)
       nil)))
 
 (defun apply-selectors (object selectors)
@@ -1777,18 +1437,26 @@
 ;; update G matrix
 ;;
 
-(defun update-g-matrix (g-matrix netlist &optional &key (debug-mode nil) (output *standard-output*))
+(defun update-g-matrix (g-matrix netlist &rest parameters &key (debug-mode nil) (output *standard-output*))
+  (declare (ignorable parameters debug-mode output))
   (handler-case
       (let ((elements-list (select (list (where :class-type 'source-class)
 					 (where :class-type 'passive-class)
-					 (where :class-type 'coupling-class)) netlist))
-	    (nodes-list (select (where :class-type 'node-class) netlist))
+					 (where :class-type 'coupling-class))
+                                   netlist))
+	    (nodes-list (select (where :class-type 'node-class)
+                                netlist))
 	    (i 0)
 	    (j 0)
 	    (k 0))
 	(when debug-mode
-	  (format output "~%~%---- update-g-matrix ----~%~%")
-	  (format output "Updating G[~a x ~a].~%" (grid:dim0 g-matrix) (grid:dim1 g-matrix)))
+	  (format output
+                  "~%~%---- update-g-matrix ----~%~%")
+	  (format output
+                  "Updating G[~a x ~a].~%"
+                  (grid:dim0 g-matrix)
+                  (grid:dim1 g-matrix))
+          (finish-output output))
 	(dolist (element elements-list)
 	  (typecase element
 	    (passive-class
@@ -1798,12 +1466,14 @@
 		      (inductance-class-p element))
 		  (setq k 0)
 		  (dolist (element-node-name element-node-names-list)
-		    (let ((found-node (find-element (where :name element-node-name) nodes-list)))
+		    (let ((found-node (find-element (where :name element-node-name)
+                                                    nodes-list)))
 		      (unless found-node
 			(error 'no-such-node-for-element-error :node-name element-node-name :element-name (element-class-name element)))
 		      (setq j (find-node-position element-node-name (exclude (list (where :class "reference")
 										   (where :class "gnd")
-										   (where :class "0")) nodes-list)))
+										   (where :class "0"))
+                                                                             nodes-list)))
 		      (unless (reference-class-node-p found-node)
 			(setf (grid:gref g-matrix i j) (expt -1d0 k)))
 		      (incf k))))
@@ -1812,10 +1482,13 @@
 		  (dolist (element-node-name element-node-names-list)
 		    (let ((found-node (find-element (where :name element-node-name) nodes-list)))
 		      (unless found-node
-			(error 'no-such-node-for-element-error :node-name element-node-name :element-name (element-class-name element)))
+			(error 'no-such-node-for-element-error
+                               :node-name element-node-name
+                               :element-name (element-class-name element)))
 		      (setq j (find-node-position element-node-name (exclude (list (where :class "reference")
 										   (where :class "gnd")
-										   (where :class "0")) nodes-list)))
+										   (where :class "0"))
+                                                                             nodes-list)))
 		      (unless (reference-class-node-p found-node)
 			(setf (grid:gref g-matrix i j) (* (expt -1d0 k) (passive-class-value element))))
 		      (incf k))))))
@@ -1827,45 +1500,67 @@
 		  (let ((element-node-names-list (passive-class-nodes-list coupling-element)))
 		    (unless (or (inductance-class-p coupling-element)
 				(capacitance-class-p coupling-element))
-		      (error 'mismatched-coupling-element :element-name (element-class-name element)))
+		      (error 'mismatched-coupling-element
+                             :element-name (element-class-name element)))
 		    (setq k 0)
 		    (dolist (element-node-name element-node-names-list)
 		      (let ((found-node (find-element (where :name element-node-name) nodes-list)))
 			(unless found-node
-			  (error 'no-such-node-for-element :node-name element-node-name :element-name (element-class-name coupling-element)))
+			  (error 'no-such-node-for-element
+                                 :node-name element-node-name
+                                 :element-name (element-class-name coupling-element)))
 			(setq j (find-node-position element-node-name (exclude (list (where :class "reference")
 										     (where :class "gnd")
-										     (where :class "0")) nodes-list)))
+										     (where :class "0"))
+                                                                               nodes-list)))
 			(unless (reference-class-node-p found-node)
 			  (setf (grid:gref g-matrix i j) (expt -1d0 k)))
 			(incf k)))))
 		 (t
-		  (error 'mismatched-coupling-element :element-name (element-class-name element))))
+		  (error 'mismatched-coupling-element
+                         :element-name (element-class-name element))))
 	       (incf i)))))
 	(when debug-mode
-	  (format output "G =~%~a~%" g-matrix))
+	  (format output
+                  "G =~%~a~%"
+                  g-matrix)
+          (finish-output output))
 	g-matrix)
     (no-such-node-for-element-error (condition)
-      (format *error-output* "No such node ~a for element ~a.~%" (node-name condition) (element-name condition))
+      (format *error-output*
+              "No such node ~a for element ~a.~%"
+              (node-name condition)
+              (element-name condition))
+      (finish-output *error-output*)
       nil)
     (mismatched-coupling-element (condition)
-      (format *error-output* "Coupling ~a must contains only inductances or capacitances.~%" (element-name condition))
+      (format *error-output*
+              "Coupling ~a must contains only inductances or capacitances.~%"
+              (element-name condition))
+      (finish-output *error-output*)
       nil)))
 
 ;;;
 ;;; update Si matrix
 ;;;
 
-(defun update-si-matrix (si-matrix netlist &optional &key (debug-mode nil) (output *standard-output*))
+(defun update-si-matrix (si-matrix netlist &rest parameters &key (debug-mode nil) (output *standard-output*))
+  (declare (ignorable parameters debug-mode output))
   (handler-case
       (let ((elements-list (select (list (where :class-type 'passive-class)
 					 (where :class-type 'coupling-class)
-					 (where :class-type 'source-class)) netlist))
+					 (where :class-type 'source-class))
+                                   netlist))
 	    (i 0)
 	    (j 0))
 	(when debug-mode
-	  (format output "~%~%---- update-si-matrix ----~%~%")
-	  (format output "Updating Si[~a x ~a].~%" (grid:dim0 si-matrix) (grid:dim1 si-matrix)))
+	  (format output
+                  "~%~%---- update-si-matrix ----~%~%")
+	  (format output
+                  "Updating Si[~a x ~a].~%"
+                  (grid:dim0 si-matrix)
+                  (grid:dim1 si-matrix))
+          (finish-output output))
 	(dolist (element elements-list)
 	  (typecase element
 	    (source-class
@@ -1878,51 +1573,81 @@
 	    (passive-class
 	     (incf j))))
 	(when debug-mode
-	  (format output "Si =~%~a~%" si-matrix))
+	  (format output
+                  "Si =~%~a~%"
+                  si-matrix)
+          (finish-output output))
 	si-matrix)))
 
 ;;;
 ;;; update Sv matrix
 ;;;
 
-(defun update-sv-matrix (sv-matrix netlist &optional &key (debug-mode nil) (output *standard-output*))
+(defun update-sv-matrix (sv-matrix netlist &rest parameters &key (debug-mode nil) (output *standard-output*))
+  (declare (ignorable parameters debug-mode output))
   (handler-case
-      (let ((sources-list (select (where :class-type 'source-class :class "voltage-source") netlist))
-	    (nodes-list (select (where :class-type 'node-class) netlist))
+      (let ((sources-list (select (where :class-type 'source-class
+                                         :class "voltage-source")
+                                  netlist))
+	    (nodes-list (select (where :class-type 'node-class)
+                                netlist))
 	    (i 0)
 	    (j 0)
 	    (k 0))
 	(when debug-mode
-	  (format output "~%~%---- update-sv-matrix ----~%~%")
-	  (format output "Updating Sv[~a x ~a].~%" (grid:dim0 sv-matrix) (grid:dim1 sv-matrix)))
+	  (format output
+                  "~%~%---- update-sv-matrix ----~%~%")
+	  (format output
+                  "Updating Sv[~a x ~a].~%"
+                  (grid:dim0 sv-matrix)
+                  (grid:dim1 sv-matrix))
+          (finish-output output))
 	(dolist (source sources-list)
 	  (setq k 0)
 	  (dolist (node-name (source-class-nodes-list source))
-	    (unless (reference-class-node-p (find-element (where :name node-name) nodes-list))
+	    (unless (reference-class-node-p (find-element (where :name node-name)
+                                                          nodes-list))
 	      (setq j (1- (find-node-position node-name nodes-list)))
 	      (unless j
-		(error 'no-such-node-for-element-error :element-name (element-class-name source) :node-name node-name))
+		(error 'no-such-node-for-element-error
+                       :element-name (element-class-name source)
+                       :node-name node-name))
 	      (setf (grid:gref sv-matrix i j) (expt -1d0 k)))
 	    (incf k))
 	  (incf i))
 	(when debug-mode
-	  (format output "Sv =~%~a~%" sv-matrix))
+	  (format output
+                  "Sv =~%~a~%"
+                  sv-matrix)
+          (finish-output output))
 	sv-matrix)
     (no-such-node-for-element-error (condition)
-      (format *error-output* "No such node ~a for element ~a.~%" (node-name condition) (element-name condition)))))
+      (format *error-output*
+              "No such node ~a for element ~a.~%"
+              (node-name condition)
+              (element-name condition))
+      (finish-output *error-output*)
+      nil)))
 
-(defun update-l-matrix (l-matrix netlist &optional &key (debug-mode nil) (output *standard-output*))
+(defun update-l-matrix (l-matrix netlist &rest parameters &key (debug-mode nil) (output *standard-output*))
+  (declare (ignorable parameters debug-mode output))
   (let ((elements-list (select (list (where :class-type 'passive-class)
 				     (where :class-type 'coupling-class)
-				     (where :class-type 'source-class)) netlist))
+				     (where :class-type 'source-class))
+                               netlist))
 	(i 0)
 	(j 0)
 	(k 0)
 	(p 0)
 	(m-value 0d0))
     (when debug-mode
-      (format output "~%~%---- update-l-matrix ----~%~%")
-      (format output "Updating L[~a x ~a].~%" (grid:dim0 l-matrix) (grid:dim1 l-matrix)))
+      (format output
+              "~%~%---- update-l-matrix ----~%~%")
+      (format output
+              "Updating L[~a x ~a].~%"
+              (grid:dim0 l-matrix)
+              (grid:dim1 l-matrix))
+      (finish-output output))
     (dolist (element elements-list)
       (typecase element
 	(passive-class
@@ -1937,48 +1662,78 @@
 	   (setf (grid:gref l-matrix (+ k i) (+ k j)) (- (passive-class-value coupling-element)))
 	   (incf k))
 	 (when debug-mode
-	   (format output "~%Coupling coefficients vector ~a.~%Coupling dimension ~a." (coupling-class-value element) k))
+	   (format output
+                   "~%Coupling coefficients vector ~a.~%Coupling dimension ~a."
+                   (coupling-class-value element) k)
+           (finish-output output))
 	 (loop for ii from 0 below k do
 	      (loop for jj from 0 below k do
 		   (unless (eql ii jj)
 		     (when debug-mode
-		       (format output "~%Mutual coupling (~a, ~a)." ii jj))
+		       (format output
+                               "~%Mutual coupling (~a, ~a)."
+                               ii
+                               jj)
+                       (finish-output output))
 		     (if (> jj ii)
 			 (setq p (/ (+ (* ii (- (* 2 k) ii 3)) (* 2 (- jj 1))) 2))
 			 (setq p (/ (+ (* jj (- (* 2 k) jj 3)) (* 2 (- ii 1))) 2)))
 		     (when debug-mode
-		       (format output "~%Coupling coefficient position ~a.~%i = ~a, ii = ~a, j = ~a, jj = ~a, M(~a, ~a) = " p i ii j jj (+ i ii) (+ j jj)))
+		       (format output
+                               "~%Coupling coefficient position ~a.~%i = ~a, ii = ~a, j = ~a, jj = ~a, M(~a, ~a) = "
+                               p
+                               i
+                               ii
+                               j
+                               jj
+                               (+ i ii)
+                               (+ j jj))
+                       (finish-output output))
 		     (setq m-value (* (grid:gref (coupling-class-value element) p)
 				      (sqrt (* (abs (grid:gref l-matrix (+ i ii) (+ j ii)))
 					       (abs (grid:gref l-matrix (+ i jj) (+ j jj)))))))
 		     (when debug-mode
-		       (format output "~a." m-value))
+		       (format output
+                               "~a."
+                               m-value)
+                       (finish-output output))
 		     (setf (grid:gref l-matrix (+ i ii) (+ j jj)) (- m-value)))))
 	 (incf i k)
 	 (incf j k))
 	(source-class
 	 (incf j))))
     (when debug-mode
-      (format output "~%L =~%~a~%" l-matrix))
+      (format output
+              "~%L =~%~a~%"
+              l-matrix)
+      (finish-output output))
     l-matrix))
 
 ;;
 ;; update C matrix
 ;;
 
-(defun update-c-matrix (c-matrix netlist &optional &key (debug-mode nil) (output *standard-output*))
+(defun update-c-matrix (c-matrix netlist &rest parameters &key (debug-mode nil) (output *standard-output*))
+  (declare (ignorable parameters debug-mode output))
   (let ((elements-list (select (list (where :class-type 'source-class)
 				     (where :class-type 'passive-class)
-				     (where :class-type 'coupling-class)) netlist))
+				     (where :class-type 'coupling-class))
+                               netlist))
 	(nodes-list (exclude (list (where :class "reference")
 				   (where :class "gnd")
-				   (where :class "0")) (select (where :class-type 'node-class) netlist)))
+				   (where :class "0")) (select (where :class-type 'node-class)
+                                                               netlist)))
 	(i 0)
 	(j 0)
 	(k 0))
     (when debug-mode
-      (format output "~%~%---- update-c-matrix ----~%~%")
-      (format output "Updating C[ ~a x ~a ].~%" (grid:dim0 c-matrix) (grid:dim1 c-matrix)))
+      (format output
+              "~%~%---- update-c-matrix ----~%~%")
+      (format output
+              "Updating C[ ~a x ~a ].~%"
+              (grid:dim0 c-matrix)
+              (grid:dim1 c-matrix))
+      (finish-output output))
     (dolist (element elements-list)
       (typecase element
 	(passive-class
@@ -1993,41 +1748,64 @@
 	(coupling-class
 	 (incf i (length (coupling-class-elements-list element))))))
     (when debug-mode
-      (format output "C =~%~a~%" c-matrix))
+      (format output
+              "C =~%~a~%"
+              c-matrix)
+      (finish-output output))
     c-matrix))
 
 ;;;
 ;;; Update Ki vector
 ;;;
 
-(defun update-ki-vector (ki-vector netlist &optional &key (debug-mode nil) (output *standard-output*))
-  (let ((current-sources-list (select (list (where :class-type 'source-class :class "current-source")) netlist))
+(defun update-ki-vector (ki-vector netlist &rest parameters &key (debug-mode nil) (output *standard-output*))
+  (declare (ignorable parameters debug-mode output))
+  (let ((current-sources-list (select (list (where :class-type 'source-class
+                                                   :class "current-source"))
+                                      netlist))
 	(i 0))
     (when debug-mode
-      (format output "~%~%---- update-ki-vector ----~%~%")
-      (format output "Updating Ki[ ~a ].~%" (grid:dim0 ki-vector)))
+      (format output
+              "~%~%---- update-ki-vector ----~%~%")
+      (format output
+              "Updating Ki[ ~a ].~%"
+              (grid:dim0 ki-vector))
+      (finish-output output))
     (dolist (current-source current-sources-list)
       (setf (grid:gref ki-vector i) (source-class-value current-source))
       (incf i))
     (when debug-mode
-      (format output "Ki =~%~a~%" ki-vector))
+      (format output
+              "Ki =~%~a~%"
+              ki-vector)
+      (finish-output output))
     ki-vector))
 
 ;;;
 ;;; Update Kv vector
 ;;;
 
-(defun update-kv-vector (kv-vector netlist &optional &key (debug-mode nil) (output *standard-output*))
-  (let ((voltage-sources-list (select (list (where :class-type 'source-class :class "voltage-source")) netlist))
+(defun update-kv-vector (kv-vector netlist &rest parameters &key (debug-mode nil) (output *standard-output*))
+  (declare (ignorable parameters debug-mode output))
+  (let ((voltage-sources-list (select (list (where :class-type 'source-class
+                                                   :class "voltage-source"))
+                                      netlist))
 	(i 0))
     (when debug-mode
-      (format output "~%~%---- update-kv-vector ----~%~%")
-      (format output "Updating Kv[ ~a ].~%" (grid:dim0 kv-vector)))
+      (format output
+              "~%~%---- update-kv-vector ----~%~%")
+      (format output
+              "Updating Kv[ ~a ].~%"
+              (grid:dim0 kv-vector))
+      (finish-output output))
     (dolist (voltage-source voltage-sources-list)
       (setf (grid:gref kv-vector i) (source-class-value voltage-source))
       (incf i))
     (when debug-mode
-      (format output "Kv =~%~a~%" kv-vector))
+      (format output
+              "Kv =~%~a~%"
+              kv-vector)
+      (finish-output output))
     kv-vector))
 
 ;;;
@@ -2054,49 +1832,90 @@
 ;;
 ;; assemble A, B and K matrix
 
-(defun assemble-system (p-matrix r-matrix g-matrix si-matrix sv-matrix l-matrix c-matrix ki-vector kv-vector &optional &key (debug-mode nil) (output *standard-output*))
+(defun assemble-system (p-matrix r-matrix g-matrix si-matrix sv-matrix l-matrix c-matrix ki-vector kv-vector &rest parameters &key (debug-mode nil) (output *standard-output*))
+  (declare (ignorable parameters debug-mode output))
   (let ((a-matrix nil)
 	(b-matrix nil)
 	(k-vector nil))
     (when debug-mode
-      (format output "Assembling A, B matrices and K vector.~%"))
+      (format output
+              "Assembling A, B matrices and K vector.~%")
+      (finish-output output))
     (when (or p-matrix r-matrix g-matrix l-matrix c-matrix)
       (setq a-matrix (grid:concatenate-grids p-matrix
-					     (grid:make-foreign-array 'double-float :dimensions (list (grid:dim0 p-matrix)
-												      (grid:dim1 g-matrix)) :initial-element 0d0) :axis 1))
+					     (grid:make-foreign-array 'double-float
+                                                                      :dimensions (list (grid:dim0 p-matrix)
+											(grid:dim1 g-matrix))
+                                                                      :initial-element 0d0)
+                                             :axis 1))
       (setq a-matrix (grid:concatenate-grids a-matrix
-					     (grid:concatenate-grids r-matrix g-matrix :axis 1) :axis 0))
+					     (grid:concatenate-grids r-matrix
+                                                                     g-matrix
+                                                                     :axis 1)
+                                             :axis 0))
       (when si-matrix
 	(setq a-matrix (grid:concatenate-grids a-matrix
 					       (grid:concatenate-grids si-matrix
-								       (grid:make-foreign-array 'double-float :dimensions (list (grid:dim0 si-matrix)
-																(grid:dim1 g-matrix)) :initial-element 0d0) :axis 1) :axis 0)))
+								       (grid:make-foreign-array 'double-float
+                                                                                                :dimensions (list (grid:dim0 si-matrix)
+														  (grid:dim1 g-matrix))
+                                                                                                :initial-element 0d0)
+                                                                       :axis 1)
+                                               :axis 0)))
       (when sv-matrix
 	(setq a-matrix (grid:concatenate-grids a-matrix
-					       (grid:concatenate-grids (grid:make-foreign-array 'double-float :dimensions (list (grid:dim0 sv-matrix)
-																(grid:dim1 p-matrix)) :initial-element 0d0) sv-matrix :axis 1) :axis 0)))
+					       (grid:concatenate-grids (grid:make-foreign-array 'double-float
+                                                                                                :dimensions (list (grid:dim0 sv-matrix)
+														  (grid:dim1 p-matrix))
+                                                                                                :initial-element 0d0)
+                                                                       sv-matrix
+                                                                       :axis 1)
+                                               :axis 0)))
       (when debug-mode
-	(format output "~%A = ~a" a-matrix))
-      (setq b-matrix (grid:make-foreign-array 'double-float :dimensions (list (grid:dim0 p-matrix)
-									      (+ (grid:dim1 p-matrix)
-										 (grid:dim1 g-matrix))) :initial-element 0d0))
+	(format output
+                "~%A = ~a"
+                a-matrix)
+        (finish-output output))
+      (setq b-matrix (grid:make-foreign-array 'double-float
+                                              :dimensions (list (grid:dim0 p-matrix)
+								(+ (grid:dim1 p-matrix)
+								   (grid:dim1 g-matrix)))
+                                              :initial-element 0d0))
       (setq b-matrix (grid:concatenate-grids b-matrix
-					     (grid:concatenate-grids l-matrix c-matrix :axis 1) :axis 0))
+					     (grid:concatenate-grids l-matrix
+                                                                     c-matrix
+                                                                     :axis 1)
+                                             :axis 0))
       (setq b-matrix (grid:concatenate-grids b-matrix
-					     (grid:make-foreign-array 'double-float :dimensions (list (+ (grid:dim0 si-matrix)
-													 (grid:dim0 sv-matrix))
-												      (+ (grid:dim1 p-matrix)
-													 (grid:dim1 g-matrix))) :initial-element 0d0) :axis 0))
+					     (grid:make-foreign-array 'double-float
+                                                                      :dimensions (list (+ (grid:dim0 si-matrix)
+											   (grid:dim0 sv-matrix))
+											(+ (grid:dim1 p-matrix)
+											   (grid:dim1 g-matrix)))
+                                                                      :initial-element 0d0)
+                                             :axis 0))
       (when debug-mode
-	(format output "~%B = ~a" b-matrix))
-      (setq k-vector (grid:make-foreign-array 'double-float :dimensions (+ (grid:dim0 p-matrix)
-									   (grid:dim0 g-matrix)) :initial-element 0d0))
+	(format output
+                "~%B = ~a"
+                b-matrix)
+        (finish-output output))
+      (setq k-vector (grid:make-foreign-array 'double-float
+                                              :dimensions (+ (grid:dim0 p-matrix)
+							     (grid:dim0 g-matrix))
+                                              :initial-element 0d0))
       (when ki-vector
-	(setq k-vector (grid:concatenate-grids k-vector ki-vector :axis 0)))
+	(setq k-vector (grid:concatenate-grids k-vector
+                                               ki-vector
+                                               :axis 0)))
       (when kv-vector
-	(setq k-vector (grid:concatenate-grids k-vector kv-vector :axis 0)))
+	(setq k-vector (grid:concatenate-grids k-vector
+                                               kv-vector
+                                               :axis 0)))
       (when debug-mode
-	(format output "~%K = ~a" k-vector)))
+	(format output
+                "~%K = ~a"
+                k-vector)
+        (finish-output output)))
     (values a-matrix b-matrix k-vector)))
 
 ;;;
@@ -2105,7 +1924,8 @@
 ;;; (t0 t1 n time y)
 ;;;
 
-(defun evaluate-model (model &optional &key (debug-mode nil) (output *standard-output*))
+(defun evaluate-model (model &rest parameters &key (debug-mode nil) (output *standard-output*))
+  (declare (ignorable parameters debug-mode output))
   (handler-case
       (let* ((*package* (find-package :circuit-solver))
 	     (name (element-class-name model))
@@ -2119,26 +1939,39 @@
 	     (old-function-value nil))
 	(when function-symbol
 	  (setq function (symbol-function function-symbol))
-	  (setq old-function-value (apply function (list :parameters parameters-list :state states-list))))
+	  (setq old-function-value (apply function (list :parameters parameters-list
+                                                         :state states-list))))
 	(unless function-symbol
 	  (if (load (make-pathname :name function-name :type "vcs"))
 	      (setq model (evaluate-model model :debug-mode debug-mode :output output))
-	      (error 'unknown-function-error :function-name function-name)))
+	      (error 'unknown-function-error
+                     :function-name function-name)))
 	(cond
 	  ((simple-function-p model)
 	   (setf (model-class-value model) old-function-value))
 	  ((differential-function-p model)
 	   (setf (model-class-value model) (+ value (* *h* old-function-value))))
 	  (t
-	   (error 'undefined-model-class-error :model-name name :model-class-name class)))
+	   (error 'undefined-model-class-error
+                  :model-name name :model-class-name class)))
 	(when debug-mode
-	  (format output "Evaluated model: ~a~%" (sexpify model)))
+	  (format output
+                  "Evaluated model: ~a~%"
+                  (sexpify model))
+          (finish-output output))
 	model)
     (unknown-function-error (condition)
-      (format *error-output* "~%Could not find ~a function." (function-name condition))
+      (format *error-output*
+              "~%Could not find ~a function."
+              (function-name condition))
+      (finish-output *error-output*)
       nil)
     (undefined-model-class-error (condition)
-      (format *error-output* "~%Undefined class ~a for model ~a.~%" (model-name condition) (model-class-name condition))
+      (format *error-output*
+              "~%Undefined class ~a for model ~a.~%"
+              (model-name condition)
+              (model-class-name condition))
+      (finish-output *error-output*)
       nil)))
 
 ;;;
@@ -2147,32 +1980,46 @@
 ;;; determine state for variable for model: currents and/or voltages. Probes say which
 ;;; of them should be selected for model calculations. The state vector is formed like:
 ;;;
-;;;         position	|          meaning
+;;;         position	 |          meaning
 ;;;    ------------------+----------------------------
 ;;;            0         |   previous model value
 ;;;        1 ; m + 1     |    current variables
 ;;;    m + 2 ; m + n + 2 |    voltage variables
 ;;;
 
-(defun update-model (element netlist state-vector &optional &key (debug-mode nil) (output *standard-output*))
+(defun update-model (element netlist state-vector &rest parameters &key (debug-mode nil) (output *standard-output*))
+  (declare (ignorable parameters debug-mode output))
   (handler-case
       (let* ((elements-list (select (list (where :class-type 'source-class)
 					  (where :class-type 'passive-class)
-					  (where :class-type 'coupling-class)) netlist))
-	     (nodes-list (select (where :class-type 'node-class) netlist))
-	     (branches-number (- (grid:dim0 state-vector) (length nodes-list)))
+					  (where :class-type 'coupling-class))
+                                    netlist))
+	     (nodes-list (select (where :class-type 'node-class)
+                                 netlist))
+	     (branches-number (- (grid:dim0 state-vector)
+                                 (length nodes-list)))
 	     (state nil)
 	     (i 0))
 	(typecase element
 	  ((or source-class passive-class coupling-class)
 	   (when (element-class-model element)
 	     (when debug-mode
-	       (format output "Evaluating model for ~a.~%" (element-class-name element)))
-	     (setf (element-class-model element) (update-model (element-class-model element) netlist state-vector :debug-mode debug-mode :output output))
+	       (format output
+                       "Evaluating model for ~a.~%"
+                       (element-class-name element))
+               (finish-output output))
+	     (setf (element-class-model element) (update-model (element-class-model element)
+                                                               netlist state-vector
+                                                               :debug-mode debug-mode
+                                                               :output output))
 	     (setf (element-class-value element) (element-class-value (element-class-model element))))
 	   (when (coupling-class-p element)
 	     (dolist (inductance (coupling-class-elements-list element))
-	       (setq inductance (update-model inductance netlist state-vector :debug-mode debug-mode :output output)))))
+	       (setq inductance (update-model inductance
+                                              netlist
+                                              state-vector
+                                              :debug-mode debug-mode
+                                              :output output)))))
 	  (model-class
 	   (push (model-class-value element) state)
 	   (when (model-class-probes-list element)
@@ -2183,41 +2030,70 @@
 		    (dolist (node-name (probe-class-nodes-list probe))
 		      (let ((node (first (select (where :class-type 'node-class :name node-name) nodes-list))))
 			(unless node
-			  (error 'no-node-for-probe-error :node-name node-name :probe-name (element-class-name probe)))
+			  (error 'no-node-for-probe-error
+                                 :node-name node-name
+                                 :probe-name (element-class-name probe)))
 			(cond
 			  ((reference-class-node-p node)
 			   (push 0d0 state))
 			  (t
 			   (setq i (find-node-position node-name nodes-list))
 			   (unless i
-			     (error 'no-node-for-probe-error :node-name node-name :probe-name (element-class-name probe)))
+			     (error 'no-node-for-probe-error
+                                    :node-name node-name
+                                    :probe-name (element-class-name probe)))
 			   (push (grid:gref state-vector (+ i branches-number)) state))))))
 		   ((current-probe-class-p probe)
 		    (dolist (element-name (probe-class-elements-list probe))
 		      (multiple-value-bind (found-element i-found)
 			  (find-element (where :name element-name) elements-list)
 			(unless found-element
-			  (error 'no-element-for-probe-error :element-name element-name :probe-name (element-name probe)))
+			  (error 'no-element-for-probe-error
+                                 :element-name element-name
+                                 :probe-name (element-name probe)))
 			(push (grid:gref state-vector i-found) state))))
 		   (t
-		    (error 'undefined-probe-type-error :probe-name (element-class-name probe)))))))
+		    (error 'undefined-probe-type-error
+                           :probe-name (element-class-name probe)))))))
 	   (setf (model-class-states-list element) state)
 	   (when debug-mode
-	     (format output "Evaluating model ~a:~%Parameters = ~a~%State = ~a~%" (element-class-name element) (model-class-parameters-list element) (model-class-states-list element)))
-	   (setq element (evaluate-model element :debug-mode debug-mode :output output))))
+	     (format output
+                     "Evaluating model ~a:~%Parameters = ~a~%State = ~a~%"
+                     (element-class-name element)
+                     (model-class-parameters-list element)
+                     (model-class-states-list element))
+             (finish-output output))
+	   (setq element (evaluate-model element
+                                         :debug-mode debug-mode
+                                         :output output))))
 	element)
     (no-node-for-probe-error (condition)
-      (format *error-output* "No ~a node for probe ~a.~%" (node-name condition) (probe-name condition)))
+      (format *error-output*
+              "No ~a node for probe ~a.~%"
+              (node-name condition)
+              (probe-name condition))
+      (finish-output *error-output*)
+      nil)
     (no-element-for-probe-error (condition)
-      (format *error-output* "No ~a element for probe ~a.~%" (element-name condition) (probe-name-condition)))
+      (format *error-output*
+              "No ~a element for probe ~a.~%"
+              (element-name condition)
+              (probe-name-condition))
+      (finish-output *error-output*)
+      nil)
     (undefined-probe-type-error (condition)
-      (format *error-output* "Undefined probe type (~a).~%" (probe-name condition)))))
+      (format *error-output*
+              "Undefined probe type (~a).~%"
+              (probe-name condition))
+      (finish-output *error-output*)
+      nil)))
 
 ;;;
 ;;; print back simulation progress bar
 ;;;
 
-(defun print-progress-bar (step little-mark big-mark &optional &key (output *standard-output*))
+(defun print-progress-bar (step little-mark big-mark &rest parameters &key (output *standard-output*))
+  (declare (ignorable parameters debug-mode output))
   (let ((percent (* 100 (/ step *steps-number*))))
     (cond
       ((< percent 100)
@@ -2226,24 +2102,36 @@
 	   (when (eql (mod percent little-mark) 0)
 	     (format output "="))))
       ((eql percent 100)
-       (format output " 100% done!~%")))))
+       (format output
+               " 100% done!~%")
+       (finish-output output)))))
 
 ;;;
 ;;; select solutions to write onto file
 ;;;
 
-(defun select-probes (netlist y-vector output-file-stream &optional &key (debug-mode nil) (output *standard-output*))
+(defun select-probes (netlist y-vector output-file-stream &rest parameters &key (debug-mode nil) (output *standard-output*))
+  (declare (ignorable parameters debug-mode output))
   (handler-case
       (let ((elements-list (select (list (where :class-type 'source-class)
 					 (where :class-type 'passive-class)
-					 (where :class-type 'coupling-class)) (netlist-class-elements-list netlist)))
-	    (nodes-list (select (where :class-type 'node-class) (netlist-class-elements-list netlist)))
-	    (probes-list (select (where :class-type 'probe-class) (netlist-class-elements-list netlist))))
+					 (where :class-type 'coupling-class))
+                                   (netlist-class-elements-list netlist)))
+	    (nodes-list (select (where :class-type 'node-class)
+                                (netlist-class-elements-list netlist)))
+	    (probes-list (select (where :class-type 'probe-class)
+                                 (netlist-class-elements-list netlist))))
 	(unless output-file-stream
-	  (error 'file-not-opened-error :file-pathname (pathname output-file-stream)))
+	  (error 'file-not-opened-error
+                 :file-pathname (pathname output-file-stream)))
 	(when debug-mode
-	  (format output "~%Writing to simulation file."))
-	(format output-file-stream "~f " *time*)
+	  (format output
+                  "~%Writing to simulation file.")
+          (finish-output output))
+	(format output-file-stream
+                "~f "
+                *time*)
+        (finish-output output-file-stream)
 	(dolist (probe probes-list)
 	  (cond
 	    ((voltage-probe-class-p probe)
@@ -2251,34 +2139,70 @@
 	       (multiple-value-bind (found-node found-node-position)
 		   (find-element (where :name node-name) nodes-list)
 		 (unless found-node
-		   (error 'probe-not-found-error :probe-name (element-class-name probe) :node-name node-name))
+		   (error 'probe-not-found-error
+                          :probe-name (element-class-name probe)
+                          :node-name node-name))
 		 (incf found-node-position (- (grid:dim0 y-vector)
 					      (length nodes-list)))
 		 (when debug-mode
-		   (format output "~%Writing Y(~a) = ~a." found-node-position (grid:gref y-vector found-node-position)))
-		 (format output-file-stream "~f " (grid:gref y-vector found-node-position)))))
+		   (format output
+                           "~%Writing Y(~a) = ~a."
+                           found-node-position
+                           (grid:gref y-vector found-node-position))
+                   (finish-output output))
+		 (format output-file-stream
+                         "~f "
+                         (grid:gref y-vector found-node-position))
+                 (finish-output output-file-stream))))
 	    ((current-probe-class-p probe)
 	     (dolist (element-name (probe-class-elements-list probe))
 	       (multiple-value-bind (found-element found-element-position) (find-element (where :name element-name) elements-list)
 		 (unless found-element
-		   (error 'probe-not-found-error :probe-name (element-name probe) :element-name element-name))
+		   (error 'probe-not-found-error
+                          :probe-name (element-name probe)
+                          :element-name element-name))
 		 (when debug-mode
-		   (format output "~%Writing Y(~a) = ~a." found-element-position (grid:gref y-vector found-element-position)))
-		 (format output-file-stream "~f " (grid:gref y-vector found-element-position)))))))
-	(format output-file-stream "~%"))
+		   (format output
+                           "~%Writing Y(~a) = ~a."
+                           found-element-position
+                           (grid:gref y-vector found-element-position))
+                   (finish-output output))
+		 (format output-file-stream
+                         "~f "
+                         (grid:gref y-vector found-element-position))
+                 (finish-output output-file-stream))))))
+	(format output-file-stream
+                "~%")
+        (finish-output output-file-stream))
     (file-writing-error (condition)
-      (format *error-output* "~%Could not write file ~a~%" (file-pathname condition))
+      (format *error-output*
+              "~%Could not write file ~a~%"
+              (file-pathname condition))
+      (finish-output *error-output*)
       nil)
     (file-not-opened-error (condition)
-      (format *error-output* "~%File not opened.~%")
+      (format *error-output*
+              "~%File not opened.~%")
+      (finish-output *error-output*)
       nil)
     (probe-not-found-error (condition)
-      (format *error-output* "~%Probe ~a " (probe-name condition))
+      (format *error-output*
+              "~%Probe ~a "
+              (probe-name condition))
+      (finish-output *error-output*)
       (when (node-name condition)
-	(format *error-output* "node ~a not found" (node-name condition)))
+	(format *error-output*
+                "node ~a not found"
+                (node-name condition))
+        (finish-output *error-output*))
       (when (element-name condition)
-	(format *error-output* "element ~a not found" (element-name condition)))
-      (format *error-output* ".~%")
+	(format *error-output*
+                "element ~a not found"
+                (element-name condition))
+        (finish-output *error-output*))
+      (format *error-output*
+              ".~%")
+      (finish-output *error-output*)
       nil)))
 
 ;;;
@@ -2287,70 +2211,126 @@
 
 (defun open-simulation-file (netlist output-file-pathname)
   (handler-case
-      (let ((probes-list (select (where :class-type 'probe-class) (netlist-class-elements-list netlist)))
-	    (output-file-stream (open output-file-pathname :direction :output :if-exists :supersede)))
+      (let ((probes-list (select (where :class-type 'probe-class)
+                                 (netlist-class-elements-list netlist)))
+	    (output-file-stream (open output-file-pathname
+                                      :direction :output
+                                      :if-exists :supersede)))
 	(when output-file-stream
-	  (format output-file-stream "time ")
+	  (format output-file-stream
+                  "time ")
+          (finish-output output-file-stream)
 	  (dolist (probe probes-list)
 	    (cond
 	      ((voltage-probe-class-p probe)
 	       (dolist (node-name (probe-class-nodes-list probe))
-		 (format output-file-stream "~a-~a " (element-class-name probe) node-name)))
+		 (format output-file-stream
+                         "~a-~a "
+                         (element-class-name probe)
+                         node-name)
+                 (finish-output output-file-stream)))
 	      ((current-probe-class-p probe)
 	       (dolist (element-name (probe-class-elements-list probe))
-		 (format output-file-stream "~a-~a " (element-class-name probe) element-name)))))
-	  (format output-file-stream "~%~%"))
+		 (format output-file-stream
+                         "~a-~a "
+                         (element-class-name probe)
+                         element-name)
+                 (finish-output output-file-stream)))))
+	  (format output-file-stream
+                  "~%~%")
+          (finish-output output-file-stream))
 	output-file-stream)
     (file-error (condition)
-      (format *error-output* "~%Error opening file.~%")
+      (format *error-output*
+              "~%Error opening file.~%")
+      (finish-output *error-output*)
       nil)))
 
 ;;;
 ;;; setup initial conditions
 ;;;
 
-(defun setup-initial-conditions (netlist y-vector &optional &key (debug-mode nil) (output *standard-output*))
+(defun setup-initial-conditions (netlist y-vector &rest parameters &key (debug-mode nil) (output *standard-output*))
+  (declare (ignorable parameters debug-mode output))
   (handler-case
       (let ((elements-list (exclude (list (where :class-type 'initial-condition-class)
-					  (where :class-type 'probe-class)) (netlist-class-elements-list netlist)))
-	    (initial-conditions-list (select (where :class-type 'initial-condition-class) (netlist-class-elements-list netlist))))
+					  (where :class-type 'probe-class))
+                                    (netlist-class-elements-list netlist)))
+	    (initial-conditions-list (select (where :class-type 'initial-condition-class)
+                                             (netlist-class-elements-list netlist))))
 	(dolist (initial-condition initial-conditions-list)
 	  (when debug-mode
-	    (format output "Found initial condition ~a.~%" (element-class-name initial-condition)))
+	    (format output
+                    "Found initial condition ~a.~%"
+                    (element-class-name initial-condition))
+            (finish-output output))
 	  (multiple-value-bind (element i)
-	      (find-element (where :name (element-target-name initial-condition)) elements-list)
+	      (find-element (where :name (element-target-name initial-condition))
+                            elements-list)
 	    (unless element
-	      (error 'unknown-element-for-initial-condition-error :element-name (element-target-name initial-condition) :initial-condition-name (element-class-name initial-condition)))
+	      (error 'unknown-element-for-initial-condition-error
+                     :element-name (element-target-name initial-condition)
+                     :initial-condition-name (element-class-name initial-condition)))
 	    (typecase element
 	      (source-class
-	       (error 'initial-condition-error :initial-condition-name (element-class-name initial-condition) :source-name (element-class-name element)))
+	       (error 'initial-condition-error
+                      :initial-condition-name (element-class-name initial-condition)
+                      :source-name (element-class-name element)))
 	      (passive-class
 	       (when debug-mode
-		 (format output "Setting y(~a) = ~a.~%" i (passive-class-value initial-condition)))
+		 (format output
+                         "Setting y(~a) = ~a.~%"
+                         i
+                         (passive-class-value initial-condition))
+                 (finish-output output))
 	       (setf (grid:gref y-vector i) (initial-condition-class-value initial-condition)))
 	      (coupling-class
-	       (error 'initial-condition-error :initial-condition-name (element-class-name initial-condition) :coupling-name (element-class-name element)))
+	       (error 'initial-condition-error
+                      :initial-condition-name (element-class-name initial-condition)
+                      :coupling-name (element-class-name element)))
 	      (node-class
 	       (when (reference-class-node-p (element-class element))
-		 (error 'initial-condition-error :initial-condition-name (element-class-name initial-condition) :node-name (element-class-name element)))
+		 (error 'initial-condition-error
+                        :initial-condition-name (element-class-name initial-condition)
+                        :node-name (element-class-name element)))
 	       (setf (grid:gref y-vector (1- i)) (initial-condition-class-value initial-condition)))
 	      (model-class
 	       (setf (model-class-value element) (initial-condition-class-value initial-condition)))
 	      (t
-	       (error "Initial condition ~a: ~a could not have an initial condition: only passive and models.~%" (element-class-name initial-condition) (element-class-name element))))))
+	       (error "Initial condition ~a: ~a could not have an initial condition: only passive and models.~%"
+                      (element-class-name initial-condition)
+                      (element-class-name element))))))
 	y-vector)
     (unknown-element-for-initial-condition-error (condition)
-      (format *error-output* "Could not find element ~a to set initial condition ~a.~%" (element-name condition) (initial-condition-name condition))
+      (format *error-output*
+              "Could not find element ~a to set initial condition ~a.~%"
+              (element-name condition)
+              (initial-condition-name condition))
+      (finish-output *error-output*)
       nil)
     (initial-condition-source-error (condition)
-      (format *error-output* "~%Could not set initial condition ~a" (initial-condition-name condition))
+      (format *error-output*
+              "~%Could not set initial condition ~a"
+              (initial-condition-name condition))
+      (finish-output *error-output*)
       (when (source-name condition)
-	(format *error-output* " for source ~a" (source-name condition)))
+	(format *error-output*
+                " for source ~a"
+                (source-name condition))
+        (finish-output *error-output*))
       (when (coupling-name condition)
-	(format *error-output* " for coupling ~a (only its passive element can)" (coupling-name condition)))
+	(format *error-output*
+                " for coupling ~a (only its passive element can)"
+                (coupling-name condition))
+        (finish-output *error-output*))
       (when (node-name condition)
-	(format *error-output* " for reference node ~a" (node-name condition)))
-      (format *error-output* ".~%")
+	(format *error-output*
+                " for reference node ~a"
+                (node-name condition))
+        (finish-output *error-output*))
+      (format *error-output*
+              ".~%")
+      (finish-output *error-output*)
       nil)))
 
 ;;
@@ -2360,107 +2340,263 @@
 ;; Y(n) = D(n) B(n) Y(n - 1) + h D(n) K(n)
 ;;
 
-(defun solve-problem (netlist-file-pathname t0 t1 steps &optional &key (verbose nil) (debug-mode nil) (progress-bar nil) (output *standard-output*))
+(defun solve-problem (netlist-file-pathname t0 t1 steps &rest parameters &key (verbose nil) (debug-mode nil) (progress-bar nil) (output *standard-output*))
+  (declare (ignorable parameters debug-mode output))
   (handler-case
       (progn
 	(when verbose
-	  (format output "~%Circuit Solver - Version ~a.~a.~a.~a~%Written by Dott. Ing. Angelo Rossi & Dott. Ing. Marco Maccioni.~%Released under GPL3 License (C) ~@r." major minor build revision year)
-	  (format output "~%Running on ~a machine type ~a.~%" (software-type) (machine-type)))
+	  (format output
+                  "~%Circuit Solver - Version ~a.~a.~a.~a~%Written by Dott. Ing. Angelo Rossi & Dott. Ing. Marco Maccioni.~%Released under GPL3 License (C) ~@r."
+                  major
+                  minor
+                  build
+                  revision
+                  year)
+	  (format output
+                  "~%Running on ~a machine type ~a.~%"
+                  (software-type)
+                  (machine-type))
+          (finish-output output))
 	(unless (> t1 t0)
-	  (error 'simulation-time-interval-error :t1 t1 :t0 t0))
+	  (error 'simulation-time-interval-error
+                 :t1 t1
+                 :t0 t0))
 	(setq *t0* t0)
 	(setq *t1* t1)
-	(if (and (< steps *minimum-steps-number*) (not debug-mode))
-	    (setq *steps-number* *minimum-steps-number*)
-	    (setq *steps-number* steps))
-	(setq *h* (/ (- *t1* *t0*) (float *steps-number*)))
+	(if (and (< steps *minimum-steps-number*)
+                 (not debug-mode))
+	    (setq *steps-number* *minimum-steps-number*
+	          *steps-number* steps))
+	(setq *h* (/ (- *t1* *t0*)
+                     (float *steps-number*)))
 	(when verbose
-	  (format output "~%Setting steps number to ~a." *steps-number*))
+	  (format output
+                  "~%Setting steps number to ~a."
+                  *steps-number*)
+          (finish-output output))
 	(let ((netlist (read-netlist netlist-file-pathname))
 	      (error-found 0))
-	  (setq netlist (include-subcircuits netlist :verbose verbose :debug-mode debug-mode :output output))
+	  (setq netlist (include-subcircuits netlist
+                                             :verbose verbose
+                                             :debug-mode debug-mode
+                                             :output output))
 	  (setq error-found (check-netlist netlist))
 	  (when (zerop error-found)
 	    (when verbose
-	      (format output "~%Input file: ~a" netlist-file-pathname)
-	      (format output "~%Debug Mode: ~a" debug-mode)
-	      (format output "~%Loaded netlist: ~a" (element-class-name netlist)))
+	      (format output
+                      "~%Input file: ~a"
+                      netlist-file-pathname)
+	      (format output
+                      "~%Debug Mode: ~a"
+                      debug-mode)
+	      (format output
+                      "~%Loaded netlist: ~a"
+                      (element-class-name netlist))
+              (finish-output output))
 	    (when debug-mode
-	      (format output "~%~a" (sexpify netlist)))
+	      (format output
+                      "~%~a"
+                      (sexpify netlist))
+              (finish-output output))
 	    (when verbose
-	      (format output "~%Start at ~a s upto ~a s with Delta t = ~a s (~a steps)." *t0* *t1* *h* *steps-number*))
+	      (format output
+                      "~%Start at ~a s upto ~a s with Delta t = ~a s (~a steps)."
+                      *t0*
+                      *t1*
+                      *h*
+                      *steps-number*)
+              (finish-output output))
 	    (when debug-mode
-	      (format output "~%Found ~a nodes and ~a elements."
-		      (length (select (where :class-type 'node-class) (netlist-class-elements-list netlist)))
+	      (format output
+                      "~%Found ~a nodes and ~a elements."
+		      (length (select (where :class-type 'node-class)
+                                      (netlist-class-elements-list netlist)))
 		      (length (exclude (list (where :class-type 'node-class)
-					     (where :class-type 'subcircuit-class)) (netlist-class-elements-list netlist)))))
-	    (let ((p-matrix (create-p-matrix (netlist-class-elements-list netlist) :debug-mode debug-mode :output output))
-		  (r-matrix (create-r-l-matrix (netlist-class-elements-list netlist) :debug-mode debug-mode :output output))
-		  (g-matrix (create-g-c-matrix (netlist-class-elements-list netlist) :debug-mode debug-mode :output output))
-		  (si-matrix (create-si-matrix (netlist-class-elements-list netlist) :debug-mode debug-mode :output output))
-		  (sv-matrix (create-sv-matrix (netlist-class-elements-list netlist) :debug-mode debug-mode :output output))
-		  (l-matrix (create-r-l-matrix (netlist-class-elements-list netlist) :debug-mode debug-mode :output output))
-		  (c-matrix (create-g-c-matrix (netlist-class-elements-list netlist) :debug-mode debug-mode :output output))
-		  (ki-vector (create-ki-vector (netlist-class-elements-list netlist) :debug-mode debug-mode :output output))
-		  (kv-vector (create-kv-vector (netlist-class-elements-list netlist) :debug-mode debug-mode :output output))
-		  (y-old-vector (create-k-y-vector (netlist-class-elements-list netlist) :debug-mode debug-mode :output output))
-		  (y-new-vector (create-k-y-vector (netlist-class-elements-list netlist) :debug-mode debug-mode :output output)))
-	      (setq y-old-vector (setup-initial-conditions netlist y-old-vector :debug-mode debug-mode :output output))
-	      (let* ((output-file-pathname (make-pathname :directory (pathname-directory netlist-file-pathname) :name (pathname-name netlist-file-pathname) :type "sim"))
-		     (output-file-stream (open-simulation-file netlist output-file-pathname)))
+					     (where :class-type 'subcircuit-class))
+                                       (netlist-class-elements-list netlist))))
+              (finish-output output))
+	    (let ((p-matrix (create-p-matrix (netlist-class-elements-list netlist)
+                                             :debug-mode debug-mode
+                                             :output output))
+		  (r-matrix (create-r-l-matrix (netlist-class-elements-list netlist)
+                                               :debug-mode debug-mode
+                                               :output output))
+		  (g-matrix (create-g-c-matrix (netlist-class-elements-list netlist)
+                                               :debug-mode debug-mode
+                                               :output output))
+		  (si-matrix (create-si-matrix (netlist-class-elements-list netlist)
+                                               :debug-mode debug-mode
+                                               :output output))
+		  (sv-matrix (create-sv-matrix (netlist-class-elements-list netlist)
+                                               :debug-mode debug-mode
+                                               :output output))
+		  (l-matrix (create-r-l-matrix (netlist-class-elements-list netlist)
+                                               :debug-mode debug-mode
+                                               :output output))
+		  (c-matrix (create-g-c-matrix (netlist-class-elements-list netlist)
+                                               :debug-mode debug-mode
+                                               :output output))
+		  (ki-vector (create-ki-vector (netlist-class-elements-list netlist)
+                                               :debug-mode debug-mode
+                                               :output output))
+		  (kv-vector (create-kv-vector (netlist-class-elements-list netlist)
+                                               :debug-mode debug-mode
+                                               :output output))
+		  (y-old-vector (create-k-y-vector (netlist-class-elements-list netlist)
+                                                   :debug-mode debug-mode
+                                                   :output output))
+		  (y-new-vector (create-k-y-vector (netlist-class-elements-list netlist)
+                                                   :debug-mode debug-mode
+                                                   :output output)))
+	      (setq y-old-vector (setup-initial-conditions netlist y-old-vector
+                                                           :debug-mode debug-mode
+                                                           :output output))
+	      (let* ((output-file-pathname (make-pathname :directory (pathname-directory netlist-file-pathname)
+                                                          :name (pathname-name netlist-file-pathname)
+                                                          :type "sim"))
+		     (output-file-stream (open-simulation-file netlist
+                                                               output-file-pathname)))
 		(when verbose
-		  (format output "~&Output file: ~a~2%" output-file-pathname))
-		(format output "~2&Solving: ")
+		  (format output
+                          "~&Output file: ~a~2%"
+                          output-file-pathname)
+                  (finish-output output))
+		(format output
+                        "~2&Solving: ")
+                (finish-output output)
 		(loop for i from 0 to *steps-number* do
-		     (setq *time* (+ t0 (* *h* (float i))))
-		     (when (and debug-mode (not progress-bar))
-		       (format output "~2%----~%Iteration #~a~%time = ~a~%----~2%" i *time*))
-		     ;;
-		     ;; Update matrices
-		     ;;
-		     (dolist (element (netlist-class-elements-list netlist))
-		       (setq element (update-model element (netlist-class-elements-list netlist) y-old-vector :debug-mode debug-mode :output output)))
-		     (setq p-matrix (update-p-matrix p-matrix (netlist-class-elements-list netlist) :debug-mode debug-mode :output output)
-			   r-matrix (update-r-matrix r-matrix (netlist-class-elements-list netlist) :debug-mode debug-mode :output output)
-			   g-matrix (update-g-matrix g-matrix (netlist-class-elements-list netlist) :debug-mode debug-mode :output output)
-			   si-matrix (update-si-matrix si-matrix (netlist-class-elements-list netlist) :debug-mode debug-mode :output output)
-			   sv-matrix (update-sv-matrix sv-matrix (netlist-class-elements-list netlist) :debug-mode debug-mode :output output)
-			   l-matrix (update-l-matrix l-matrix (netlist-class-elements-list netlist) :debug-mode debug-mode :output output)
-			   c-matrix (update-c-matrix c-matrix (netlist-class-elements-list netlist) :debug-mode debug-mode :output output)
-			   ki-vector (update-ki-vector ki-vector (netlist-class-elements-list netlist) :debug-mode debug-mode :output output)
-			   kv-vector (update-kv-vector kv-vector (netlist-class-elements-list netlist) :debug-mode debug-mode :output output))
-		     (multiple-value-bind (a-matrix b-matrix k-vector)
-			 (assemble-system p-matrix r-matrix g-matrix si-matrix sv-matrix l-matrix c-matrix ki-vector kv-vector :debug-mode debug-mode :output output)
-		       (let ((alpha-matrix (gsl:elt+ (gsl:elt* *h* (grid:copy-to a-matrix 'grid:foreign-array)) (grid:copy-to b-matrix 'grid:foreign-array)))
-			     (beta-matrix (gsl:elt+ (gsl:elt* *h* (grid:copy-to k-vector 'grid:foreign-array)) (gsl:matrix-product (grid:copy-to b-matrix 'grid:foreign-array) (grid:copy-to y-old-vector 'grid:foreign-array)))))
-			 (multiple-value-bind (decomposition-matrix permutation-matrix sign)
-                             (gsl:lu-decomposition (grid:copy-to alpha-matrix 'grid:foreign-array))
-                           (declare (ignore sign))
-                           (when debug-mode
-			     (format output "~&Permutation sign: ~a" sign))
-                           (let ((initial-solution (gsl:lu-solve (grid:copy-to decomposition-matrix 'grid:foreign-array)
-                                                                 (grid:copy-to beta-matrix 'grid:foreign-array)
-                                                                 permutation-matrix
-                                                                 t)))
-			     (setq y-new-vector (gsll:lu-refine (grid:copy-to alpha-matrix 'grid:foreign-array)
-                                                                (grid:copy-to decomposition-matrix 'grid:foreign-array)
-                                                                permutation-matrix
-                                                                (grid:copy-to beta-matrix 'grid:foreign-array)
-                                                                initial-solution))
-			     (when debug-mode
-			       (format output "~&Y(n+1) =~%~a~%" y-new-vector)
-			       (format output "~&Y(n) =~%~a~%" y-old-vector))
-			     (select-probes netlist y-new-vector output-file-stream :debug-mode debug-mode :output output)
-			     (setq y-old-vector y-new-vector)))
-		         (when (and (not debug-mode)
-				    progress-bar)
-			   (print-progress-bar i 2 20 :output output)))))
+		  (setq *time* (+ t0
+                                  (* *h*
+                                     (float i))))
+		  (when (and debug-mode
+                             (not progress-bar))
+		    (format output
+                            "~2%----~%Iteration #~a~%time = ~a~%----~2%"
+                            i
+                            *time*)
+                    (finish-output output))
+		  ;;
+		  ;; Update matrices
+		  ;;
+		  (dolist (element (netlist-class-elements-list netlist))
+		    (setq element (update-model element
+                                                (netlist-class-elements-list netlist)
+                                                y-old-vector
+                                                :debug-mode debug-mode
+                                                :output output)))
+		  (setq p-matrix (update-p-matrix p-matrix
+                                                  (netlist-class-elements-list netlist)
+                                                  :debug-mode debug-mode
+                                                  :output output)
+			r-matrix (update-r-matrix r-matrix
+                                                  (netlist-class-elements-list netlist)
+                                                  :debug-mode debug-mode
+                                                  :output output)
+			g-matrix (update-g-matrix g-matrix
+                                                  (netlist-class-elements-list netlist)
+                                                  :debug-mode debug-mode
+                                                  :output output)
+			si-matrix (update-si-matrix si-matrix
+                                                    (netlist-class-elements-list netlist)
+                                                    :debug-mode debug-mode
+                                                    :output output)
+			sv-matrix (update-sv-matrix sv-matrix
+                                                    (netlist-class-elements-list netlist)
+                                                    :debug-mode debug-mode
+                                                    :output output)
+			l-matrix (update-l-matrix l-matrix
+                                                  (netlist-class-elements-list netlist)
+                                                  :debug-mode debug-mode
+                                                  :output output)
+			c-matrix (update-c-matrix c-matrix
+                                                  (netlist-class-elements-list netlist)
+                                                  :debug-mode debug-mode
+                                                  :output output)
+			ki-vector (update-ki-vector ki-vector
+                                                    (netlist-class-elements-list netlist)
+                                                    :debug-mode debug-mode
+                                                    :output output)
+			kv-vector (update-kv-vector kv-vector
+                                                    (netlist-class-elements-list netlist)
+                                                    :debug-mode debug-mode
+                                                    :output output))
+		  (multiple-value-bind (a-matrix b-matrix k-vector)
+		      (assemble-system p-matrix
+                                       r-matrix
+                                       g-matrix
+                                       si-matrix
+                                       sv-matrix
+                                       l-matrix
+                                       c-matrix
+                                       ki-vector
+                                       kv-vector
+                                       :debug-mode debug-mode
+                                       :output output)
+		    (let ((alpha-matrix (gsl:elt+ (gsl:elt* *h*
+                                                            (grid:copy-to a-matrix 'grid:foreign-array))
+                                                  (grid:copy-to b-matrix 'grid:foreign-array)))
+			  (beta-matrix (gsl:elt+ (gsl:elt* *h*
+                                                           (grid:copy-to k-vector 'grid:foreign-array))
+                                                 (gsl:matrix-product (grid:copy-to b-matrix 'grid:foreign-array)
+                                                                     (grid:copy-to y-old-vector 'grid:foreign-array)))))
+		      (multiple-value-bind (decomposition-matrix permutation-matrix sign)
+                          (gsl:lu-decomposition (grid:copy-to alpha-matrix 'grid:foreign-array))
+                        (when debug-mode
+			  (format output
+                                  "~&Permutation sign: ~a~%"
+                                  sign)
+                          (finish-output output))
+                        (let ((initial-solution (gsl:lu-solve (grid:copy-to decomposition-matrix 'grid:foreign-array)
+                                                              (grid:copy-to beta-matrix 'grid:foreign-array)
+                                                              permutation-matrix
+                                                              t)))
+			  (setq y-new-vector (gsll:lu-refine (grid:copy-to alpha-matrix 'grid:foreign-array)
+                                                             (grid:copy-to decomposition-matrix 'grid:foreign-array)
+                                                             permutation-matrix
+                                                             (grid:copy-to beta-matrix 'grid:foreign-array)
+                                                             initial-solution))
+			  (when debug-mode
+			    (format output
+                                    "~&Y(n+1) =~%~a~%"
+                                    y-new-vector)
+			    (format output
+                                    "~&Y(n) =~%~a~%"
+                                    y-old-vector)
+                            (finish-output output))
+			  (select-probes netlist
+                                         y-new-vector
+                                         output-file-stream
+                                         :debug-mode debug-mode
+                                         :output output)
+			  (setq y-old-vector y-new-vector)))
+		      (when (and (not debug-mode)
+				 progress-bar)
+			(print-progress-bar i 2 20 :output output)))))
 		(when output-file-stream
 		  (close output-file-stream))
 		output-file-pathname)))))
+    (gsll:input-domain (condition)
+      (format *error-output*
+              "Simulation error at time (~a): ~a.~%"
+              *time*
+              condition)
+      (finish-output *error-output*)
+      nil)
     (simulation-time-interval-error (condition)
-      (format *error-output* "Simulation final time (~a) less than or equal to start time (~a).~%" (:t0 condition) (:t1 condition))
+      (format *error-output*
+              "Simulation final time (~a) less than or equal to start time (~a).~%"
+              (:t0 condition)
+              (:t1 condition))
+      (finish-output *error-output*)
       nil)))
 
-(defun kst (netlist-file-pathname t0 t1 steps &optional &key (verbose nil) (debug-mode nil) (progress-bar nil) (output *standard-output*))
-  (asdf:run-shell-command "kst2 ~S" (solve-problem netlist-file-pathname t0 t1 steps :verbose verbose :debug-mode debug-mode :output output)))
+(defun kst (netlist-file-pathname t0 t1 steps &rest parameters &key (verbose nil) (debug-mode nil) (progress-bar nil) (output *standard-output*))
+  (declare (ignorable parameters verbose debug-mode progress-bar output))
+  (asdf:run-shell-command "kst2 ~S"
+                          (solve-problem netlist-file-pathname
+                                         t0
+                                         t1
+                                         steps
+                                         :verbose verbose
+                                         :debug-mode debug-mode
+                                         :output output)))
