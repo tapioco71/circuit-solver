@@ -56,6 +56,18 @@
 
 ;; Methods.
 
+(defmethod sexpify ((object netlist-class))
+  "Create a sexp for netlist element: :NAME name [ :ID id ] :ELEMENTS-LIST elements-list."
+  (let ((return-value (call-next-method object)))
+    (unless (string-equal (netlist-class-author object)
+                          "")
+      (setq return-value (append return-value (list :author (netlist-class-author object)))))
+    (unless (string-equal (netlist-class-date object)
+                          "")
+      (setq return-value (append return-value (list :date (netlist-class-date object)))))
+    (setq return-value (append return-value (list :elements-list (mapcar #'sexpify (netlist-class-elements-list object)))))
+    return-value))
+
 (defmethod rename-netlist-element ((object netlist-class) name &rest parameters &key (debug-mode nil) (output *standard-output*))
   (declare (ignorable parameters debug-mode output))
   (let ((return-value object))
@@ -64,7 +76,9 @@
               "~%~%Renaming netlist ~a to "
               (element-class-name object))
       (finish-output output))
-    (setf (element-class-name return-value) (concatenate 'string name ":" (element-class-name return-value)))
+    (setf (element-class-name return-value) (concatenate 'string name
+                                                         ":"
+                                                         (element-class-name return-value)))
     (when debug-mode
       (format output
               "~a."

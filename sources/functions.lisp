@@ -352,17 +352,30 @@
 
 ;; Simple MOV model.
 
-(defun simple-mov (&optional &key parameters state)
+(defun simple-mov (&rest rest &key parameters state)
   "Simple MOV model."
+  (declare (ignorable rest parameters state))
+  (let* ((va (pop state))
+         (vb (pop state))
+         (vmax (getf parameters :vmax))
+         (gmin (getf parameters :gmin))
+         (gmax (getf parameters :gmax)))
+    (if (<= (abs (- va vb))
+            (abs vmax))
+        gmin
+        gmax)))
+
+(defun simple-mov-2 (&rest rest &key parameters state)
+  "Simple MOV model."
+  (declare (ignorable rest parameters state))
   (let* ((va (pop state))
          (vb (pop state))
          (vmax (getf parameters :vmax))
          (gmax (getf parameters :gmax))
-         (gmin (getf parameters :gmin)))
-    (if (< (abs (- va vb))
-           (abs vmax))
-        (* gmin
-           (- va vb))
-        (* gmax
-           (signum (- va vb))
-           (abs vmax)))))
+         (delta-v (- va vb)))
+    (* gmax
+       (+ 1d0
+          (/ -1d0
+             (+ 1d0 (exp (- (+ delta-v vmax)))))
+          (/ 1d0
+             (+ 1d0 (exp (+ (- delta-v) vmax))))))))

@@ -2,7 +2,7 @@
 ;; single phase transformer
 ;; Sn = 10000 VA
 ;; V1n = 4000 V
-;; V2n = 380 V 
+;; V2n = 380 V
 ;;
 
 (NETLIST
@@ -111,7 +111,7 @@
 							:CLASS "inductance"
 							:NODES-LIST ("N2" "E1")
 							:VALUE 5108d-3)
-						
+
 						(PASSIVE
 							:NAME "L22"
 							:CLASS "inductance"
@@ -148,7 +148,7 @@
 
 			(NODE
 				:NAME "E1"
-				:CLASS "v-i")				
+				:CLASS "v-i")
 
 			(NODE
 				:NAME "B2"
@@ -156,7 +156,7 @@
 
 			(NODE
 				:NAME "E2"
-				:CLASS "v-i")				
+				:CLASS "v-i")
 
 			(NODE
 				:NAME "B3"
@@ -165,7 +165,7 @@
 			(NODE
 				:NAME "E3"
 				:CLASS "v-i")
-				
+
 			(NODE
 				:NAME "B4"
 				:CLASS "v-i")
@@ -173,7 +173,7 @@
 			(NODE
 				:NAME "E4"
 				:CLASS "v-i")
-				
+
 			(NODE
 				:NAME "B5"
 				:CLASS "v-i")
@@ -181,7 +181,7 @@
 			(NODE
 				:NAME "E5"
 				:CLASS "v-i")
-				
+
 			(NODE
 				:NAME "B6"
 				:CLASS "v-i")
@@ -237,8 +237,3 @@
 			(NODE
 				:NAME "N12"
 				:CLASS "v-i")))
-
-
-
-
-			

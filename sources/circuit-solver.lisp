@@ -108,148 +108,14 @@
 	 (create-object-from-sexp 'initial-condition-class sexp))
 	(t
 	 (mapcar (lambda (subsexp)
-		   (objectify subsexp)) sexp)))
+		   (objectify subsexp))
+                 sexp)))
     (unknown-object-error (condition)
-      (format *error-output* "~%Unknown object found: ~s~%" (object condition))
+      (format *error-output*
+              "~%Unknown object found: ~s~%"
+              (object condition))
+      (finish-output *error-output*)
       nil)))
-
-;;
-;; serialization: create a sexp from an object
-;;
-
-;;
-;; create a sexp for element: :NAME name :ID id
-;;
-
-(defmethod sexpify ((object element-class))
-  (let ((return-value (list (type-of object))))
-    (when (element-class-name object)
-      (setq return-value (append return-value (list :name (element-class-name object)))))
-    (unless (eql (element-class-id object) -1)
-      (setq return-value (append return-value (list :id (element-class-id object)))))
-    return-value))
-
-;;
-;; create a sexp for netlist element: :NAME name [ :ID id ] :ELEMENTS-LIST elements-list
-;;
-
-(defmethod sexpify ((object netlist-class))
-  (let ((return-value (call-next-method object)))
-    (unless (string-equal (netlist-class-author object) "")
-      (setq return-value (append return-value (list :author (netlist-class-author object)))))
-    (unless (string-equal (netlist-class-date object) "")
-      (setq return-value (append return-value (list :date (netlist-class-date object)))))
-    (setq return-value (append return-value (list :elements-list (mapcar #'sexpify (netlist-class-elements-list object)))))
-    return-value))
-
-;;
-;; create a sexp for node element: :NAME name [ :ID id ] :CLASS element-class [ :STATE state ] [ :NUMBER number ]
-;;
-
-(defmethod sexpify ((object node-class))
-  (let ((return-value (call-next-method object)))
-    (unless (undefined-class-p object)
-      (setq return-value (append return-value (list :class (node-class-class object)))))
-    (unless (eql (node-class-state object) nil)
-      (setq return-value (append return-value (list :state (node-class-state object)))))
-    (unless (eql (node-class-number object) -1)
-      (setq return-value (append return-value (list :number (node-class-number object)))))
-    return-value))
-
-;;
-;; create a sexp for passive element: :NAME name [ :ID id ] :CLASS element-class :NODES-LIST nodes-list { :MODEL model | :VALUE value }
-;;
-
-(defmethod sexpify ((object passive-class))
-  (let ((return-value (call-next-method object)))
-    (unless (undefined-class-p object)
-      (setq return-value (append return-value (list :class (passive-class-class object)))))
-    (when (passive-class-nodes-list object)
-      (setq return-value (append return-value (list :nodes-list (passive-class-nodes-list object)))))
-    (when (has-model-p object)
-      (setq return-value (append return-value (list :model (sexpify (passive-class-model object))))))
-    (when (has-value-p object)
-      (setq return-value (append return-value (list :value (passive-class-value object)))))
-    return-value))
-
-;;
-;; create a sexp for coupling element: :NAME name [ :ID id ] :ELEMENTS-LIST elements-list { :MODEL model | :VALUE value }
-;;
-
-(defmethod sexpify ((object coupling-class))
-  (let ((return-value (call-next-method object)))
-    (when (coupling-class-elements-list object)
-      (setq return-value (append return-value (list :elements-list (mapcar #'sexpify (coupling-class-elements-list object))))))
-    (when (has-model-p object)
-      (setq return-value (append return-value (list :model (sexpify (coupling-class-model object))))))
-    (when (has-value-p object)
-      (setq return-value (append return-value (list :value (coupling-class-value object)))))
-    return-value))
-
-;;
-;; create a sexp for source element: :NAME name [ :ID id ] :CLASS element-class :NODES-LIST nodes-list { :MODEL model | :VALUE value }
-;;
-
-(defmethod sexpify ((object source-class))
-  (let ((return-value (call-next-method object)))
-    (unless (undefined-class-p object)
-      (setq return-value (append return-value (list :class (source-class-class object)))))
-    (when (source-class-nodes-list object)
-      (setq return-value (append return-value (list :nodes-list (source-class-nodes-list object)))))
-    (when (has-model-p object)
-      (setq return-value (append return-value (list :model (sexpify (source-class-model object))))))
-    (when (has-value-p object)
-      (setq return-value (append return-value (list :value (source-class-value object)))))
-    return-value))
-
-;;
-;; create a sexp for subcircuit element: :NAME name [ :ID id ] :FILE-NAME file-name :NODES-LIST nodes-list
-;;
-
-(defmethod sexpify ((object subcircuit-class))
-  "Create a sexp for subcircuit element: :NAME name [ :ID id ] :FILE-NAME file-name :NODES-LIST nodes-list"
-  (let ((return-value (call-next-method object)))
-    (when (pathnamep (subcircuit-class-file-pathname object))
-      (setq return-value (append return-value  (list :file-pathname (subcircuit-class-file-pathname object)))))
-    (when (subcircuit-class-nodes-list object)
-      (setq return-value (append return-value (list :nodes-list (subcircuit-class-nodes-list object)))))
-    return-value))
-
-(defmethod sexpify ((object model-class))
-  (let ((return-value (call-next-method object)))
-    (unless (undefined-class-p object)
-      (setq return-value (append return-value (list :class (model-class-class object)))))
-    (when (model-class-function-name object)
-      (setq return-value (append return-value (list :function-name (model-class-function-name object)))))
-    (when (model-class-external-function-name object)
-      (setq return-value (append return-value (list :external-function-name (model-class-external-function-name object)))))
-    (when (model-class-parameters-list object)
-      (setq return-value (append return-value (list :parameters-list (model-class-parameters-list object)))))
-    (when (model-class-states-list object)
-      (setq return-value (append return-value (list :states-list (model-class-states-list object)))))
-    (when (model-class-probes-list object)
-      (setq return-value (append return-value (mapcar #'sexpify (model-class-probes-list object)))))
-    (when (has-value-p object)
-      (setq return-value (append return-value (list :value (model-class-value object)))))
-    return-value))
-
-(defmethod sexpify ((object probe-class))
-  (let ((return-value (call-next-method object)))
-    (unless (undefined-class-p object)
-      (setq return-value (append return-value (list :class (probe-class-class object)))))
-    (when (probe-class-elements-list object)
-      (setq return-value (append return-value (list :elements-list (probe-class-elements-list object)))))
-    (when (probe-class-nodes-list object)
-      (setq return-value (append return-value (list :nodes-list (probe-class-nodes-list object)))))
-    return-value))
-
-(defmethod sexpify ((object initial-condition-class))
-  (let ((return-value (call-next-method object)))
-    (when (initial-condition-class-target-name object)
-      (setq return-value (append return-value (list :target-name (initial-condition-class-target-name object)))))
-    (when (initial-condition-class-value object)
-      (setq return-value (append return-value (list :value (initial-condition-class-value object)))))
-    return-value))
 
 ;;
 ;; Predicates.
@@ -257,23 +123,23 @@
 
 (defun resistance-class-p (object)
   (when (typep object 'passive-class)
-    (string= (string-downcase (passive-class-class object))
-             "resistance")))
+    (string-equal (passive-class-class object)
+                  "resistance")))
 
 (defun inductance-class-p (object)
   (when (typep object 'passive-class)
-    (string= (string-downcase (passive-class-class object))
-             "inductance")))
+    (string-equal (passive-class-class object)
+                  "inductance")))
 
 (defun capacitance-class-p (object)
   (when (typep object 'passive-class)
-    (string= (string-downcase (passive-class-class object))
-             "capacitance")))
+    (string-equal (passive-class-class object)
+                  "capacitance")))
 
 (defun conductance-class-p (object)
   (when (typep object 'passive-class)
-    (string= (string-downcase (passive-class-class object))
-             "conductance")))
+    (string-equal (passive-class-class object)
+                  "conductance")))
 
 (defun coupling-class-p (object)
   (typep object 'coupling-class))
@@ -333,6 +199,8 @@
 	(unless (eql where-return-value t)
 	  (setq selection (append selection (list element))))))
     selection))
+
+;; Check functions.
 
 (defmethod check-element-with-selectors ((object element-class) selectors)
   (let ((return-value nil))
@@ -819,13 +687,16 @@
                                                             :output output))
 		   (let ((subcircuit-nodes-list (select (where :class-type 'node-class)
 							(netlist-class-elements-list subcircuit))))
-		     (when (> (length (subcircuit-class-nodes-list subcircuit-call)) (length subcircuit-nodes-list))
+		     (when (> (length (subcircuit-class-nodes-list subcircuit-call))
+                              (length subcircuit-nodes-list))
 		       (error 'wrong-subcircuit-nodes-list-error
                               :subcircuit-name (element-class-name subcircuit)
 			      :actual-nodes-count (length subcircuit-nodes-list)
 			      :needed-nodes-count (length (subcircuit-class-nodes-list subcircuit-call))))
 		     (let ((connection-nodes-list nil))
-		       (loop for i from 0 below (length (subcircuit-class-nodes-list subcircuit-call)) do
+		       (loop
+                         for i from 0 below (length (subcircuit-class-nodes-list subcircuit-call))
+                         do
 			    (setq connection-nodes-list (append connection-nodes-list (list (list (element-class-name (nth i subcircuit-nodes-list))
 												  (nth i (subcircuit-class-nodes-list subcircuit-call)))))))
 		       (when debug-mode
@@ -843,7 +714,7 @@
 										 (netlist-class-elements-list return-value)))
 		       (when debug-mode
 			 (format output
-                                 "~%~%Resulting netlist:~%~a"
+                                 "~%~%Resulting netlist:~%~s~%"
                                  (sexpify return-value))
                          (finish-output output))))
 		   (incf i))))
@@ -1937,15 +1808,19 @@
 	     (function-symbol (find-symbol (string-upcase function-name)))
 	     (function nil)
 	     (old-function-value nil))
-	(when function-symbol
-	  (setq function (symbol-function function-symbol))
-	  (setq old-function-value (apply function (list :parameters parameters-list
-                                                         :state states-list))))
-	(unless function-symbol
-	  (if (load (make-pathname :name function-name :type "vcs"))
-	      (setq model (evaluate-model model :debug-mode debug-mode :output output))
-	      (error 'unknown-function-error
-                     :function-name function-name)))
+        (when debug-mode
+          (format output
+                  "function symbol ~s~%"
+                  function-symbol)
+          (finish-output output))
+	(if function-symbol
+	    (setq function (symbol-function function-symbol)
+	          old-function-value (apply function (list :parameters parameters-list
+                                                           :state states-list)))
+	    (if (load (make-pathname :name function-name :type "vcs"))
+	        (setq model (evaluate-model model :debug-mode debug-mode :output output))
+	        (error 'unknown-function-error
+                       :function-name function-name)))
 	(cond
 	  ((simple-function-p model)
 	   (setf (model-class-value model) old-function-value))
@@ -2028,7 +1903,9 @@
 		 (cond
 		   ((voltage-probe-class-p probe)
 		    (dolist (node-name (probe-class-nodes-list probe))
-		      (let ((node (first (select (where :class-type 'node-class :name node-name) nodes-list))))
+		      (let ((node (first (select (where :class-type 'node-class
+                                                        :name node-name)
+                                                 nodes-list))))
 			(unless node
 			  (error 'no-node-for-probe-error
                                  :node-name node-name
@@ -2094,13 +1971,21 @@
 
 (defun print-progress-bar (step little-mark big-mark &rest parameters &key (output *standard-output*))
   (declare (ignorable parameters debug-mode output))
-  (let ((percent (* 100 (/ step *steps-number*))))
+  (let ((percent (* 100
+                    (/ step
+                       *steps-number*))))
     (cond
       ((< percent 100)
        (if (eql (mod percent big-mark) 0)
-	   (format output " %~a " percent)
+           (progn
+	     (format output
+                     " %~a "
+                     percent)
+             (finish-output output))
 	   (when (eql (mod percent little-mark) 0)
-	     (format output "="))))
+	     (format output
+                     "=")
+             (finish-output output))))
       ((eql percent 100)
        (format output
                " 100% done!~%")
@@ -2340,7 +2225,7 @@
 ;; Y(n) = D(n) B(n) Y(n - 1) + h D(n) K(n)
 ;;
 
-(defun solve-problem (netlist-file-pathname t0 t1 steps &rest parameters &key (verbose nil) (debug-mode nil) (progress-bar nil) (output *standard-output*))
+(defun solve-problem (netlist-file-pathname time-start time-stop time-steps &rest parameters &key (verbose nil) (debug-mode nil) (progress-bar nil) (output *standard-output*))
   (declare (ignorable parameters debug-mode output))
   (handler-case
       (progn
@@ -2357,16 +2242,16 @@
                   (software-type)
                   (machine-type))
           (finish-output output))
-	(unless (> t1 t0)
+	(unless (> time-stop time-start)
 	  (error 'simulation-time-interval-error
-                 :t1 t1
-                 :t0 t0))
-	(setq *t0* t0)
-	(setq *t1* t1)
-	(if (and (< steps *minimum-steps-number*)
+                 :t1 time-start
+                 :t0 time-stop))
+	(setq *t0* time-start
+	      *t1* time-stop)
+	(if (and (< time-steps *minimum-steps-number*)
                  (not debug-mode))
-	    (setq *steps-number* *minimum-steps-number*
-	          *steps-number* steps))
+	    (setq *steps-number* *minimum-steps-number*)
+            (setq *steps-number* time-steps))
 	(setq *h* (/ (- *t1* *t0*)
                      (float *steps-number*)))
 	(when verbose
@@ -2465,7 +2350,7 @@
                         "~2&Solving: ")
                 (finish-output output)
 		(loop for i from 0 to *steps-number* do
-		  (setq *time* (+ t0
+		  (setq *time* (+ *t0*
                                   (* *h*
                                      (float i))))
 		  (when (and debug-mode
@@ -2475,9 +2360,9 @@
                             i
                             *time*)
                     (finish-output output))
-		  ;;
+
 		  ;; Update matrices
-		  ;;
+
 		  (dolist (element (netlist-class-elements-list netlist))
 		    (setq element (update-model element
                                                 (netlist-class-elements-list netlist)

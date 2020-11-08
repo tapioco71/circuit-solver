@@ -49,21 +49,30 @@
     :accessor probe-class-nodes-list
     :accessor element-class-nodes-list)))
 
-;;
 ;; Methods.
-;;
+
+(defmethod sexpify ((object probe-class))
+  (let ((return-value (call-next-method object)))
+    (unless (undefined-class-p object)
+      (setq return-value (append return-value (list :class (probe-class-class object)))))
+    (when (probe-class-elements-list object)
+      (setq return-value (append return-value (list :elements-list (probe-class-elements-list object)))))
+    (when (probe-class-nodes-list object)
+      (setq return-value (append return-value (list :nodes-list (probe-class-nodes-list object)))))
+    return-value))
 
 (defmethod undefined-class-p ((object probe-class))
-  (or (string-equal (string-downcase (probe-class-class object))
+  (or (string-equal (probe-class-class object)
                     "undefined")
-      (string-equal (probe-class-class object) "")))
+      (string-equal (probe-class-class object)
+                    "")))
 
 (defmethod voltage-probe-class-p ((object probe-class))
-  (string-equal (string-downcase (probe-class-class object))
+  (string-equal (probe-class-class object)
                 "voltage-probe"))
 
 (defmethod current-probe-class-p ((object probe-class))
-  (string-equal (string-downcase (probe-class-class object))
+  (string-equal (probe-class-class object)
                 "current-probe"))
 
 (defmethod rename-netlist-element ((object probe-class) name &rest parameters &key (debug-mode nil) (output *standard-output*))
@@ -97,7 +106,9 @@
       nil)))
 
 (defmethod element-with-node ((object probe-class) node-name)
-  (when (position node-name (probe-class-nodes-list object) :test 'string-equal)
+  (when (position node-name
+                  (probe-class-nodes-list object)
+                  :test 'string-equal)
     object))
 
 ;; End probe.lisp

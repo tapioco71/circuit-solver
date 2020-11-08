@@ -49,25 +49,36 @@
     :accessor node-class-number
     :accessor element-class-number)))
 
-;;
 ;; Methods.
-;;
+
+(defmethod sexpify ((object node-class))
+  "Create a sexp for node element: :NAME name [ :ID id ] :CLASS element-class [ :STATE state ] [ :NUMBER number ]."
+  (let ((return-value (call-next-method object)))
+    (unless (undefined-class-p object)
+      (setq return-value (append return-value (list :class (node-class-class object)))))
+    (unless (eql (node-class-state object) nil)
+      (setq return-value (append return-value (list :state (node-class-state object)))))
+    (unless (eql (node-class-number object) -1)
+      (setq return-value (append return-value (list :number (node-class-number object)))))
+    return-value))
 
 (defmethod undefined-class-p ((object node-class))
-  (or (string-equal (string-downcase (node-class-class object))
+  (or (string-equal (node-class-class object)
                     "undefined")
-      (string-equal (node-class-class object) "")))
+      (string-equal (node-class-class object)
+                    "")))
 
 (defmethod reference-class-node-p ((object node-class))
-  (or (string-equal (string-downcase (node-class-class object))
+  (or (string-equal (node-class-class object)
                     "reference")
-      (string-equal (string-downcase (node-class-class object))
+      (string-equal (node-class-class object)
                     "gnd")
-      (string-equal (string-downcase (node-class-class object))
+      (string-equal (node-class-class object)
                     "0")))
 
 (defmethod element-with-node ((object node-class) node-name)
-  (when (string-equal node-name (element-class-name object))
+  (when (string-equal node-name
+                      (element-class-name object))
     object))
 
 ;; End node.lisp

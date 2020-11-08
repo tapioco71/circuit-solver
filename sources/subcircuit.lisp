@@ -43,6 +43,21 @@
     :accessor subcircuit-class-nodes-list
     :accessor element-class-nodes-list)))
 
+;; Methods.
+
+;;
+;; create a sexp for subcircuit element: :NAME name [ :ID id ] :FILE-NAME file-name :NODES-LIST nodes-list
+;;
+
+(defmethod sexpify ((object subcircuit-class))
+  "Create a sexp for subcircuit element: :NAME name [ :ID id ] :FILE-NAME file-name :NODES-LIST nodes-list."
+  (let ((return-value (call-next-method object)))
+    (when (pathnamep (subcircuit-class-file-pathname object))
+      (setq return-value (append return-value  (list :file-pathname (subcircuit-class-file-pathname object)))))
+    (when (subcircuit-class-nodes-list object)
+      (setq return-value (append return-value (list :nodes-list (subcircuit-class-nodes-list object)))))
+    return-value))
+
 (defmethod rename-netlist-element ((object subcircuit-class) name &rest parameters &key (debug-mode nil) (output *standard-output*))
   (declare (ignorable parameters debug-mode output))
   (let ((return-value (call-next-method object name
@@ -54,7 +69,9 @@
     return-value))
 
 (defmethod element-with-node ((object subcircuit-class) node-name)
-  (when (position node-name (subcircuit-class-nodes-list object) :test 'string-equal)
+  (when (position node-name
+                  (subcircuit-class-nodes-list object)
+                  :test 'string-equal)
     object))
 
 ;; End subcircuit.lisp

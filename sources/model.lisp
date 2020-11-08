@@ -77,17 +77,36 @@
 ;; Methods.
 ;;
 
+(defmethod sexpify ((object model-class))
+  (let ((return-value (call-next-method object)))
+    (unless (undefined-class-p object)
+      (setq return-value (append return-value (list :class (model-class-class object)))))
+    (when (model-class-function-name object)
+      (setq return-value (append return-value (list :function-name (model-class-function-name object)))))
+    (when (model-class-external-function-name object)
+      (setq return-value (append return-value (list :external-function-name (model-class-external-function-name object)))))
+    (when (model-class-parameters-list object)
+      (setq return-value (append return-value (list :parameters-list (model-class-parameters-list object)))))
+    (when (model-class-states-list object)
+      (setq return-value (append return-value (list :states-list (model-class-states-list object)))))
+    (when (model-class-probes-list object)
+      (setq return-value (append return-value (mapcar #'sexpify (model-class-probes-list object)))))
+    (when (has-value-p object)
+      (setq return-value (append return-value (list :value (model-class-value object)))))
+    return-value))
+
 (defmethod undefined-class-p ((object model-class))
-  (or (string-equal (string-downcase (model-class-class object))
+  (or (string-equal (model-class-class object)
                     "undefined")
-      (string-equal (model-class-class object) "")))
+      (string-equal (model-class-class object)
+                    "")))
 
 (defmethod simple-function-p ((object model-class))
-  (string-equal (string-downcase (model-class-class object))
+  (string-equal (model-class-class object)
                 "function"))
 
 (defmethod differential-function-p ((object model-class))
-  (string-equal (string-downcase (model-class-class object))
+  (string-equal (model-class-class object)
                 "differential"))
 
 (defmethod has-value-p ((object model-class))

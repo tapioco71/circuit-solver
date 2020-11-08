@@ -2,7 +2,7 @@
 ;; single phase transformer
 ;; Sn = 25000 VA
 ;; V1n = 3000 V
-;; V2n = 250 V 
+;; V2n = 250 V
 ;;
 
 (NETLIST
@@ -56,7 +56,7 @@
 		 ;;
 		 ;; external connection nodes
 		 ;;
-		 
+
 		 (NODE
 		  :NAME "N0"
 		  :CLASS "v-i")
@@ -64,7 +64,7 @@
 		 (NODE
 		  :NAME "N1"
 		  :CLASS "v-i")
-		 
+
 		 (NODE
 		  :NAME "N6"
 		  :CLASS "v-i")

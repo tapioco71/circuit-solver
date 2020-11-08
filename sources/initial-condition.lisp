@@ -43,4 +43,14 @@
     :accessor initial-condition-class-value
     :accessor element-class-value)))
 
+;; Methods.
+
+(defmethod sexpify ((object initial-condition-class))
+  (let ((return-value (call-next-method object)))
+    (when (initial-condition-class-target-name object)
+      (setq return-value (append return-value (list :target-name (initial-condition-class-target-name object)))))
+    (when (initial-condition-class-value object)
+      (setq return-value (append return-value (list :value (initial-condition-class-value object)))))
+    return-value))
+
 ;; End initial-condition.lisp

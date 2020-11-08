@@ -44,8 +44,20 @@
 
 ;; Methods.
 
+(defmethod sexpify ((object element-class))
+  "Create a sexp for element: :NAME name :ID id"
+  (let ((return-value (list (type-of object))))
+    (when (element-class-name object)
+      (setq return-value (append return-value (list :name (element-class-name object)))))
+    (unless (eql (element-class-id object) -1)
+      (setq return-value (append return-value (list :id (element-class-id object)))))
+    return-value))
+
 (defmethod rename-element ((object element-class) radix)
-  (setf (element-class-name object) (concatenate 'string radix ":" (element-class-name object)))
+  (setf (element-class-name object) (concatenate 'string
+                                                 radix
+                                                 ":"
+                                                 (element-class-name object)))
   object)
 
 (defmethod rename-netlist-element ((object element-class) name &rest parameters &key (debug-mode nil) (output *standard-output*))

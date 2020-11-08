@@ -55,9 +55,19 @@
     :accessor coupling-class-value
     :accessor element-class-value)))
 
-;;
 ;; Methods.
-;;
+
+(defmethod sexpify ((object coupling-class))
+  "Create a sexp for coupling element: :NAME name [ :ID id ] :ELEMENTS-LIST elements-list { :MODEL model | :VALUE value }."
+  (let ((return-value (call-next-method object)))
+    (when (coupling-class-elements-list object)
+      (setq return-value (append return-value (list :elements-list (mapcar #'sexpify
+                                                                           (coupling-class-elements-list object))))))
+    (when (has-model-p object)
+      (setq return-value (append return-value (list :model (sexpify (coupling-class-model object))))))
+    (when (has-value-p object)
+      (setq return-value (append return-value (list :value (coupling-class-value object)))))
+    return-value))
 
 (defmethod has-model-p ((object coupling-class))
   (typep object 'model-class))
@@ -86,7 +96,9 @@
 (defmethod element-with-node ((object coupling-class) node-name)
   (let ((return-value nil))
     (dolist (coupling-element (coupling-class-elements-list object))
-      (when (position node-name (passive-class-nodes-list object) :test 'string-equal)
+      (when (position node-name
+                      (passive-class-nodes-list object)
+                      :test 'string-equal)
 	(push coupling-element return-value)))
     return-value))
 

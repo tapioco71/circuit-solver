@@ -55,26 +55,38 @@
     :accessor source-class-value
     :accessor element-class-value)))
 
-
-;;
 ;; Methods.
-;;
+
+(defmethod sexpify ((object source-class))
+  "Create a sexp for source element: :NAME name [ :ID id ] :CLASS element-class :NODES-LIST nodes-list { :MODEL model | :VALUE value }."
+  (let ((return-value (call-next-method object)))
+    (unless (undefined-class-p object)
+      (setq return-value (append return-value (list :class (source-class-class object)))))
+    (when (source-class-nodes-list object)
+      (setq return-value (append return-value (list :nodes-list (source-class-nodes-list object)))))
+    (when (has-model-p object)
+      (setq return-value (append return-value (list :model (sexpify (source-class-model object))))))
+    (when (has-value-p object)
+      (setq return-value (append return-value (list :value (source-class-value object)))))
+    return-value))
 
 (defmethod undefined-class-p ((object source-class))
-  (or (string-equal (string-downcase (source-class-class object))
+  (or (string-equal (source-class-class object)
                     "undefined")
-      (string-equal (source-class-class object) "")))
+      (string-equal (source-class-class object)
+                    "")))
 
 (defmethod voltage-source-class-p ((object source-class))
-  (string-equal (string-downcase (source-class-class object))
+  (string-equal (source-class-class object)
                 "voltage-source"))
 
 (defmethod current-source-class-p ((object source-class))
-  (string-equal (string-downcase (source-class-class object))
+  (string-equal (source-class-class object)
                 "current-source"))
 
 (defmethod has-model-p ((object source-class))
-  (typep (source-class-model object) 'model-class))
+  (typep (source-class-model object)
+         'model-class))
 
 (defmethod has-value-p ((object source-class))
   (null (source-class-value object)))
@@ -92,12 +104,16 @@
                                                                       :output output)))
     (when (source-class-nodes-list return-value)
       (setf (source-class-nodes-list return-value) (mapcar #'(lambda (x)
-							       (concatenate 'string name ":" x))
+							       (concatenate 'string name
+                                                                            ":"
+                                                                            x))
                                                            (source-class-nodes-list return-value))))
     return-value))
 
 (defmethod element-with-node ((object source-class) node-name)
-  (when (position node-name (source-class-nodes-list object) :test 'string-equal)
+  (when (position node-name
+                  (source-class-nodes-list object)
+                  :test 'string-equal)
     object))
 
 ;; End sources.lisp

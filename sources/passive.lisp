@@ -55,14 +55,26 @@
     :accessor passive-class-value
     :accessor element-class-value)))
 
-;;
 ;; Methods.
-;;
+
+(defmethod sexpify ((object passive-class))
+  "Create a sexp for passive element: :NAME name [ :ID id ] :CLASS element-class :NODES-LIST nodes-list { :MODEL model | :VALUE value }."
+  (let ((return-value (call-next-method object)))
+    (unless (undefined-class-p object)
+      (setq return-value (append return-value (list :class (passive-class-class object)))))
+    (when (passive-class-nodes-list object)
+      (setq return-value (append return-value (list :nodes-list (passive-class-nodes-list object)))))
+    (when (has-model-p object)
+      (setq return-value (append return-value (list :model (sexpify (passive-class-model object))))))
+    (when (has-value-p object)
+      (setq return-value (append return-value (list :value (passive-class-value object)))))
+    return-value))
 
 (defmethod undefined-class-p ((object passive-class))
-  (or (string-equal (string-downcase (passive-class-class object))
+  (or (string-equal (passive-class-class object)
                     "undefined")
-      (string-equal (passive-class-class object) "")))
+      (string-equal (passive-class-class object)
+                    "")))
 
 (defmethod has-model-p ((object passive-class))
   (typep object 'model-class))
@@ -82,7 +94,9 @@
                                                                        :debug-mode debug-mode)))
     (when (passive-class-nodes-list return-value)
       (setf (passive-class-nodes-list return-value) (mapcar #'(lambda (x)
-							        (concatenate 'string name ":" x))
+							        (concatenate 'string name
+                                                                             ":"
+                                                                             x))
                                                             (passive-class-nodes-list return-value))))
     return-value))
 
