@@ -168,4 +168,25 @@
 
 ;; Methods.
 
+;; Macros.
+
+(defmacro generate-thread-function ((p debug) &body body)
+  `#'(lambda ()
+       (let ((return-value nil)
+	     (thread-name (symbol-name (gensym "thread-"))))
+         (lparallel:force ,p)
+	 (when ,debug
+	   (format *standard-output*
+		   "Thread ~a started.~%"
+		   thread-name)
+	   (finish-output *standard-output*))
+	 ,@body
+	 (when ,debug
+	   (format *standard-output*
+		   "Thread ~a finished.~%"
+		   thread-name)
+	   (finish-output *standard-output*))
+	 (setq return-value t)
+	 return-value)))
+
 ;; End problem.lisp

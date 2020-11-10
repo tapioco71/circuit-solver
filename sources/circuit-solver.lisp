@@ -1656,7 +1656,9 @@
 ;;; Update Kv vector
 ;;;
 
-(defun update-kv-vector (kv-vector netlist &rest parameters &key (debug-mode nil) (output *standard-output*))
+(defun update-kv-vector (kv-vector netlist &rest parameters &key
+                                                              (debug-mode nil)
+                                                              (output *standard-output*))
   (declare (ignorable parameters debug-mode output))
   (let ((voltage-sources-list (select (list (where :class-type 'source-class
                                                    :class "voltage-source"))
@@ -2229,10 +2231,15 @@
                                                                                                (verbose nil)
                                                                                                (debug-mode nil)
                                                                                                (progress-bar nil)
+                                                                                               (parallel nil)
                                                                                                (output *standard-output*))
-  (declare (ignorable parameters verbose debug-mode progress-bar output))
+  (declare (ignorable parameters verbose debug-mode progress-bar parallel output))
   (handler-case
-      (let ((problem (make-problem :netlist-file-pathname netlist-file-pathname)))
+      (let ((problem (make-problem :netlist-file-pathname netlist-file-pathname))
+            (thread-functions nil)
+            (tasks-count 0)
+            (channel nil)
+            (promise (lparallel:promise)))
 	(when verbose
 	  (format output
                   "~%Circuit Solver - Version ~a.~a.~a.~a~%Written by Dott. Ing. Angelo Rossi & Dott. Ing. Marco Maccioni.~%Released under GPL3 License (C) ~@r."
@@ -2353,9 +2360,71 @@
 		(format output
                         "~2&Solving: ")
                 (finish-output output)
+                (when parallel
+                  (setq thread-functions (list (generate-thread-function (promise debug-mode)
+                                                 (dolist (element (netlist-class-elements-list netlist))
+		                                   (setq element (update-model element
+                                                                               (netlist-class-elements-list netlist)
+                                                                               y-old-vector
+                                                                               :debug-mode debug-mode
+                                                                               :output output))))
+                                               (generate-thread-function (promise debug-mode)
+                                                 (setq p-matrix (update-p-matrix p-matrix
+                                                                                 (netlist-class-elements-list netlist)
+                                                                                 :debug-mode debug-mode
+                                                                                 :output output)))
+                                               (generate-thread-function (promise debug-mode)
+			                         (setq r-matrix (update-r-matrix r-matrix
+                                                                                 (netlist-class-elements-list netlist)
+                                                                                 :debug-mode debug-mode
+                                                                                 :output output)))
+                                               (generate-thread-function (promise debug-mode)
+			                         (setq g-matrix (update-g-matrix g-matrix
+                                                                                 (netlist-class-elements-list netlist)
+                                                                                 :debug-mode debug-mode
+                                                                                 :output output)))
+                                               (generate-thread-function (promise debug-mode)
+                                                 (setq si-matrix (update-si-matrix si-matrix
+                                                                                   (netlist-class-elements-list netlist)
+                                                                                   :debug-mode debug-mode
+                                                                                   :output output)))
+                                               (generate-thread-function (promise debug-mode)
+			                         (setq sv-matrix (update-sv-matrix sv-matrix
+                                                                                   (netlist-class-elements-list netlist)
+                                                                                   :debug-mode debug-mode
+                                                                                   :output output)))
+                                               (generate-thread-function (promise debug-mode)
+                                                 (setq l-matrix (update-l-matrix l-matrix
+                                                                                 (netlist-class-elements-list netlist)
+                                                                                 :debug-mode debug-mode
+                                                                                 :output output)))
+                                               (generate-thread-function (promise debug-mode)
+			                         (setq c-matrix (update-c-matrix c-matrix
+                                                                                 (netlist-class-elements-list netlist)
+                                                                                 :debug-mode debug-mode
+                                                                                 :output output)))
+                                               (generate-thread-function (promise debug-mode)
+			                         (setq ki-vector (update-ki-vector ki-vector
+                                                                                   (netlist-class-elements-list netlist)
+                                                                                   :debug-mode debug-mode
+                                                                                   :output output)))
+                                               (generate-thread-function (promise debug-mode)
+                                                 (setq kv-vector (update-kv-vector kv-vector
+                                                                                   (netlist-class-elements-list netlist)
+                                                                                   :debug-mode debug-mode
+                                                                                   :output output))))
+                        tasks-count (length thread-functions))
+                  (when debug-mode
+                    (format output
+                            "Number of tasks: ~a~%"
+                            task-count)
+                    (finish-output output))
+                  (setf lparallel:*kernel* (lparallel:make-kernel tasks-count
+                                                                  :name (symbol-name (gensym "kernel-"))))
+                  (setq channel (lparallel:make-channel)))
 	        (loop
-                  for i from 0 to *steps-number*
-                  do
+                   for i from 0 to *steps-number*
+                   do
 		     (setq *time* (+ *t0*
                                      (* *h*
                                         (float i))))
@@ -2367,50 +2436,66 @@
                                *time*)
                        (finish-output output))
 
-		     ;; Update matrices
+		   ;; Update matrices
 
-		     (dolist (element (netlist-class-elements-list netlist))
-		       (setq element (update-model element
-                                                   (netlist-class-elements-list netlist)
-                                                   y-old-vector
-                                                   :debug-mode debug-mode
-                                                   :output output)))
-		     (setq p-matrix (update-p-matrix p-matrix
-                                                     (netlist-class-elements-list netlist)
-                                                     :debug-mode debug-mode
-                                                     :output output)
-			   r-matrix (update-r-matrix r-matrix
-                                                     (netlist-class-elements-list netlist)
-                                                     :debug-mode debug-mode
-                                                     :output output)
-			   g-matrix (update-g-matrix g-matrix
-                                                     (netlist-class-elements-list netlist)
-                                                     :debug-mode debug-mode
-                                                     :output output)
-			   si-matrix (update-si-matrix si-matrix
-                                                       (netlist-class-elements-list netlist)
-                                                       :debug-mode debug-mode
-                                                       :output output)
-			   sv-matrix (update-sv-matrix sv-matrix
-                                                       (netlist-class-elements-list netlist)
-                                                       :debug-mode debug-mode
-                                                       :output output)
-			   l-matrix (update-l-matrix l-matrix
-                                                     (netlist-class-elements-list netlist)
-                                                     :debug-mode debug-mode
-                                                     :output output)
-			   c-matrix (update-c-matrix c-matrix
-                                                     (netlist-class-elements-list netlist)
-                                                     :debug-mode debug-mode
-                                                     :output output)
-			   ki-vector (update-ki-vector ki-vector
-                                                       (netlist-class-elements-list netlist)
-                                                       :debug-mode debug-mode
-                                                       :output output)
-			   kv-vector (update-kv-vector kv-vector
-                                                       (netlist-class-elements-list netlist)
-                                                       :debug-mode debug-mode
-                                                       :output output))
+                     (if parallel
+                         (progn
+                           (loop
+                              for thread-function in thread-functions
+                              do
+                                (lparallel:submit-task channel thread-function))
+                           (lparallel:fulfill promise t)
+                           (loop
+                              finally (when debug-mode
+                                        (format output
+                                                "All tasks completed!~%")
+                                        (finish-output output))
+                              for i from 0 below tasks-count
+                              do
+                                (lparallel:receive-result channel)))
+                         (progn
+		           (dolist (element (netlist-class-elements-list netlist))
+		             (setq element (update-model element
+                                                         (netlist-class-elements-list netlist)
+                                                         y-old-vector
+                                                         :debug-mode debug-mode
+                                                         :output output)))
+		           (setq p-matrix (update-p-matrix p-matrix
+                                                           (netlist-class-elements-list netlist)
+                                                           :debug-mode debug-mode
+                                                           :output output)
+			         r-matrix (update-r-matrix r-matrix
+                                                           (netlist-class-elements-list netlist)
+                                                           :debug-mode debug-mode
+                                                           :output output)
+			         g-matrix (update-g-matrix g-matrix
+                                                           (netlist-class-elements-list netlist)
+                                                           :debug-mode debug-mode
+                                                           :output output)
+			         si-matrix (update-si-matrix si-matrix
+                                                             (netlist-class-elements-list netlist)
+                                                             :debug-mode debug-mode
+                                                             :output output)
+			         sv-matrix (update-sv-matrix sv-matrix
+                                                             (netlist-class-elements-list netlist)
+                                                             :debug-mode debug-mode
+                                                             :output output)
+			         l-matrix (update-l-matrix l-matrix
+                                                           (netlist-class-elements-list netlist)
+                                                           :debug-mode debug-mode
+                                                           :output output)
+			         c-matrix (update-c-matrix c-matrix
+                                                           (netlist-class-elements-list netlist)
+                                                           :debug-mode debug-mode
+                                                           :output output)
+			         ki-vector (update-ki-vector ki-vector
+                                                             (netlist-class-elements-list netlist)
+                                                             :debug-mode debug-mode
+                                                             :output output)
+			         kv-vector (update-kv-vector kv-vector
+                                                             (netlist-class-elements-list netlist)
+                                                             :debug-mode debug-mode
+                                                             :output output))))
 		     (multiple-value-bind (a-matrix b-matrix k-vector)
 		         (assemble-system p-matrix
                                           r-matrix

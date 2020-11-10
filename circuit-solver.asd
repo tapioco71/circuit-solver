@@ -28,7 +28,7 @@
   :version "0.2.6"
   :description "Electrical circuits solver using gsll."
   :serial t
-  :depends-on (#:bordeaux-threads #:gsll)
+  :depends-on (#:lparallel #:gsll)
   :components ((:file "sources/package")
                (:file "sources/conditions")
 	       (:file "sources/functions")
