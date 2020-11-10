@@ -55,10 +55,18 @@
 ;; sinusoidal function y = A * sin(omega * t + phi)
 ;;
 
-(defun sinusoidal-function (&optional &key parameters state)
+(defun sinusoidal-function (&rest rest &key parameters state)
   "sinusoidal-function(parameters, state) where parameters = (amplitude, frequency, phase)"
-  state
-  (* (getf parameters :amplitude) (sin (+ (* 2 pi (getf parameters :frequency) *time*) (getf parameters :phase)))))
+  (declare (ignorable rest parameters state))
+  (let ((amplitude (getf parameters :amplitude))
+        (frequency (getf parameters :frequency))
+        (phase (getf parameters :phase)))
+    (when (and amplitude
+               frequency
+               phase)
+      (* amplitude
+         (sin (+ (* 2 pi frequency *time*)
+                 phase))))))
 
 ;;
 ;; ramp function y = m * t, t >= t0

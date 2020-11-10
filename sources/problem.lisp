@@ -60,30 +60,112 @@
     :initarg :netlist
     :initform ()
     :accessor problem-class-netlist)
-   (simulation-type
-    :documentation "simulation type: time, frequency or undefined."
-    :initarg :simulation-type
-    :initform "undefined"
-    :accessor problem-class-simulation-type)
-   (x-start
-    :documentation "Start value for time or frequency."
-    :initarg :x-start
+   (simulation
+    :documentation "Simulation data."
+    :initarg :simulation
     :initform nil
-    :accessor problem-class-x-start)
-   (x-end
-    :documentation "End value for time or frequency."
-    :initarg :x-end
+    :accessor simulation)
+   (p-matrix
+    :documentation "P matrix."
+    :initarg :p-matrix
     :initform nil
-    :accessor problem-class-x-end)
-   (x-value
-    :documentation "Value for time or frequency during simulation."
-    :initarg :x-value
+    :accessor p-matrix)
+   (r-matrix
+    :documentation "R matrix."
+    :initarg :r-matrix
     :initform nil
-    :accessor problem-class-x-value)
-   (x-steps
-    :documentation "Number of steps for time or frequency."
-    :initarg :x-steps
-    :initform 1000
-    :accessor problem-class-x-steps)))
+    :accessor r-matrix)
+   (g-matrix
+    :documentation "G matrix."
+    :initarg :g-matrix
+    :initform nil
+    :accessor g-matrix)
+   (si-matrix
+    :documentation "Si matrix."
+    :initarg :si-matrix
+    :initform nil
+    :accessor si-matrix)
+   (sv-matrix
+    :documentation "Sv matrix."
+    :initarg :sv-matrix
+    :initform nil
+    :accessor sv-matrix)
+   (l-matrix
+    :documentation "L matrix."
+    :initarg :l-matrix
+    :initform nil
+    :accessor l-matrix)
+   (c-matrix
+    :documentation "C matrix."
+    :initarg :c-matrix
+    :initform nil
+    :accessor c-matrix)
+   (ki-matrix
+    :documentation "Ki matrix."
+    :initarg :ki-matrix
+    :initform nil
+    :accessor ki-matrix)
+   (kv-matrix
+    :documentation "Kv matrix."
+    :initarg :kv-matrix
+    :initform nil
+    :accessor kv-matrix)))
+
+;; Functions.
+
+(defun make-problem (&rest parameters &key
+                                        (id (symbol-name (gensym "P-")) id-p)
+                                        (name "" name-p)
+                                        (date (get-universal-time) date-p)
+                                        (netlist-file-pathname nil netlist-file-pathname-p)
+                                        (log-file-pathname nil log-file-pathname-p)
+                                        (netlist nil netlist-p)
+                                        (simulation nil simulation-p)
+                                        (p-matrix nil p-matrix-p)
+                                        (r-matrix nil r-matrix-p)
+                                        (g-matrix nil g-matrix-p)
+                                        (si-matrix nil si-matrix-p)
+                                        (sv-matrix nil sv-matrix-p)
+                                        (l-matrix nil l-matrix-p)
+                                        (c-matrix nil c-matrix-p)
+                                        (ki-matrix nil ki-matrix-p)
+                                        (kv-matrix nil kv-matrix-p))
+  (declare (ignorable parameters
+                      id
+                      name
+                      date
+                      netlist-file-pathname
+                      log-file-pathname
+                      netlist
+                      simulation
+                      p-matrix
+                      r-matrix
+                      g-matrix
+                      si-matrix
+                      sv-matrix
+                      l-matrix
+                      c-matrix
+                      ki-matrix
+                      kv-matrix))
+  (let ((object (make-instance 'problem-class
+                               :id id
+                               :name name
+                               :date date
+                               :netlist-file-pathname netlist-file-pathname
+                               :log-file-pathname log-file-pathname
+                               :netlist netlist
+                               :simulation simulation
+                               :p-matrix p-matrix
+                               :r-matrix r-matrix
+                               :g-matrix g-matrix
+                               :si-matrix si-matrix
+                               :sv-matrix sv-matrix
+                               :l-matrix l-matrix
+                               :c-matrix c-matrix
+                               :ki-matrix ki-matrix
+                               :kv-matrix kv-matrix)))
+    object))
+
+;; Methods.
 
 ;; End problem.lisp

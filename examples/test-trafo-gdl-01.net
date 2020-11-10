@@ -1,151 +1,121 @@
-(NETLIST
- :NAME "test-trafo-gdl-01"
- :ELEMENTS-LIST ((SOURCE
-		  :NAME "V1"
-		  :CLASS "voltage-source"
-		  :MODEL (MODEL :NAME "sinusoidal-voltage-1"
-				:FUNCTION-NAME "sinusoidal-function"
-				:CLASS "function"
-				:PARAMETERS-LIST (:AMPLITUDE 4243d0 :FREQUENCY 50d0 :PHASE 0d0))
-		  :NODES-LIST ("N1" "GND"))
+;;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; indent-tabs-mode: nil; coding: utf-8; show-trailing-whitespace: t -*-
+(netlist :name "test-trafo-gdl-01"
+         :elements-list ((source :name "V1"
+		                 :class "voltage-source"
+		                 :model (model :name "sinusoidal-voltage-1"
+				               :function-name "sinusoidal-function"
+				               :class "function"
+				               :parameters-list (:amplitude 4243d0 :frequency 50d0 :phase 0d0))
+		                 :nodes-list ("N1" "GND"))
 
-		 (SOURCE
-		  :NAME "Vb"
-		  :CLASS "voltage-source"
-		  :NODES-LIST ("N10" "GND")
-		  :MODEL (MODEL
-			  :NAME "square-voltage-1"
-			  :FUNCTION-NAME "bistable-function-1"
-			  :CLASS "function"
-			  :PARAMETERS-LIST (:POLARITY nil :T0 200d-3 :LOW-VALUE 0d0 :HIGH-VALUE 5d0)))
+		         (source :name "Vb"
+		                 :class "voltage-source"
+		                 :nodes-list ("N10" "GND")
+		                 :model (model :name "square-voltage-1"
+			                       :function-name "bistable-function-1"
+			                       :class "function"
+			                       :parameters-list (:polarity nil :t0 200d-3 :low-value 0d0 :high-value 5d0)))
 
-		 (PASSIVE
-		  :NAME "Rb"
-		  :CLASS "resistance"
-		  :NODES-LIST ("N10" "GND")
-		  :VALUE 1d6)
+		         (passive :name "Rb"
+		                  :class "resistance"
+		                  :nodes-list ("N10" "GND")
+		                  :value 1d6)
 
-		 (SUBCIRCUIT
-		  :NAME "T"
-		  :FILE-PATHNAME #p"/home/angel/Development/lisp/circuit-solver/subcircuits/t_25000_3000_250.sub"
-		  :NODES-LIST ("N4" "GND" "N5" "N6"))
+		         (subcircuit :name "T"
+		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/t-25000-3000-250.sub"
+		                     :nodes-list ("N4" "GND" "N5" "N6"))
 
-		 (PASSIVE
-		  :NAME "R1"
-		  :CLASS "resistance"
-		  :NODES-LIST ("N1" "N2")
-		  :VALUE 100d-3)
+		         (passive :name "R1"
+		                  :class "resistance"
+		                  :nodes-list ("N1" "N2")
+		                  :value 100d-3)
 
-		 (PASSIVE
-		  :NAME "L1"
-		  :CLASS "inductance"
-		  :NODES-LIST ("N2" "N3")
-		  :VALUE 4.7d-6)
+		         (passive :name "L1"
+		                  :class "inductance"
+		                  :nodes-list ("N2" "N3")
+		                  :value 4.7d-6)
 
-		 (PASSIVE
-		  :NAME "I1"
-		  :CLASS "conductance"
-		  :NODES-LIST ("N3" "N4")
-		  :MODEL (MODEL
-			  :NAME "breaker"
-			  :FUNCTION-NAME "simple-switch-2"
-			  :CLASS "function"
-			  :PARAMETERS-LIST (:ON-CONDUCTANCE 1d3 :OFF-CONDUCTANCE 1d-12 :ON-TIME 1d-6 :OFF-TIME 1d-6 :UPPER-THRESHOLD 3.333d0 :LOWER-THRESHOLD 1.667d0)
-			  :PROBES-LIST ((PROBE
-					 :NAME "P1"
-					 :CLASS "voltage-probe"
-					 :NODES-LIST ("GND"))
-					(PROBE
-					 :NAME "P2"
-					 :CLASS "voltage-probe"
-					 :NODES-LIST ("N10")))
-			  :VALUE 1d-12))
+		         (passive :name "I1"
+		                  :class "conductance"
+		                  :nodes-list ("N3" "N4")
+		                  :model (model :name "breaker"
+			                        :function-name "simple-switch-2"
+			                        :class "function"
+			                        :parameters-list (:on-conductance 1d3 :off-conductance 1d-12 :on-time 1d-6 :off-time 1d-6 :upper-threshold 3.333d0 :lower-threshold 1.667d0)
+			                        :probes-list ((probe :name "P1"
+					                             :class "voltage-probe"
+					                             :nodes-list ("GND"))
+					                      (probe :name "P2"
+					                             :class "voltage-probe"
+					                             :nodes-list ("N10")))
+			                        :value 1d-12))
 
-		 (PASSIVE
-		  :NAME "Cl"
-		  :CLASS "capacitance"
-		  :NODES-LIST ("N5" "N6")
-		  :VALUE 22d-6)
+		         (passive :name "Cl"
+		                  :class "capacitance"
+		                  :nodes-list ("N5" "N6")
+		                  :value 22d-6)
 
-		 (PASSIVE
-		  :NAME "Rload"
-		  :CLASS "resistance"
-		  :NODES-LIST ("N5" "N6")
-		  :VALUE 3.3d0)
+		         (passive :name "Rload"
+		                  :class "resistance"
+		                  :nodes-list ("N5" "N6")
+		                  :value 3.3d0)
 
-		 (PASSIVE
-		  :NAME "Rl"
-		  :CLASS "resistance"
-		  :NODES-LIST ("N5" "N7")
-		  :VALUE 7d0)
+		         (passive :name "Rl"
+		                  :class "resistance"
+		                  :nodes-list ("N5" "N7")
+		                  :value 7d0)
 
-		 (PASSIVE
-		  :NAME "Ll"
-		  :CLASS "inductance"
-		  :NODES-LIST ("N7" "N8")
-		  :VALUE 350d-3)
+		         (passive :name "Ll"
+		                  :class "inductance"
+		                  :nodes-list ("N7" "N8")
+		                  :value 350d-3)
 
-		 (PASSIVE
-		  :NAME "G1"
-		  :CLASS "conductance"
-		  :NODES-LIST ("N8" "N6")
-		  :MODEL (MODEL
-			  :NAME "gas-discharge-lamp-1"
-			  :FUNCTION-NAME "gas-discharge-lamp"
-			  :CLASS "differential"
-			  :PARAMETERS-LIST (:A2 1.12d0 :A1 0d0 :B3 0d0 :B2 1074d0 :B1 3778d0 :B0 0d0 :FRAG 1d0 :EQE 0d0)
-			  :PROBES-LIST ((PROBE
-					 :NAME "lamp-current-1"
-					 :CLASS "current-probe"
-					 :ELEMENTS-LIST ("G1")))
-			  :VALUE 1d-3))
+		         (passive :name "G1"
+		                  :class "conductance"
+		                  :nodes-list ("N8" "N6")
+		                  :model (model :name "gas-discharge-lamp-1"
+			                        :function-name "gas-discharge-lamp"
+			                        :class "differential"
+			                        :parameters-list (:a2 1.12d0 :a1 0d0 :b3 0d0 :b2 1074d0 :b1 3778d0 :b0 0d0 :frag 1d0 :eqe 0d0)
+			                        :probes-list ((probe :name "lamp-current-1"
+					                             :class "current-probe"
+					                             :elements-list ("G1")))
+			                        :value 1d-3))
 
-		 (NODE
-		  :NAME "GND"
-		  :CLASS "reference")
+		         (node :name "GND"
+		               :class "reference")
 
-		 (NODE
-		  :NAME "N1"
-		  :CLASS "v-i")
+		         (node :name "N1"
+		               :class "v-i")
 
-		 (NODE
-		  :NAME "N2"
-		  :CLASS "v-i")
+		         (node :name "N2"
+		               :class "v-i")
 
-		 (NODE
-		  :NAME "N3"
-		  :CLASS "v-i")
+		         (node :name "N3"
+		               :class "v-i")
 
-		 (NODE
-		  :NAME "N4"
-		  :CLASS "v-i")
+		         (node :name "N4"
+		               :class "v-i")
 
-		 (NODE
-		  :NAME "N5"
-		  :CLASS "v-i")
+		         (node :name "N5"
+		               :class "v-i")
 
-		 (NODE
-		  :NAME "N6"
-		  :CLASS "v-i")
+		         (node :name "N6"
+		               :class "v-i")
 
-		 (NODE
-		  :NAME "N7"
-		  :CLASS "v-i")
+		         (node :name "N7"
+		               :class "v-i")
 
-		 (NODE
-		  :NAME "N8"
-		  :CLASS "v-i")
+		         (node :name "N8"
+		               :class "v-i")
 
-		 (NODE
-		  :NAME "N10"
-		  :CLASS "v-i")
+		         (node :name "N10"
+		               :class "v-i")
 
-		 (PROBE
-		  :NAME "current"
-		  :CLASS "current-probe"
-		  :ELEMENTS-LIST ("V1" "R1" "L1" "I1" "Cl" "Rl" "Rload" "Ll" "G1"))
+		         (probe :name "current"
+		                :class "current-probe"
+		                :elements-list ("V1" "R1" "L1" "I1" "Cl" "Rl" "Rload" "Ll" "G1"))
 
-		 (PROBE
-		  :NAME "voltage"
-		  :CLASS "voltage-probe"
-		  :NODES-LIST ("N1" "N2" "N3" "N4" "N5" "N6" "N7" "N8" "N10"))))
+		         (probe :name "voltage"
+		                :class "voltage-probe"
+		                :nodes-list ("N1" "N2" "N3" "N4" "N5" "N6" "N7" "N8" "N10"))))

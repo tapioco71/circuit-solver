@@ -1,6 +1,6 @@
 ;;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; indent-tabs-mode: nil; coding: utf-8; show-trailing-whitespace: t -*-
 ;;
-;; mov with R1 = 1 Ohm, C1 = 100 pF, L1 = 1 nH, Vmax = 1500 V, Imax = 1 A
+;; mov with R1 = 1 Ohm, C1 = 100 pF, L1 = 1 nH, Vmax = 500 V, Imax = 1 A
 ;;
 ;;
 ;;              o A

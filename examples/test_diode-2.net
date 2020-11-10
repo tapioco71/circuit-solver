@@ -1,6 +1,6 @@
 (NETLIST
 	:NAME "test_diode-2"
-	:ELEMENTS-LIST ((SOURCE 
+	:ELEMENTS-LIST ((SOURCE
 				:NAME "V1"
 				:CLASS "voltage-source"
 				:NODES-LIST ("GND" "N1")
@@ -18,25 +18,25 @@
 				       	      :FUNCTION-NAME "simple-diode-2"
 					      :CLASS "function"
 					      :PARAMETERS-LIST (:VT 252d-3 :N 1d0 :IS 1d-3)
-					      :PROBES-LIST ((PROBE 
+					      :PROBES-LIST ((PROBE
 					      		   	   :NAME "diode-a-1"
 								   :CLASS "voltage-probe"
 								   :NODES-LIST ("N1"))
 
-							    (PROBE 
+							    (PROBE
 					      		   	   :NAME "diode-k-1"
 								   :CLASS "voltage-probe"
-								   :NODES-LIST ("GND")))	
+								   :NODES-LIST ("GND")))
 					      :VALUE 0d0))
 
 			(NODE
 				:NAME "GND"
 			       	:CLASS "reference")
-			       
+
 			(NODE
 				:NAME "N1"
 				:CLASS "v-i")
-			       					      		  			
+
 			(PROBE
 			       :NAME "diode-current"
 			       :CLASS "current-probe"

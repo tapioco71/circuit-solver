@@ -1,0 +1,161 @@
+;;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; indent-tabs-mode: nil; coding: utf-8; show-trailing-whitespace: t -*-
+(netlist :name "test-07"
+         :elements-list ((source :name "Vb"
+		                 :class "voltage-source"
+		                 :nodes-list ("N99" "GND")
+		                 :model (model :name "square-voltage-1"
+			                       :function-name "bistable-function-1"
+			                       :class "function"
+			                       :parameters-list (:polarity nil :t0 30d-3 :low-value 0d0 :high-value 5d0)))
+
+		         (passive :name "Rb"
+		                  :class "resistance"
+		                  :nodes-list ("N99" "GND")
+		                  :value 1d6)
+
+                         (source :name "V1"
+		                 :class "voltage-source"
+		                 :nodes-list ("GND" "N1")
+		                 :model (model :name "sinusoidal-voltage"
+				               :function-name "sinusoidal-function"
+				               :class "function"
+				               :parameters-list (:amplitude 1.5d3 :frequency 50d0 :phase 0d0)
+				               :value 0d0))
+
+                         (passive :name "R1"
+                                  :class "resistance"
+                                  :nodes-list ("N1" "N2")
+                                  :value 5d0)
+
+                         (passive :name "I1"
+		                  :class "conductance"
+		                  :nodes-list ("N2" "N3")
+		                  :model (model :name "breaker"
+			                        :function-name "simple-switch-2"
+			                        :class "function"
+			                        :parameters-list (:on-conductance 1d6 :off-conductance 1d-12 :on-time 1d-6 :off-time 1d-6 :upper-threshold 3.333d0 :lower-threshold 1.667d0)
+			                        :probes-list ((probe :name "P1"
+					                             :class "voltage-probe"
+					                             :nodes-list ("GND"))
+					                      (probe :name "P2"
+					                             :class "voltage-probe"
+					                             :nodes-list ("N99")))
+			                        :value 1d-12))
+
+                         (subcircuit :name "M1"
+                                     :file-pathname "/home/angel/Development/lisp/circuit-solver/subcircuits/mov.sub"
+                                     :nodes-list ("N3" "GND"))
+
+                         (subcircuit :name "T1"
+                                     :file-pathname "/home/angel/Development/lisp/circuit-solver/subcircuits/t-10-230-9.sub"
+                                     :nodes-list ("N3" "GND" "N4" "N5"))
+
+                         (passive :name "Rt"
+                                  :class "resistance"
+                                  :nodes-list ("GND" "N4")
+                                  :value 1d7)
+
+                         (passive :name "D1"
+                                  :class "conductance"
+                                  :nodes-list ("N4" "N6")
+                                  :model (model :name "simple-diode"
+                                                :function-name "simple-diode-2"
+                                                :class "function"
+                                                :parameters-list (:vt 252d-3 :n 1d0 :is 1d-3)
+                                                :probes-list ((probe :name "diode-a-1"
+                                                                     :class "voltage-probe"
+                                                                     :nodes-list ("N4"))
+
+                                                              (probe :name "diode-k-1"
+                                                                     :class "voltage-probe"
+                                                                     :nodes-list ("N6")))))
+
+                         (passive :name "D2"
+                                  :class "conductance"
+                                  :nodes-list ("N5" "N6")
+                                  :model (model :name "simple-diode"
+                                                :function-name "simple-diode-2"
+                                                :class "function"
+                                                :parameters-list (:vt 252d-3 :n 1d0 :is 1d-3)
+                                                :probes-list ((probe :name "diode-a-2"
+                                                                     :class "voltage-probe"
+                                                                     :nodes-list ("N5"))
+
+                                                              (probe :name "diode-k-2"
+                                                                     :class "voltage-probe"
+                                                                     :nodes-list ("N6")))))
+
+                         (passive :name "D3"
+                                  :class "conductance"
+                                  :nodes-list ("N7" "N5")
+                                  :model (model :name "simple-diode"
+                                                :function-name "simple-diode-2"
+                                                :class "function"
+                                                :parameters-list (:vt 252d-3 :n 1d0 :is 1d-3)
+                                                :probes-list ((probe :name "diode-a-3"
+                                                                     :class "voltage-probe"
+                                                                     :nodes-list ("N7"))
+
+                                                              (probe :name "diode-k-3"
+                                                                     :class "voltage-probe"
+                                                                     :nodes-list ("N5")))))
+
+                         (passive :name "D4"
+                                  :class "conductance"
+                                  :nodes-list ("N7" "N4")
+                                  :model (model :name "simple-diode"
+                                                :function-name "simple-diode-2"
+                                                :class "function"
+                                                :parameters-list (:vt 252d-3 :n 1d0 :is 1d-3)
+                                                :probes-list ((probe :name "diode-a-4"
+                                                                     :class "voltage-probe"
+                                                                     :nodes-list ("N7"))
+
+                                                              (probe :name "diode-k-4"
+                                                                     :class "voltage-probe"
+                                                                     :nodes-list ("N4")))))
+
+                         (passive :name "C1"
+                                  :class "capacitance"
+                                  :nodes-list ("N6" "N7")
+                                  :value 100d-9)
+
+                         (passive :name "R2"
+                                  :class "resistance"
+                                  :nodes-list ("N6" "N7")
+                                  :value 1d3)
+
+		         (node :name "GND"
+		               :class "reference")
+
+		         (node :name "N1"
+		               :class "v-i")
+
+		         (node :name "N2"
+		               :class "v-i")
+
+                         (node :name "N3"
+		               :class "v-i")
+
+                         (node :name "N4"
+                               :class "v-i")
+
+                         (node :name "N5"
+                               :class "v-i")
+
+                         (node :name "N6"
+                               :class "v-i")
+
+                         (node :name "N7"
+                               :class "v-i")
+
+                         (node :name "N99"
+                               :class "v-i")
+
+                         (probe :name "P1"
+                                :class "current-probe"
+                                :elements-list ("V1" "R1" "R2" "M1:R"))
+
+		         (probe :name "P2"
+		                :class "voltage-probe"
+		                :nodes-list ("N1" "N2" "N3" "N4" "N5" "N6" "N7" "N99"))))

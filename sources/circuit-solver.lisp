@@ -2225,10 +2225,14 @@
 ;; Y(n) = D(n) B(n) Y(n - 1) + h D(n) K(n)
 ;;
 
-(defun solve-problem (netlist-file-pathname time-start time-stop time-steps &rest parameters &key (verbose nil) (debug-mode nil) (progress-bar nil) (output *standard-output*))
-  (declare (ignorable parameters debug-mode output))
+(defun solve-problem (netlist-file-pathname time-start time-stop time-steps &rest parameters &key
+                                                                                               (verbose nil)
+                                                                                               (debug-mode nil)
+                                                                                               (progress-bar nil)
+                                                                                               (output *standard-output*))
+  (declare (ignorable parameters verbose debug-mode progress-bar output))
   (handler-case
-      (progn
+      (let ((problem (make-problem :netlist-file-pathname netlist-file-pathname)))
 	(when verbose
 	  (format output
                   "~%Circuit Solver - Version ~a.~a.~a.~a~%Written by Dott. Ing. Angelo Rossi & Dott. Ing. Marco Maccioni.~%Released under GPL3 License (C) ~@r."
@@ -2349,114 +2353,116 @@
 		(format output
                         "~2&Solving: ")
                 (finish-output output)
-		(loop for i from 0 to *steps-number* do
-		  (setq *time* (+ *t0*
-                                  (* *h*
-                                     (float i))))
-		  (when (and debug-mode
-                             (not progress-bar))
-		    (format output
-                            "~2%----~%Iteration #~a~%time = ~a~%----~2%"
-                            i
-                            *time*)
-                    (finish-output output))
+	        (loop
+                  for i from 0 to *steps-number*
+                  do
+		     (setq *time* (+ *t0*
+                                     (* *h*
+                                        (float i))))
+		     (when (and debug-mode
+                                (not progress-bar))
+		       (format output
+                               "~2%----~%Iteration #~a~%time = ~a~%----~2%"
+                               i
+                               *time*)
+                       (finish-output output))
 
-		  ;; Update matrices
+		     ;; Update matrices
 
-		  (dolist (element (netlist-class-elements-list netlist))
-		    (setq element (update-model element
-                                                (netlist-class-elements-list netlist)
-                                                y-old-vector
-                                                :debug-mode debug-mode
-                                                :output output)))
-		  (setq p-matrix (update-p-matrix p-matrix
-                                                  (netlist-class-elements-list netlist)
-                                                  :debug-mode debug-mode
-                                                  :output output)
-			r-matrix (update-r-matrix r-matrix
-                                                  (netlist-class-elements-list netlist)
-                                                  :debug-mode debug-mode
-                                                  :output output)
-			g-matrix (update-g-matrix g-matrix
-                                                  (netlist-class-elements-list netlist)
-                                                  :debug-mode debug-mode
-                                                  :output output)
-			si-matrix (update-si-matrix si-matrix
-                                                    (netlist-class-elements-list netlist)
-                                                    :debug-mode debug-mode
-                                                    :output output)
-			sv-matrix (update-sv-matrix sv-matrix
-                                                    (netlist-class-elements-list netlist)
-                                                    :debug-mode debug-mode
-                                                    :output output)
-			l-matrix (update-l-matrix l-matrix
-                                                  (netlist-class-elements-list netlist)
-                                                  :debug-mode debug-mode
-                                                  :output output)
-			c-matrix (update-c-matrix c-matrix
-                                                  (netlist-class-elements-list netlist)
-                                                  :debug-mode debug-mode
-                                                  :output output)
-			ki-vector (update-ki-vector ki-vector
-                                                    (netlist-class-elements-list netlist)
-                                                    :debug-mode debug-mode
-                                                    :output output)
-			kv-vector (update-kv-vector kv-vector
-                                                    (netlist-class-elements-list netlist)
-                                                    :debug-mode debug-mode
-                                                    :output output))
-		  (multiple-value-bind (a-matrix b-matrix k-vector)
-		      (assemble-system p-matrix
-                                       r-matrix
-                                       g-matrix
-                                       si-matrix
-                                       sv-matrix
-                                       l-matrix
-                                       c-matrix
-                                       ki-vector
-                                       kv-vector
-                                       :debug-mode debug-mode
-                                       :output output)
-		    (let ((alpha-matrix (gsl:elt+ (gsl:elt* *h*
-                                                            (grid:copy-to a-matrix 'grid:foreign-array))
-                                                  (grid:copy-to b-matrix 'grid:foreign-array)))
-			  (beta-matrix (gsl:elt+ (gsl:elt* *h*
-                                                           (grid:copy-to k-vector 'grid:foreign-array))
-                                                 (gsl:matrix-product (grid:copy-to b-matrix 'grid:foreign-array)
-                                                                     (grid:copy-to y-old-vector 'grid:foreign-array)))))
-		      (multiple-value-bind (decomposition-matrix permutation-matrix sign)
-                          (gsl:lu-decomposition (grid:copy-to alpha-matrix 'grid:foreign-array))
-                        (when debug-mode
-			  (format output
-                                  "~&Permutation sign: ~a~%"
-                                  sign)
-                          (finish-output output))
-                        (let ((initial-solution (gsl:lu-solve (grid:copy-to decomposition-matrix 'grid:foreign-array)
-                                                              (grid:copy-to beta-matrix 'grid:foreign-array)
-                                                              permutation-matrix
-                                                              t)))
-			  (setq y-new-vector (gsll:lu-refine (grid:copy-to alpha-matrix 'grid:foreign-array)
-                                                             (grid:copy-to decomposition-matrix 'grid:foreign-array)
-                                                             permutation-matrix
-                                                             (grid:copy-to beta-matrix 'grid:foreign-array)
-                                                             initial-solution))
-			  (when debug-mode
-			    (format output
-                                    "~&Y(n+1) =~%~a~%"
-                                    y-new-vector)
-			    (format output
-                                    "~&Y(n) =~%~a~%"
-                                    y-old-vector)
-                            (finish-output output))
-			  (select-probes netlist
-                                         y-new-vector
-                                         output-file-stream
-                                         :debug-mode debug-mode
-                                         :output output)
-			  (setq y-old-vector y-new-vector)))
-		      (when (and (not debug-mode)
-				 progress-bar)
-			(print-progress-bar i 2 20 :output output)))))
+		     (dolist (element (netlist-class-elements-list netlist))
+		       (setq element (update-model element
+                                                   (netlist-class-elements-list netlist)
+                                                   y-old-vector
+                                                   :debug-mode debug-mode
+                                                   :output output)))
+		     (setq p-matrix (update-p-matrix p-matrix
+                                                     (netlist-class-elements-list netlist)
+                                                     :debug-mode debug-mode
+                                                     :output output)
+			   r-matrix (update-r-matrix r-matrix
+                                                     (netlist-class-elements-list netlist)
+                                                     :debug-mode debug-mode
+                                                     :output output)
+			   g-matrix (update-g-matrix g-matrix
+                                                     (netlist-class-elements-list netlist)
+                                                     :debug-mode debug-mode
+                                                     :output output)
+			   si-matrix (update-si-matrix si-matrix
+                                                       (netlist-class-elements-list netlist)
+                                                       :debug-mode debug-mode
+                                                       :output output)
+			   sv-matrix (update-sv-matrix sv-matrix
+                                                       (netlist-class-elements-list netlist)
+                                                       :debug-mode debug-mode
+                                                       :output output)
+			   l-matrix (update-l-matrix l-matrix
+                                                     (netlist-class-elements-list netlist)
+                                                     :debug-mode debug-mode
+                                                     :output output)
+			   c-matrix (update-c-matrix c-matrix
+                                                     (netlist-class-elements-list netlist)
+                                                     :debug-mode debug-mode
+                                                     :output output)
+			   ki-vector (update-ki-vector ki-vector
+                                                       (netlist-class-elements-list netlist)
+                                                       :debug-mode debug-mode
+                                                       :output output)
+			   kv-vector (update-kv-vector kv-vector
+                                                       (netlist-class-elements-list netlist)
+                                                       :debug-mode debug-mode
+                                                       :output output))
+		     (multiple-value-bind (a-matrix b-matrix k-vector)
+		         (assemble-system p-matrix
+                                          r-matrix
+                                          g-matrix
+                                          si-matrix
+                                          sv-matrix
+                                          l-matrix
+                                          c-matrix
+                                          ki-vector
+                                          kv-vector
+                                          :debug-mode debug-mode
+                                          :output output)
+		       (let ((alpha-matrix (gsl:elt+ (gsl:elt* *h*
+                                                               (grid:copy-to a-matrix 'grid:foreign-array))
+                                                     (grid:copy-to b-matrix 'grid:foreign-array)))
+			     (beta-matrix (gsl:elt+ (gsl:elt* *h*
+                                                              (grid:copy-to k-vector 'grid:foreign-array))
+                                                    (gsl:matrix-product (grid:copy-to b-matrix 'grid:foreign-array)
+                                                                        (grid:copy-to y-old-vector 'grid:foreign-array)))))
+		         (multiple-value-bind (decomposition-matrix permutation-matrix sign)
+                             (gsl:lu-decomposition (grid:copy-to alpha-matrix 'grid:foreign-array))
+                           (when debug-mode
+			     (format output
+                                     "~&Permutation sign: ~a~%"
+                                     sign)
+                             (finish-output output))
+                           (let ((initial-solution (gsl:lu-solve (grid:copy-to decomposition-matrix 'grid:foreign-array)
+                                                                 (grid:copy-to beta-matrix 'grid:foreign-array)
+                                                                 permutation-matrix
+                                                                 t)))
+			     (setq y-new-vector (gsll:lu-refine (grid:copy-to alpha-matrix 'grid:foreign-array)
+                                                                (grid:copy-to decomposition-matrix 'grid:foreign-array)
+                                                                permutation-matrix
+                                                                (grid:copy-to beta-matrix 'grid:foreign-array)
+                                                                initial-solution))
+			     (when debug-mode
+			       (format output
+                                       "~&Y(n+1) =~%~a~%"
+                                       y-new-vector)
+			       (format output
+                                       "~&Y(n) =~%~a~%"
+                                       y-old-vector)
+                               (finish-output output))
+			     (select-probes netlist
+                                            y-new-vector
+                                            output-file-stream
+                                            :debug-mode debug-mode
+                                            :output output)
+			     (setq y-old-vector y-new-vector)))
+		         (when (and (not debug-mode)
+				    progress-bar)
+			   (print-progress-bar i 2 20 :output output)))))
 		(when output-file-stream
 		  (close output-file-stream))
 		output-file-pathname)))))
