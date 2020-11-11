@@ -81,4 +81,13 @@
                       (element-class-name object))
     object))
 
+(defmethod check-element-with-selectors ((object node-class) selectors)
+  (let ((return-value (call-next-method object selectors)))
+    (if (listp selectors)
+	(dolist (selector selectors)
+	  (setq return-value (or return-value
+				  (funcall selector object))))
+	(setq return-value (funcall selectors object)))
+    return-value))
+
 ;; End node.lisp

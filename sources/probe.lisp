@@ -111,4 +111,13 @@
                   :test 'string-equal)
     object))
 
+(defmethod check-element-with-selectors ((object probe-class) selectors)
+  (let ((return-value (call-next-method object selectors)))
+    (if (listp selectors)
+	(dolist (selector selectors)
+	  (setq return-value (or return-value
+				  (funcall selector object))))
+	(setq return-value (funcall selectors object)))
+    return-value))
+
 ;; End probe.lisp

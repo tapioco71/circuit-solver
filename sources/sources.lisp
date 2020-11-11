@@ -116,4 +116,13 @@
                   :test 'string-equal)
     object))
 
+(defmethod check-element-with-selectors ((object source-class) selectors)
+  (let ((return-value (call-next-method object selectors)))
+    (if (listp selectors)
+	(dolist (selector selectors)
+	  (setq return-value (or return-value
+				  (funcall selector object))))
+	(setq return-value (funcall selectors object)))
+    return-value))
+
 ;; End sources.lisp

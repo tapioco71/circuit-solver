@@ -78,4 +78,13 @@
       (finish-output output))
     return-value))
 
+(defmethod check-element-with-selectors ((object element-class) selectors)
+  (let ((return-value nil))
+    (if (listp selectors)
+	(dolist (selector selectors)
+	  (setq return-value (or return-value
+				 (funcall selector object))))
+	(setq return-value (funcall selectors object)))
+    return-value))
+
 ;; End element.lisp
