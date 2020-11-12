@@ -42,6 +42,17 @@
     :initform ""
     :accessor element-class-name)))
 
+;; Functions.
+
+(defun make-element (&rest parameters &key
+                                        (id nil id-p)
+                                        (name (symbol-name (gensym "element-")) name-p))
+  (declare (ignorable parameters id name))
+  (let ((object (make-instance 'element-class
+                               :id id
+                               :name name)))
+    object))
+
 ;; Methods.
 
 (defmethod sexpify ((object element-class))

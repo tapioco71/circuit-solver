@@ -73,9 +73,33 @@
     :accessor model-class-value
     :accessor element-class-value)))
 
-;;
+;; Functions.
+
+(defun make-model (&rest parameters &key
+                                      (id nil id-p)
+                                      (name (symbol-name (gensym "model-")) name-p)
+                                      (class "" class-p)
+                                      (parameters-list nil parameters-list-p)
+                                      (function-name "" function-name-p)
+                                      (external-function-name "" external-function-name-p)
+                                      (probes-list nil probes-list-p)
+                                      (states-list nil states-list-p)
+                                      (value nil value-p))
+  (declare (ignorable parameters id name class parameters-list function-name external-function-name probes-list states-list value))
+  (let ((object (make-instance 'model-class
+                               :id id
+                               :name name
+                               :class class
+                               :parameters-list parameters-list
+                               :function-name function-name
+                               :external-function-name external-function-name
+                               :probes-list probes-list
+                               :states-list states-list
+                               :value value)))
+    object))
+
 ;; Methods.
-;;
+
 
 (defmethod sexpify ((object model-class))
   (let ((return-value (call-next-method object)))
@@ -112,7 +136,9 @@
 (defmethod has-value-p ((object model-class))
   (null (model-class-value object)))
 
-(defmethod rename-netlist-element ((object model-class) name &rest parameters &key (debug-mode nil) (output *standard-output*))
+(defmethod rename-netlist-element ((object model-class) name &rest parameters &key
+                                                                                (debug-mode nil)
+                                                                                (output *standard-output*))
   (declare (ignorable parameters debug-mode output))
   (let ((return-value (call-next-method object
                                         name

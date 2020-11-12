@@ -176,7 +176,7 @@
   (let ((selection nil)
         (temp-netlist nil))
     (if lock
-        (bt:with-lock-held (lock)
+        (bt:with-recursive-lock-held (lock)
           (setq temp-netlist (copy-seq netlist)))
         (setq temp-netlist netlist))
     (dolist (element temp-netlist)
@@ -199,7 +199,7 @@
   (let ((selection nil)
         (temp-netlist nil))
     (if lock
-        (bt:with-lock-held (lock)
+        (bt:with-recursive-lock-held (lock)
           (setq temp-netlist (copy-seq netlist)))
         (setq temp-netlist netlist))
     (dolist (element temp-netlist)
@@ -221,7 +221,7 @@
   (let ((element-position 0)
         (temp-netlist nil))
     (if lock
-        (bt:with-lock-held (lock)
+        (bt:with-recursive-lock-held (lock)
           (setq temp-netlist (copy-seq netlist)))
         (setq temp-netlist netlist))
     (dolist (element temp-netlist)
@@ -237,7 +237,7 @@
   (declare (ignorable parameters lock))
   (let ((temp-netlist nil))
     (if lock
-        (bt:with-lock-held (lock)
+        (bt:with-recursive-lock-held (lock)
           (setq temp-netlist (copy-seq netlist)))
         (setq temp-netlist netlist))
     (length (select selectors temp-netlist))))
@@ -593,10 +593,16 @@
 ;;; find node position in nodes list
 ;;;
 
-(defun find-node-position (name nodes-list)
-  (position name nodes-list
-	    :key (function element-class-name)
-	    :test (function string-equal)))
+(defun find-node-position (name nodes-list &rest parameters &key (lock nil))
+  (declare (ignorable parameters lock))
+  (if lock
+      (bt:with-recursive-lock-held (lock)
+        (position name nodes-list
+	          :key (function element-class-name)
+	          :test (function string-equal)))
+      (position name nodes-list
+	        :key (function element-class-name)
+	        :test (function string-equal))))
 
 (defun merge-names (parent child)
   (concatenate 'string parent ":" child))
@@ -1043,7 +1049,10 @@
 ;; update functions stuff
 ;;
 
-(defun update-p-matrix (p-matrix netlist &rest parameters &key (lock nil) (debug-mode nil) (output *standard-output*))
+(defun update-p-matrix (p-matrix netlist &rest parameters &key
+                                                            (lock nil)
+                                                            (debug-mode nil)
+                                                            (output *standard-output*))
   (declare (ignorable parameters lock debug-mode output))
   (let ((nodes-list (select (where :class-type 'node-class)
                             netlist
@@ -1121,8 +1130,11 @@
 ;;; update R matrix
 ;;;
 
-(defun update-r-matrix (r-matrix netlist &rest parameters &key (lock nil) (debug-mode nil) (output *standard-output*))
-  (declare (ignorable parameters debug-mode output))
+(defun update-r-matrix (r-matrix netlist &rest parameters &key
+                                                            (lock nil)
+                                                            (debug-mode nil)
+                                                            (output *standard-output*))
+  (declare (ignorable parameters lock debug-mode output))
   (let ((elements-list (select (list (where :class-type 'passive-class)
 				     (where :class-type 'coupling-class)
 				     (where :class-type 'source-class))
@@ -1280,8 +1292,11 @@
 ;; update G matrix
 ;;
 
-(defun update-g-matrix (g-matrix netlist &rest parameters &key (lock nil) (debug-mode nil) (output *standard-output*))
-  (declare (ignorable parameters debug-mode output))
+(defun update-g-matrix (g-matrix netlist &rest parameters &key
+                                                            (lock nil)
+                                                            (debug-mode nil)
+                                                            (output *standard-output*))
+  (declare (ignorable parameters lock debug-mode output))
   (handler-case
       (let ((elements-list (select (list (where :class-type 'source-class)
 					 (where :class-type 'passive-class)
@@ -1289,7 +1304,8 @@
                                    netlist
                                    :lock lock))
 	    (nodes-list (select (where :class-type 'node-class)
-                                netlist))
+                                netlist
+                                :lock lock))
 	    (i 0)
 	    (j 0)
 	    (k 0))
@@ -1311,20 +1327,24 @@
 		  (setq k 0)
 		  (dolist (element-node-name element-node-names-list)
 		    (let ((found-node (find-element (where :name element-node-name)
-                                                    nodes-list)))
+                                                    nodes-list
+                                                    :lock lock)))
 		      (unless found-node
 			(error 'no-such-node-for-element-error :node-name element-node-name :element-name (element-class-name element)))
 		      (setq j (find-node-position element-node-name (exclude (list (where :class "reference")
 										   (where :class "gnd")
 										   (where :class "0"))
-                                                                             nodes-list)))
+                                                                             nodes-list
+                                                                             :lock lock)))
 		      (unless (reference-class-node-p found-node)
 			(setf (grid:gref g-matrix i j) (expt -1d0 k)))
 		      (incf k))))
 		 ((conductance-class-p element)
 		  (setq k 0)
 		  (dolist (element-node-name element-node-names-list)
-		    (let ((found-node (find-element (where :name element-node-name) nodes-list)))
+		    (let ((found-node (find-element (where :name element-node-name)
+                                                    nodes-list
+                                                    :lock lock)))
 		      (unless found-node
 			(error 'no-such-node-for-element-error
                                :node-name element-node-name
@@ -1332,7 +1352,8 @@
 		      (setq j (find-node-position element-node-name (exclude (list (where :class "reference")
 										   (where :class "gnd")
 										   (where :class "0"))
-                                                                             nodes-list)))
+                                                                             nodes-list
+                                                                             :lock lock)))
 		      (unless (reference-class-node-p found-node)
 			(setf (grid:gref g-matrix i j) (* (expt -1d0 k) (passive-class-value element))))
 		      (incf k))))))
@@ -1348,7 +1369,9 @@
                              :element-name (element-class-name element)))
 		    (setq k 0)
 		    (dolist (element-node-name element-node-names-list)
-		      (let ((found-node (find-element (where :name element-node-name) nodes-list)))
+		      (let ((found-node (find-element (where :name element-node-name)
+                                                      nodes-list
+                                                      :lock lock)))
 			(unless found-node
 			  (error 'no-such-node-for-element
                                  :node-name element-node-name
@@ -1356,7 +1379,8 @@
 			(setq j (find-node-position element-node-name (exclude (list (where :class "reference")
 										     (where :class "gnd")
 										     (where :class "0"))
-                                                                               nodes-list)))
+                                                                               nodes-list
+                                                                               :lock lock)))
 			(unless (reference-class-node-p found-node)
 			  (setf (grid:gref g-matrix i j) (expt -1d0 k)))
 			(incf k)))))
@@ -1388,8 +1412,11 @@
 ;;; update Si matrix
 ;;;
 
-(defun update-si-matrix (si-matrix netlist &rest parameters &key (lock nil) (debug-mode nil) (output *standard-output*))
-  (declare (ignorable parameters debug-mode output))
+(defun update-si-matrix (si-matrix netlist &rest parameters &key
+                                                              (lock nil)
+                                                              (debug-mode nil)
+                                                              (output *standard-output*))
+  (declare (ignorable parameters lock debug-mode output))
   (handler-case
       (let ((elements-list (select (list (where :class-type 'passive-class)
 					 (where :class-type 'coupling-class)
@@ -1428,8 +1455,11 @@
 ;;; update Sv matrix
 ;;;
 
-(defun update-sv-matrix (sv-matrix netlist &rest parameters &key (lock nil) (debug-mode nil) (output *standard-output*))
-  (declare (ignorable parameters debug-mode output))
+(defun update-sv-matrix (sv-matrix netlist &rest parameters &key
+                                                              (lock nil)
+                                                              (debug-mode nil)
+                                                              (output *standard-output*))
+  (declare (ignorable parameters lock debug-mode output))
   (handler-case
       (let ((sources-list (select (where :class-type 'source-class
                                          :class "voltage-source")
@@ -1453,7 +1483,8 @@
 	  (setq k 0)
 	  (dolist (node-name (source-class-nodes-list source))
 	    (unless (reference-class-node-p (find-element (where :name node-name)
-                                                          nodes-list))
+                                                          nodes-list
+                                                          :lock lock))
 	      (setq j (1- (find-node-position node-name nodes-list)))
 	      (unless j
 		(error 'no-such-node-for-element-error
@@ -1476,8 +1507,11 @@
       (finish-output *error-output*)
       nil)))
 
-(defun update-l-matrix (l-matrix netlist &rest parameters &key (lock nil) (debug-mode nil) (output *standard-output*))
-  (declare (ignorable parameters debug-mode output))
+(defun update-l-matrix (l-matrix netlist &rest parameters &key
+                                                            (lock nil)
+                                                            (debug-mode nil)
+                                                            (output *standard-output*))
+  (declare (ignorable parameters lock debug-mode output))
   (let ((elements-list (select (list (where :class-type 'passive-class)
 				     (where :class-type 'coupling-class)
 				     (where :class-type 'source-class))
@@ -1561,8 +1595,11 @@
 ;; update C matrix
 ;;
 
-(defun update-c-matrix (c-matrix netlist &rest parameters &key (lock nil) (debug-mode nil) (output *standard-output*))
-  (declare (ignorable parameters debug-mode output))
+(defun update-c-matrix (c-matrix netlist &rest parameters &key
+                                                            (lock nil)
+                                                            (debug-mode nil)
+                                                            (output *standard-output*))
+  (declare (ignorable parameters lock debug-mode output))
   (let ((elements-list (select (list (where :class-type 'source-class)
 				     (where :class-type 'passive-class)
 				     (where :class-type 'coupling-class))
@@ -1573,7 +1610,8 @@
 				   (where :class "0"))
                              (select (where :class-type 'node-class)
                                      netlist
-                                     :lock lock)))
+                                     :lock lock)
+                             :lock lock))
 	(i 0)
 	(j 0)
 	(k 0))
@@ -1609,8 +1647,11 @@
 ;;; Update Ki vector
 ;;;
 
-(defun update-ki-vector (ki-vector netlist &rest parameters &key (lock nil) (debug-mode nil) (output *standard-output*))
-  (declare (ignorable parameters debug-mode output))
+(defun update-ki-vector (ki-vector netlist &rest parameters &key
+                                                              (lock nil)
+                                                              (debug-mode nil)
+                                                              (output *standard-output*))
+  (declare (ignorable parameters lock debug-mode output))
   (let ((current-sources-list (select (list (where :class-type 'source-class
                                                    :class "current-source"))
                                       netlist
@@ -1624,8 +1665,13 @@
               (grid:dim0 ki-vector))
       (finish-output output))
     (dolist (current-source current-sources-list)
-      (setf (grid:gref ki-vector i) (source-class-value current-source))
-      (incf i))
+      (let ((temp-value (source-class-value current-source)))
+        (if temp-value
+            (progn
+              (setf (grid:gref ki-vector i) temp-value)
+              (incf i))
+            (error 'invalid-source-element
+                   :source-name (element-class-name current-source)))))
     (when debug-mode
       (format output
               "Ki =~%~a~%"
@@ -1641,7 +1687,7 @@
                                                               (lock nil)
                                                               (debug-mode nil)
                                                               (output *standard-output*))
-  (declare (ignorable parameters debug-mode output))
+  (declare (ignorable parameters lock debug-mode output))
   (let ((voltage-sources-list (select (list (where :class-type 'source-class
                                                    :class "voltage-source"))
                                       netlist
@@ -1654,9 +1700,16 @@
               "Updating Kv[ ~a ].~%"
               (grid:dim0 kv-vector))
       (finish-output output))
-    (dolist (voltage-source voltage-sources-list)
-      (setf (grid:gref kv-vector i) (source-class-value voltage-source))
-      (incf i))
+    (loop
+      for voltage-source in voltage-sources-list
+      do
+         (let ((temp-value (source-class-value voltage-source)))
+           (if temp-value
+               (progn
+                 (setf (grid:gref kv-vector i) temp-value)
+                 (incf i))
+               (error 'invalid-source-element
+                      :source-name (element-class-name voltage-source)))))
     (when debug-mode
       (format output
               "Kv =~%~a~%"
@@ -1851,7 +1904,7 @@
                                                                      (lock nil)
                                                                      (debug-mode nil)
                                                                      (output *standard-output*))
-  (declare (ignorable parameters debug-mode output))
+  (declare (ignorable parameters lock debug-mode output))
   (handler-case
       (let* ((elements-list (select (list (where :class-type 'source-class)
 					  (where :class-type 'passive-class)
@@ -1906,7 +1959,9 @@
 			  ((reference-class-node-p node)
 			   (push 0d0 state))
 			  (t
-			   (setq i (find-node-position node-name nodes-list))
+			   (setq i (find-node-position node-name
+                                                       nodes-list
+                                                       :lock lock))
 			   (unless i
 			     (error 'no-node-for-probe-error
                                     :node-name node-name
@@ -2229,7 +2284,7 @@
             (thread-functions nil)
             (tasks-count 0)
             (channel nil)
-            (promise (lparallel:promise))
+            (promise nil)
             (lock nil))
 	(when verbose
 	  (format output
@@ -2259,6 +2314,13 @@
 	(when verbose
 	  (format output
                   "~%Setting steps number to ~a."
+                  *steps-number*)
+          (finish-output output))
+        (when debug-mode
+          (format output
+                  "Starting time ~a, ending time ~a, time steps ~a.~%"
+                  *t0*
+                  *t1*
                   *steps-number*)
           (finish-output output))
 	(let ((netlist (read-netlist netlist-file-pathname))
@@ -2352,7 +2414,7 @@
                         "~2&Solving: ")
                 (finish-output output)
                 (when parallel
-                  (setq lock (bt:make-lock (symbol-name (gensym "lock-")))
+                  (setq lock (bt:make-recursive-lock (symbol-name (gensym "lock-")))
                         thread-functions (list (generate-thread-function (promise debug-mode)
                                                  (dolist (element (netlist-class-elements-list netlist))
 		                                   (setq element (update-model element
@@ -2413,7 +2475,7 @@
                   (when debug-mode
                     (format output
                             "Number of tasks: ~a~%"
-                            task-count)
+                            tasks-count)
                     (finish-output output))
                   (setf lparallel:*kernel* (lparallel:make-kernel tasks-count
                                                                   :name (symbol-name (gensym "kernel-"))))
@@ -2436,6 +2498,7 @@
 
                      (if parallel
                          (progn
+                           (setq promise (lparallel:promise))
                            (loop
                               for thread-function in thread-functions
                               do

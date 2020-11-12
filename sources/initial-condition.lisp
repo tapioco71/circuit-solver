@@ -43,6 +43,21 @@
     :accessor initial-condition-class-value
     :accessor element-class-value)))
 
+;; Functions.
+
+(defun make-initial-condition (&rest parameters &key
+                                                  (id nil id-p)
+                                                  (name (symbol-name (gensym "initial-condition-")) name-p)
+                                                  (target-name nil target-name-p)
+                                                  (value nil value-p))
+  (declare (ignorable parameters id name target-name value))
+  (let ((object (make-instance 'initial-condition-class
+                               :id id
+                               :name name
+                               :target-name target-name
+                               :value value)))
+    object))
+
 ;; Methods.
 
 (defmethod sexpify ((object initial-condition-class))

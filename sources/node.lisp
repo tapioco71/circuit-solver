@@ -49,6 +49,23 @@
     :accessor node-class-number
     :accessor element-class-number)))
 
+;; Functions.
+
+(defun make-node (&rest parameters &key
+                                     (id nil id-p)
+                                     (name (symbol-name (gensym "node-")) name-p)
+                                     (class "" class-p)
+                                     (state nil state-p)
+                                     (number nil number-p))
+  (declare (ignorable parameters id name class state number))
+  (let ((object (make-instance 'node-class
+                               :id id
+                               :name name
+                               :class class
+                               :state state
+                               :number number)))
+    object))
+
 ;; Methods.
 
 (defmethod sexpify ((object node-class))

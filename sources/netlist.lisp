@@ -54,6 +54,25 @@
     :accessor netlist-class-elements-list
     :accessor element-class-elements-list)))
 
+;; Functions.
+
+(defun make-netlist (&rest parameters &key
+                                        (id nil id-p)
+                                        (name (symbol-name (gensym "netlist-")) name-p)
+                                        (file-pathname nil file-pathname-p)
+                                        (author nil author-p)
+                                        (date nil date-p)
+                                        (elements-list nil elements-list-p))
+  (declare (ignorable parameters id name file-pathname author date elements-list))
+  (let ((object (make-instance 'netlist-class
+                               :id id
+                               :name name
+                               :file-pathname file-pathname
+                               :author author
+                               :date date
+                               :elements-list elements-list)))
+    object))
+
 ;; Methods.
 
 (defmethod sexpify ((object netlist-class))

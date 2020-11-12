@@ -28,22 +28,22 @@
          :elements-list ((passive :name "R"
 		                  :class "resistance"
 		                  :nodes-list ("A" "N1")
-		                  :value 1d-3)
+		                  :value 1d-6)
                          (passive :name "L"
 		                  :class "inductance"
 		                  :nodes-list ("N1" "N2")
-		                  :value 1d-12)
+		                  :value 1d-9)
                          (passive :name "C"
                                   :class "capacitance"
                                   :nodes-list ("N2" "B")
-                                  :value 1d-12)
+                                  :value 220d-9)
                          (passive :name "G"
 		                  :class "conductance"
 		                  :nodes-list ("N2" "B")
 		                  :model (model :name "mov"
 			                        :function-name "simple-mov-2"
 			                        :class "function"
-			                        :parameters-list (:vmax 5d2 :gmax 1d6)
+			                        :parameters-list (:vmax 2.5d2 :gmax 1d6 :kv 1d0)
 			                        :probes-list ((probe :name "P1"
 					                             :class "voltage-probe"
 					                             :nodes-list ("N2"))

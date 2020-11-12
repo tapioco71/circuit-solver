@@ -31,6 +31,11 @@
 ;;; exception handling
 ;;;
 
+(define-condition invalid-source-element (error)
+  ((source-name
+    :initarg :source-name
+    :reader source-name)))
+
 (define-condition invalid-passive-element-in-coupling (error)
   ((coupling-name :initarg :coupling-name :reader coupling-name)))
 

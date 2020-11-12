@@ -55,6 +55,25 @@
     :accessor source-class-value
     :accessor element-class-value)))
 
+;; Functions.
+
+(defun make-source (&rest parameters &key
+                                       (id nil id-p)
+                                       (name (symbol-name (gensym "source-")) name-p)
+                                       (class "" class-p)
+                                       (nodes-list nil nodes-list-p)
+                                       (model nil model-p)
+                                       (value 0d0 value-p))
+  (declare (ignorable id name parameters class nodes-list model value))
+  (let ((object (make-instance 'source-class
+                               :id id
+                               :name name
+                               :class class
+                               :nodes-list nodes-list
+                               :model model
+                               :value value)))
+    object))
+
 ;; Methods.
 
 (defmethod sexpify ((object source-class))

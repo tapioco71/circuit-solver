@@ -223,6 +223,57 @@
 ;; a simple diode from Sedra-Smith book (pag. 132)
 ;;
 
+(defun simple-diode (&optional &key parameters state)
+  (let ((v1 (pop state))
+	(v2 (pop state))
+	(Is (getf parameters :is))
+	(Vt (getf parameters :vt))
+	(n (getf parameters :n)))
+    (if (<= (abs (- v1 v2)) 1d-9)
+	(abs (/ Is (* n Vt)))
+	(abs (/ (- v1 v2) (* Is (- (exp (/ (- v1 v2) (* n Vt))) 1)))))))
+
+(defun simple-diode-1 (&optional &key parameters state)
+  (let ((v1 (pop state))
+	(v2 (pop state))
+	(Is (getf parameters :is))
+	(Vt (getf parameters :vt))
+	(n (getf parameters :n)))
+    (* Is (- (exp (/ (- v1 v2) (* n Vt))) 1))))
+
+(defun simple-diode-2 (&optional &key parameters state)
+  (let* ((v2 (pop state))
+	 (v1 (pop state))
+	 (Is (getf parameters :is))
+	 (Vt (getf parameters :vt))
+	 (n (getf parameters :n))
+	 (g0 (/ Is (* n Vt))))
+    (if (<= (- v1 v2) 0d0)
+	g0
+        (* g0
+           (+ 1
+	      (abs (/ (- v1 v2) (* 2 n Vt)))
+	      (abs (/ (expt (/ (- v1 v2) (* n Vt)) 2d0) 6d0))
+	      (abs (/ (expt (/ (- v1 v2) (* n Vt)) 3d0) 24d0))
+	      (abs (/ (expt (/ (- v1 v2) (* n Vt)) 4d0) 120d0)))))))
+
+(defun simple-diode-3 (&optional &key parameters state)
+  (let* ((v2 (pop state))
+	 (v1 (pop state))
+	 (Is (getf parameters :is))
+	 (Vt (getf parameters :vt))
+	 (n (getf parameters :n))
+	 (Vb (getf parameters :vb))
+	 (g0 (/ Is (* n Vt))))
+    (cond
+      ((and (<= (- v1 v2) 0d0)
+	    (>= (- v1 v2) Vb))
+       g0)
+      ((< (- v1 v2) Vb)
+       (abs (- (* g0 (+ 1 (/ (- v1 v2) (* 2 n Vt)) (/ (expt (/ (- v1 v2) (* n Vt)) 2d0) 6d0))))))
+      ((> (- v1 v2) 0d0)
+       (abs (* g0 (+ 1 (/ (- v1 v2) (* 2 n Vt)) (/ (expt (/ (- v1 v2) (* n Vt)) 2d0) 6d0))))))))
+
 (defun simple-diode-4 (&optional &key parameters state)
   (let* ((v2 (pop state))
 	 (v1 (pop state))
@@ -237,58 +288,6 @@
       (loop for i from 1 to order do
 	   (setf g (+ (/ (expt (- v1 v2) i) (* (expt (* n Vt) (+ i 1)) (factorial (1+ i))))))))
     g))
-
-(defun simple-diode-3 (&optional &key parameters state)
-  (let* ((v2 (pop state))
-	 (v1 (pop state))
-	 (Is (getf parameters :is))
-	 (Vt (getf parameters :vt))
-	 (n (getf parameters :n))
-	 (Vb (getf parameters :vb))
-	 (g0 (/ Is (* n Vt))))
-    (cond
-      ((and
-	(<= (- v1 v2) 0d0)
-	(>= (- v1 v2) Vb))
-       g0)
-      ((< (- v1 v2) Vb)
-       (- (* g0 (+ 1 (/ (- v1 v2) (* 2 n Vt)) (/ (expt (/ (- v1 v2) (* n Vt)) 2d0) 6d0)))))
-      ((> (- v1 v2) 0d0)
-       (* g0 (+ 1 (/ (- v1 v2) (* 2 n Vt)) (/ (expt (/ (- v1 v2) (* n Vt)) 2d0) 6d0)))))))
-
-(defun simple-diode-2 (&optional &key parameters state)
-  (let* ((v2 (pop state))
-	 (v1 (pop state))
-	 (Is (getf parameters :is))
-	 (Vt (getf parameters :vt))
-	 (n (getf parameters :n))
-	 (g0 (/ Is (* n Vt))))
-    (if (<= (- v1 v2) 0d0)
-	g0
-	(* g0 (+
-	       1
-	       (/ (- v1 v2) (* 2 n Vt))
-	       (/ (expt (/ (- v1 v2) (* n Vt)) 2d0) 6d0)
-	       (/ (expt (/ (- v1 v2) (* n Vt)) 3d0) 24d0)
-	       (/ (expt (/ (- v1 v2) (* n Vt)) 4d0) 120d0))))))
-
-(defun simple-diode-1 (&optional &key parameters state)
-  (let ((v1 (pop state))
-	(v2 (pop state))
-	(Is (getf parameters :is))
-	(Vt (getf parameters :vt))
-	(n (getf parameters :n)))
-    (* Is (- (exp (/ (- v1 v2) (* n Vt))) 1))))
-
-(defun simple-diode (&optional &key parameters state)
-  (let ((v1 (pop state))
-	(v2 (pop state))
-	(Is (getf parameters :is))
-	(Vt (getf parameters :vt))
-	(n (getf parameters :n)))
-    (if (<= (abs (- v1 v2)) 1d-9)
-	(/ Is (* n Vt))
-	(/ (- v1 v2) (* Is (- (exp (/ (- v1 v2) (* n Vt))) 1))))))
 
 ;;
 ;; simple switch
@@ -380,10 +379,13 @@
          (vb (pop state))
          (vmax (getf parameters :vmax))
          (gmax (getf parameters :gmax))
+         (kv (getf parameters :kv))
          (delta-v (- va vb)))
     (* gmax
        (+ 1d0
-          (/ -1d0
-             (+ 1d0 (exp (- (+ delta-v vmax)))))
           (/ 1d0
-             (+ 1d0 (exp (+ (- delta-v) vmax))))))))
+             (+ 1d0
+                (exp (* kv (- vmax delta-v)))))
+          (/ -1d0
+             (+ 1d0
+                (exp (* kv (- (- vmax) delta-v)))))))))

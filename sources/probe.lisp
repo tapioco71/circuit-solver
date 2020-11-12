@@ -49,6 +49,23 @@
     :accessor probe-class-nodes-list
     :accessor element-class-nodes-list)))
 
+;; Functions.
+
+(defun make-probe (&rest parameters &key
+                                      (id nil id-p)
+                                      (name (symbol-name (gensym "probe-")) name-p)
+                                      (class nil class-p)
+                                      (elements-list nil elements-list-p)
+                                      (nodes-list nil nodes-list-p))
+  (declare (ignorable parameters id name class elements-list nodes-list))
+  (let ((object (make-instance 'probe-class
+                               :id id
+                               :name name
+                               :class class
+                               :elements-list elements-list
+                               :nodes-list nodes-list)))
+    object))
+
 ;; Methods.
 
 (defmethod sexpify ((object probe-class))

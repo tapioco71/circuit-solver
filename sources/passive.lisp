@@ -55,6 +55,25 @@
     :accessor passive-class-value
     :accessor element-class-value)))
 
+;; Functions.
+
+(defun make-passive (&rest parameters &key
+                                        (id nil id-p)
+                                        (name (symbol-name (gensym "passive-")) name-p)
+                                        (class nil class-p)
+                                        (nodes-list nil nodes-list-p)
+                                        (model nil model-p)
+                                        (value nil value-p))
+  (declare (ignorable parameters id name class nodes-list model value))
+  (let ((object (make-instance 'passive-class
+                               :id id
+                               :name name
+                               :class class
+                               :nodes-list nodes-list
+                               :model model
+                               :value value)))
+    object))
+
 ;; Methods.
 
 (defmethod sexpify ((object passive-class))
