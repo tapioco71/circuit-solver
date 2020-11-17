@@ -15,7 +15,7 @@
 
                          (source :name "V1"
 		                 :class "voltage-source"
-		                 :nodes-list ("GND" "N1")
+		                 :nodes-list ("N1" "GND")
 		                 :model (model :name "sinusoidal-voltage"
 				               :function-name "sinusoidal-function"
 				               :class "function"
@@ -43,7 +43,7 @@
 			                        :value 1d-12))
 
                          (subcircuit :name "M1"
-                                     :file-pathname "/home/angel/Development/lisp/circuit-solver/subcircuits/mov.sub"
+                                     :file-pathname "/home/angel/Development/lisp/circuit-solver/subcircuits/mov-500.sub"
                                      :nodes-list ("N3" "GND"))
 
                          (subcircuit :name "T1"
@@ -199,4 +199,4 @@
 
 		         (probe :name "P2"
 		                :class "voltage-probe"
-		                :nodes-list ("N1" "N2" "N3" "N4" "N5" "N6" "N7" "N8" "N99"))))
+		                :nodes-list ("N1" "N2" "N3" "N4" "N5" "N6" "N7" "N8" "N9" "N99"))))

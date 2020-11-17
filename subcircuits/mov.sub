@@ -43,7 +43,7 @@
 		                  :model (model :name "mov"
 			                        :function-name "simple-mov-2"
 			                        :class "function"
-			                        :parameters-list (:vmax 2.5d2 :gmax 1d6 :kv 1d0)
+			                        :parameters-list (:vmax 2.5d2 :gmax 1d6 :kv 0.8d0)
 			                        :probes-list ((probe :name "P1"
 					                             :class "voltage-probe"
 					                             :nodes-list ("N2"))
