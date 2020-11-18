@@ -112,8 +112,9 @@
 ;; impulse-function: y = H <=> t0 <= t < t1, y = L <=> t < t0, t >= t1
 ;;
 
-(defun impulse-function (&optional &key parameters state)
+(defun impulse-function (&rest rest &key parameters state)
   "Generate a square pulse at time = start ending at time = stop."
+  (declare (ignorable rest parameters state))
   (let* ((new-voltage (pop state))
 	 (stop (getf parameters :start))
 	 (start (getf parameters :stop))
@@ -389,3 +390,65 @@
           (/ -1d0
              (+ 1d0
                 (exp (* kv (- (- vmax) delta-v)))))))))
+
+(defun lightning-pulse-DEXP (&rest rest &key parameters state)
+  "Double exponential (DEXP) lightning model (T.R. McComb, J.E. Lagnese)."
+  (declare (ignorable rest parameters state))
+  (let ((k (getf parameters :k))
+        (a (getf parameters :a))
+        (b (getf parameters :b))
+        (time-start (getf parameters :time-start)))
+    (when (and k a b time-start)
+      (if (>= *time* time-start)
+          (* k
+             (- (exp (- (* a (- *time* time-start))))
+                (exp (- (* b (- *time* time-start))))))
+          0d0))))
+
+(defun lightning-pulse-NTEXP (&rest rest &key parameters state)
+  "Negative triple exponential (NTEXP) lightning model (T.R. McComb, J.E. Lagnese)."
+  (declare (ignorable rest parameters state))
+  (let ((k (getf parameters :k))
+        (a (getf parameters :a))
+        (b (getf parameters :b))
+        (c (getf parameters :c))
+        (time-start (getf parameters :time-start)))
+    (when (and k a b c time-start)
+      (if (>= *time* time-start)
+          (* k
+             (- 1d0 (expt (* c *time*)))
+             (- (expt (- (* a *time*)))
+                (expt (- (* b *time*)))))
+          0d0))))
+
+(defun lightning-pulse-GEXP (&rest rest &key parameters state)
+  "Gaussian (GTEXP) lightning model (T.R. McComb, J.E. Lagnese)."
+  (declare (ignorable rest parameters state))
+  (let ((k (getf parameters :k))
+        (a (getf parameters :a))
+        (b (getf parameters :b))
+        (c (getf parameters :c))
+        (time-start (getf parameters :time-start)))
+    (when (and k a b c time-start)
+      (if (>= *time* time-start)
+          (* k
+             (- 1d0 (exp (- (* c (expt *time* 2d0)))))
+             (- (exp (- (* a *time*)))
+                (exp (- (* b *time*)))))
+          0d0))))
+
+(defun lightning-pulse-PTEXP (&rest rest &key parameters state)
+  "Positive triple exponential (PTEXP) lightning model (T.R. McComb, J.E. Lagnese)."
+  (declare (ignorable rest parameters state))
+  (let ((k (getf parameters :k))
+        (a (getf parameters :a))
+        (b (getf parameters :b))
+        (c (getf parameters :c))
+        (time-start (getf parameters :time-start)))
+    (when (and k a b c time-start)
+      (if (>= *time* time-start)
+          (* k
+             (+ 1d0 (expt (* c *time*)))
+             (- (expt (- (* a *time*)))
+                (expt (- (* b *time*)))))
+          0d0))))

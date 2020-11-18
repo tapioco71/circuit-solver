@@ -1,0 +1,73 @@
+;;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; indent-tabs-mode: nil; coding: utf-8; show-trailing-whitespace: t -*-
+;;
+;; mov with R1 = 1 microOhm Ohm, C1 = 100 pF, L1 = 1 nH, Vmax = 1000 V
+;;
+;;
+;;              o A
+;;              |
+;;              R
+;;              R R
+;;              R
+;;              |
+;;              o N1
+;;              |
+;;              L
+;;              L L
+;;              L
+;;              | N2
+;;          ----o----
+;;          |       |
+;;       C ===      G G
+;;         ===      G
+;;          |       |
+;;          ----o----
+;;              |
+;;              o B
+
+(netlist :name "mov-500"
+         :elements-list ((passive :name "R"
+		                  :class "resistance"
+		                  :nodes-list ("A" "N1")
+		                  :value 1d-6)
+                         (passive :name "L"
+		                  :class "inductance"
+		                  :nodes-list ("N1" "N2")
+		                  :value 1d-9)
+                         (passive :name "C"
+                                  :class "capacitance"
+                                  :nodes-list ("N2" "B")
+                                  :value 100d-12)
+                         (passive :name "G"
+		                  :class "conductance"
+		                  :nodes-list ("N2" "B")
+		                  :model (model :name "mov"
+			                        :function-name "simple-mov-2"
+			                        :class "function"
+			                        :parameters-list (:vmax 1d3 :gmax 1d6 :kv 0.85d0)
+			                        :probes-list ((probe :name "P1"
+					                             :class "voltage-probe"
+					                             :nodes-list ("N2"))
+					                      (probe :name "P2"
+					                             :class "voltage-probe"
+					                             :nodes-list ("B")))
+                                                :value 0d0))
+
+		 ;;
+		 ;; external connection nodes
+		 ;;
+
+		         (node :name "A"
+		               :class "v-i")
+
+		         (node :name "B"
+		               :class "v-i")
+
+		 ;;
+		 ;; internal nodes
+		 ;;
+
+		         (node :name "N1"
+		               :class "v-i")
+
+                         (node :name "N2"
+                               :class "v-i")))
