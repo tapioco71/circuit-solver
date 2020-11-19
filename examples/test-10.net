@@ -6,7 +6,7 @@
 		                 :model (model :name "lightning-pulse"
 				               :function-name "lightning-pulse-DEXP"
 				               :class "function"
-				               :parameters-list (:k 1.5d3 :a 4d3 :b 250d3 :time-start 1d-3)))
+				               :parameters-list (:k 1.5d3 :a 8d3 :b 250d3 :time-start 100d-6)))
 
                          (passive :name "R1"
                                   :class "resistance"
@@ -18,7 +18,7 @@
                                      :nodes-list ("N2" "GND"))
 
                          (subcircuit :name "T1"
-                                     :file-pathname "/home/angel/Development/lisp/circuit-solver/subcircuits/t-10-230-12.sub"
+                                     :file-pathname "/home/angel/Development/lisp/circuit-solver/subcircuits/pt-300-3-1.sub"
                                      :nodes-list ("N2" "GND" "N3" "N4"))
 
                          (passive :name "Rt"

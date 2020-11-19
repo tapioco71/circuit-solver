@@ -48,6 +48,7 @@
 (defparameter *time* 0d0)
 (defparameter *minimum-steps-number* 10)
 (defparameter *steps-number* *minimum-steps-number*)
+(defparameter *old-step* nil)
 (defparameter *t0* 0d0)
 (defparameter *t1* 0d0)
 (defparameter *h* 0d0)
@@ -2018,24 +2019,24 @@
 
 (defun print-progress-bar (step little-mark big-mark &rest parameters &key (output *standard-output*))
   (declare (ignorable parameters debug-mode output))
-  (let ((percent (* 100
-                    (/ step
-                       *steps-number*))))
+  (let ((percent nil))
+    (unless *old-step*
+      (setq *old-step* step))
+    (setq percent (* 1d2 (/ (coerce (- step *old-step*) 'double-float)
+                            (coerce *steps-number* 'double-float))))
     (cond
-      ((< percent 100)
-       (if (eql (mod percent big-mark) 0)
-           (progn
-	     (format output
-                     " %~a "
-                     percent)
-             (finish-output output))
-	   (when (eql (mod percent little-mark) 0)
-	     (format output
-                     "=")
-             (finish-output output))))
-      ((eql percent 100)
+      ((and (not (zerop percent))
+            (zerop (mod percent little-mark)))
        (format output
-               " 100% done!~%")
+               "=")
+       (finish-output output))
+      ((or (zerop step)
+           (>= percent big-mark))
+       (setq *old-step* step)
+       (format output
+               "~d%"
+               (floor (/ (* 1d2 step)
+                         *steps-number*)))
        (finish-output output)))))
 
 ;;;
