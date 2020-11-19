@@ -23,6 +23,14 @@
 
 (in-package :circuit-solver)
 
+;; Functions.
+
+(defun sigmoid (x &rest parameters &key (amplitude 1d0) (scale 1d0) (x0 0d0) (y0 -1/2))
+  (declare (ignorable parameters amplitude scale x0 y0))
+  (* amplitude
+     (- (/ (exp (* scale (- x x0)))
+           (+ 1d0 (exp (* scale (- x x0)))))
+        y0)))
 ;;
 ;; Built-in models
 ;;
@@ -56,17 +64,26 @@
 ;;
 
 (defun sinusoidal-function (&rest rest &key parameters state)
-  "sinusoidal-function(parameters, state) where parameters = (amplitude, frequency, phase)"
+  "sinusoidal-function(parameters, state) where parameters = (amplitude, frequency, phase, offset)"
   (declare (ignorable rest parameters state))
   (let ((amplitude (getf parameters :amplitude))
         (frequency (getf parameters :frequency))
-        (phase (getf parameters :phase)))
-    (when (and amplitude
-               frequency
-               phase)
-      (* amplitude
-         (sin (+ (* 2 pi frequency *time*)
-                 phase))))))
+        (phase (getf parameters :phase))
+        (offset (getf parameters :offset))
+        (omega nil))
+    (unless amplitude
+      (setq amplitude 1d0))
+    (unless frequency
+      (setq frequency 50d0))
+    (unless phase
+      (setq phase 0d0))
+    (unless offset
+      (setq offset 0d0))
+    (setq omega (* 2d0 pi frequency))
+    (+ offset
+       (* amplitude
+          (sin (+ (* omega *time*)
+                  phase))))))
 
 ;;
 ;; ramp function y = m * t, t >= t0
@@ -271,7 +288,13 @@
 	    (>= (- v1 v2) Vb))
        g0)
       ((< (- v1 v2) Vb)
-       (abs (- (* g0 (+ 1 (/ (- v1 v2) (* 2 n Vt)) (/ (expt (/ (- v1 v2) (* n Vt)) 2d0) 6d0))))))
+       (abs (- (* g0 (+ 1
+                        (/ (- v1 v2)
+                           (* 2 n Vt))
+                        (/ (expt (/ (- v1 v2)
+                                    (* n Vt))
+                                 2d0)
+                           6d0))))))
       ((> (- v1 v2) 0d0)
        (abs (* g0 (+ 1 (/ (- v1 v2) (* 2 n Vt)) (/ (expt (/ (- v1 v2) (* n Vt)) 2d0) 6d0))))))))
 
@@ -289,6 +312,30 @@
       (loop for i from 1 to order do
 	   (setf g (+ (/ (expt (- v1 v2) i) (* (expt (* n Vt) (+ i 1)) (factorial (1+ i))))))))
     g))
+
+(defun zener-diode-1 (&rest rest &key parameters state)
+  (declare (ignorable rest parameters state))
+  (let* ((v2 (pop state))
+	 (v1 (pop state))
+         (nf (getf parameters :nf))
+         (nz (getf parameters :nz))
+         (kf (getf parameters :kf))
+         (kz (getf parameters :kz))
+	 (vf (getf parameters :vf))
+	 (vz (getf parameters :vz))
+         (vak nil))
+    (when (and v2 v1 vf vz)
+      (setq vak (- v1 v2))
+      (+ (sigmoid vak
+                  :amplitude (abs kf)
+                  :scale (abs nf)
+                  :x0 (abs vf)
+                  :y0 0d0)
+         (sigmoid (- vak)
+                  :amplitude (abs kz)
+                  :scale (abs nz)
+                  :x0 (abs vz)
+                  :y0 0d0)))))
 
 ;;
 ;; simple switch

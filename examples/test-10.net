@@ -11,14 +11,14 @@
                          (passive :name "R1"
                                   :class "resistance"
                                   :nodes-list ("N1" "N2")
-                                  :value 470d0)
+                                  :value 2d2)
 
                          (subcircuit :name "M1"
                                      :file-pathname "/home/angel/Development/lisp/circuit-solver/subcircuits/mov-1000.sub"
                                      :nodes-list ("N2" "GND"))
 
                          (subcircuit :name "T1"
-                                     :file-pathname "/home/angel/Development/lisp/circuit-solver/subcircuits/t-10-230-9.sub"
+                                     :file-pathname "/home/angel/Development/lisp/circuit-solver/subcircuits/t-10-230-12.sub"
                                      :nodes-list ("N2" "GND" "N3" "N4"))
 
                          (passive :name "Rt"
@@ -96,13 +96,18 @@
                                   :nodes-list ("N5" "N7")
                                   :value 100d0)
 
+                         (passive :name "C2"
+                                  :class "capacitance"
+                                  :nodes-list ("N6" "N7")
+                                  :value 100d-9)
+
                          (passive :name "D5"
                                   :class "conductance"
                                   :nodes-list ("N6" "N7")
                                   :model (model :name "simple-diode"
-                                                :function-name "simple-diode-3"
+                                                :function-name "zener-diode-1"
                                                 :class "function"
-                                                :parameters-list (:vt 252d-3 :n 1d0 :is 1d-3 :vb 2d0)
+                                                :parameters-list (:kf 1d5 :nf 1d2 :kz 1d6 :nz 1d2 :vf 0.7d0 :vz 5.6d0)
                                                 :probes-list ((probe :name "diode-a-5"
                                                                      :class "voltage-probe"
                                                                      :nodes-list ("N6"))
@@ -160,7 +165,7 @@
 
                          (probe :name "currents"
                                 :class "current-probe"
-                                :elements-list ("Vl" "R1" "R2" "R3" "M1:R" "D1" "D5" "D6"))
+                                :elements-list ("Vl" "R1" "R2" "R3" "C1" "C2" "M1:R" "D1" "D5" "D6"))
 
 		         (probe :name "voltages"
 		                :class "voltage-probe"
