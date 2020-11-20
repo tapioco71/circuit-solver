@@ -2037,6 +2037,10 @@
                "~d%"
                (floor (/ (* 1d2 step)
                          *steps-number*)))
+       (finish-output output))
+      ((= step *steps-number*)
+       (format output
+               "100% done!~%")
        (finish-output output)))))
 
 ;;;

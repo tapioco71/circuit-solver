@@ -12,15 +12,15 @@
 				       	      :FUNCTION-NAME "simple-diode-4"
 					      :CLASS "function"
 					      :PARAMETERS-LIST (:VT 252d-3 :N 1d0 :IS 1d-6 :ORDER 1)
-					      :PROBES-LIST ((PROBE 
+					      :PROBES-LIST ((PROBE
 					      		   	   :NAME "diode-a-1"
 								   :CLASS "voltage-probe"
 								   :NODES-LIST ("N1"))
 
-							    (PROBE 
+							    (PROBE
 					      		   	   :NAME "diode-k-1"
 								   :CLASS "voltage-probe"
-								   :NODES-LIST ("N3")))	
+								   :NODES-LIST ("N3")))
 					      :VALUE 0d0))
 
 			(PASSIVE
@@ -31,15 +31,15 @@
 				       	      :FUNCTION-NAME "simple-diode-4"
 					      :CLASS "function"
 					      :PARAMETERS-LIST (:VT 252d-3 :N 1d0 :IS 1d-6 :ORDER 1)
-					      :PROBES-LIST ((PROBE 
+					      :PROBES-LIST ((PROBE
 					      		   	   :NAME "diode-a-2"
 								   :CLASS "voltage-probe"
 								   :NODES-LIST ("N2"))
 
-							    (PROBE 
+							    (PROBE
 					      		   	   :NAME "diode-k-2"
 								   :CLASS "voltage-probe"
-								   :NODES-LIST ("N3")))	
+								   :NODES-LIST ("N3")))
 					      :VALUE 0d0))
 
 			(PASSIVE
@@ -50,15 +50,15 @@
 				       	      :FUNCTION-NAME "simple-diode-4"
 					      :CLASS "function"
 					      :PARAMETERS-LIST (:VT 252d-3 :N 1d0 :IS 1d-6 :ORDER 1)
-					      :PROBES-LIST ((PROBE 
+					      :PROBES-LIST ((PROBE
 					      		   	   :NAME "diode-a-3"
 								   :CLASS "voltage-probe"
 								   :NODES-LIST ("N4"))
 
-							    (PROBE 
+							    (PROBE
 					      		   	   :NAME "diode-k-3"
 								   :CLASS "voltage-probe"
-								   :NODES-LIST ("N2")))	
+								   :NODES-LIST ("N2")))
 					      :VALUE 0d0))
 
 			(PASSIVE
@@ -69,21 +69,21 @@
 				       	      :FUNCTION-NAME "simple-diode-4"
 					      :CLASS "function"
 					      :PARAMETERS-LIST (:VT 252d-3 :N 1d0 :IS 1d-6 :ORDER 1)
-					      :PROBES-LIST ((PROBE 
+					      :PROBES-LIST ((PROBE
 					      		   	   :NAME "diode-a-4"
 								   :CLASS "voltage-probe"
 								   :NODES-LIST ("N4"))
 
-							    (PROBE 
+							    (PROBE
 					      		   	   :NAME "diode-k-4"
 								   :CLASS "voltage-probe"
-								   :NODES-LIST ("N1")))	
+								   :NODES-LIST ("N1")))
 					      :VALUE 0d0))
 
 ;;
 ;; external connection nodes
 ;;
-							
+
 			(NODE
 				:NAME "N1"
 				:CLASS "v-i")
@@ -91,7 +91,7 @@
 			(NODE
 				:NAME "N2"
 				:CLASS "v-i")
-			
+
 			(NODE
 				:NAME "N3"
 				:CLASS "v-i")
