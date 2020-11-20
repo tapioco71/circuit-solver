@@ -1,0 +1,65 @@
+;;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; indent-tabs-mode: nil; coding: utf-8; show-trailing-whitespace: t -*-
+;;
+;; single phase pulse transformer
+;; k =  2:1
+;;
+
+(netlist :name "murata-1082c"
+         :elements-list ((passive :name "G0"
+		                  :class "conductance"
+		                  :nodes-list ("N1" "N0")
+		                  :value 1d-6)
+
+                         (coupling :name "M1"
+		                   :class "transformational"
+		                   :value #(1d0)
+		                   :elements-list ((passive :name "L1"
+				                            :class "inductance"
+				                            :nodes-list ("N0" "N1")
+				                            :value 6.1d-3)
+
+				                   (passive :name "L2"
+				                            :class "inductance"
+				                            :nodes-list ("N2" "N3")
+				                            :value 610d-9)))
+
+                         (passive :name "Cw"
+                                  :class "capacitance"
+                                  :nodes-list ("N0" "N3")
+                                  :value 6d-12)
+
+		         (passive :name "R2cc"
+		                  :class "resistance"
+		                  :nodes-list ("N2" "N4")
+		                  :value 100.11d-3)
+
+		         (passive :name "L2cc"
+		                  :class "inductance"
+		                  :nodes-list ("N4" "N5")
+		                  :value 1d-9)
+
+		         ;;
+		         ;; external connection nodes
+		         ;;
+
+		         (node :name "N0"
+		               :class "v-i")
+
+		         (node :name "N1"
+		               :class "v-i")
+
+		         (node :name "N3"
+		               :class "v-i")
+
+		         (node :name "N5"
+		               :class "v-i")
+
+		         ;;
+		         ;; internal nodes
+		         ;;
+
+		         (node :name "N2"
+		               :class "v-i")
+
+		         (node :name "N4"
+		               :class "v-i")))

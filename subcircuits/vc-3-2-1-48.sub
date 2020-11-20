@@ -1,0 +1,75 @@
+;;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; indent-tabs-mode: nil; coding: utf-8; show-trailing-whitespace: t -*-
+;;
+;; single phase pulse transformer
+;; k =  230:48
+;;
+
+(netlist :name "vc-3.2-1-48"
+         :elements-list ((passive :name "G0"
+		                  :class "conductance"
+		                  :nodes-list ("N1" "N0")
+		                  :value 2d-3)
+
+                         (passive :name "C1"
+                                  :class capacitance
+                                  :nodes-list ("N0" "N1")
+                                  :value 220d-12)
+
+                         (passive :name "C2"
+                                  :class capacitance
+                                  :nodes-list ("N2" "N3")
+                                  :value 22d-12)
+
+                         (coupling :name "M1"
+		                   :class "transformational"
+		                   :value #(1d0)
+		                   :elements-list ((passive :name "L1"
+				                            :class "inductance"
+				                            :nodes-list ("N0" "N1")
+				                            :value 110d-3)
+
+				                   (passive :name "L2"
+				                            :class "inductance"
+				                            :nodes-list ("N2" "N3")
+				                            :value 4.8d-3)))
+
+                         (passive :name "C12"
+                                  :class capacitance
+                                  :nodes-list ("N1" "N5")
+                                  :value 100d-9)
+
+		         (passive :name "R2cc"
+		                  :class "resistance"
+		                  :nodes-list ("N2" "N4")
+		                  :value 62.9d0)
+
+		         (passive :name "L2cc"
+		                  :class "inductance"
+		                  :nodes-list ("N4" "N5")
+		                  :value 1128d-3)
+
+		         ;;
+		         ;; external connection nodes
+		         ;;
+
+		         (node :name "N0"
+		               :class "v-i")
+
+		         (node :name "N1"
+		               :class "v-i")
+
+		         (node :name "N3"
+		               :class "v-i")
+
+		         (node :name "N5"
+		               :class "v-i")
+
+		         ;;
+		         ;; internal nodes
+		         ;;
+
+		         (node :name "N2"
+		               :class "v-i")
+
+		         (node :name "N4"
+		               :class "v-i")))

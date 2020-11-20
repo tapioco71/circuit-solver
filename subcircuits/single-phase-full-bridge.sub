@@ -1,0 +1,76 @@
+;;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; indent-tabs-mode: nil; coding: utf-8; show-trailing-whitespace: t -*-
+;;
+;; single phase full bridge rectifier Vb = 400V
+
+(netlist :name "db-400"
+         :elements-list ((passive :name "D1"
+                                  :class "conductance"
+                                  :nodes-list ("in+" "out+")
+                                  :model (model :name "diode"
+                                                :function-name "zener-diode-1"
+                                                :class "function"
+                                                :parameters-list (:kf 1d3 :nf 1d0 :kz 2d3 :nz 1d0 :vf 1d0 :vz 4d2)
+                                                :probes-list ((probe :name "diode-a-1"
+                                                                     :class "voltage-probe"
+                                                                     :nodes-list ("in+"))
+
+                                                              (probe :name "diode-k-1"
+                                                                     :class "voltage-probe"
+                                                                     :nodes-list ("out+")))))
+
+                         (passive :name "D2"
+                                  :class "conductance"
+                                  :nodes-list ("out-" "in+")
+                                  :model (model :name "diode"
+                                                :function-name "zener-diode-1"
+                                                :class "function"
+                                                :parameters-list (:kf 1d3 :nf 1d0 :kz 2d3 :nz 1d0 :vf 1d0 :vz 4d2)
+                                                :probes-list ((probe :name "diode-a-2"
+                                                                     :class "voltage-probe"
+                                                                     :nodes-list ("out-"))
+
+                                                              (probe :name "diode-k-2"
+                                                                     :class "voltage-probe"
+                                                                     :nodes-list ("in+")))))
+
+                         (passive :name "D3"
+                                  :class "conductance"
+                                  :nodes-list ("out-" "in-")
+                                  :model (model :name "diode"
+                                                :function-name "zener-diode-1"
+                                                :class "function"
+                                                :parameters-list (:kf 1d3 :nf 1d0 :kz 2d3 :nz 1d0 :vf 1d0 :vz 4d2)
+                                                :probes-list ((probe :name "diode-a-3"
+                                                                     :class "voltage-probe"
+                                                                     :nodes-list ("out-"))
+
+                                                              (probe :name "diode-k-3"
+                                                                     :class "voltage-probe"
+                                                                     :nodes-list ("in-")))))
+
+                         (passive :name "D4"
+                                  :class "conductance"
+                                  :nodes-list ("in-" "out-")
+                                  :model (model :name "diode"
+                                                :function-name "zener-diode-1"
+                                                :class "function"
+                                                :parameters-list (:kf 1d3 :nf 1d0 :kz 2d3 :nz 1d0 :vf 1d0 :vz 4d2)
+                                                :probes-list ((probe :name "diode-a-4"
+                                                                     :class "voltage-probe"
+                                                                     :nodes-list ("in-"))
+
+                                                              (probe :name "diode-k-4"
+                                                                     :class "voltage-probe"
+                                                                     :nodes-list ("out+")))))
+
+                         (node :name "in-"
+                               :class "v-i")
+
+                         (node :name "in+"
+                               :class "v-i")
+
+                         (node :name "out-"
+                               :class "v-i")
+
+                         (node :name "out+"
+                               :class "v-i")))

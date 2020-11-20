@@ -1,0 +1,60 @@
+;;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; indent-tabs-mode: nil; coding: utf-8; show-trailing-whitespace: t -*-
+;;
+;; single phase pulse transformer
+;; k =  2:1
+;;
+
+(netlist :name "vc-3.2-1-6"
+         :elements-list ((passive :name "G0"
+		                  :class "conductance"
+		                  :nodes-list ("N1" "N0")
+		                  :value 18.9d-6)
+
+                         (coupling :name "M1"
+		                   :class "transformational"
+		                   :value #(1d0)
+		                   :elements-list ((passive :name "L1"
+				                            :class "inductance"
+				                            :nodes-list ("N0" "N1")
+				                            :value 3d-3)
+
+				                   (passive :name "L2"
+				                            :class "inductance"
+				                            :nodes-list ("N2" "N3")
+				                            :value 10.1d-6)))
+
+		         (passive :name "R2cc"
+		                  :class "resistance"
+		                  :nodes-list ("N2" "N4")
+		                  :value 3.2d0)
+
+		         (passive :name "L2cc"
+		                  :class "inductance"
+		                  :nodes-list ("N4" "N5")
+		                  :value 14.6d-3)
+
+		         ;;
+		         ;; external connection nodes
+		         ;;
+
+		         (node :name "N0"
+		               :class "v-i")
+
+		         (node :name "N1"
+		               :class "v-i")
+
+		         (node :name "N3"
+		               :class "v-i")
+
+		         (node :name "N5"
+		               :class "v-i")
+
+		         ;;
+		         ;; internal nodes
+		         ;;
+
+		         (node :name "N2"
+		               :class "v-i")
+
+		         (node :name "N4"
+		               :class "v-i")))
