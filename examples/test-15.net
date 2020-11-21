@@ -1,25 +1,34 @@
 ;;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; indent-tabs-mode: nil; coding: utf-8; show-trailing-whitespace: t -*-
 (netlist :name "test-15"
-         :elements-list ((source :name "V1"
+         :elements-list (
+                         ;; (source :name "V1"
+		         ;;         :class "voltage-source"
+		         ;;         :nodes-list ("N1" "GND")
+		         ;;         :model (model :name "lightning-pulse"
+			 ;;                       :function-name "lightning-pulse-DEXP"
+			 ;;                       :class "function"
+			 ;;                       :parameters-list (:k 1.75d3 :a 8d3 :b 250d3 :time-start 1d-6)))
+
+                         (source :name "V1"
 		                 :class "voltage-source"
 		                 :nodes-list ("N1" "GND")
-		                 :model (model :name "lightning-pulse"
-				               :function-name "lightning-pulse-DEXP"
+		                 :model (model :name "sinusoidal"
+				               :function-name "sinusoidal-function"
 				               :class "function"
-				               :parameters-list (:k 1.75d3 :a 8d3 :b 250d3 :time-start 1d-6)))
+				               :parameters-list (:amplitude 311d0 :frequency 5d3)))
 
                          (passive :name "R1"
                                   :class "resistance"
                                   :nodes-list ("N1" "N2")
-                                  :value 1d1)
+                                  :value 2.2d-3)
 
                          (subcircuit :name "M1"
-                                     :file-pathname "/home/angel/Development/lisp/circuit-solver/subcircuits/mov-500.sub"
+                                     :file-pathname "/home/angel/Development/lisp/circuit-solver/subcircuits/mov-1000.sub"
                                      :nodes-list ("N2" "GND"))
 
                          (subcircuit :name "T1"
-                                     :file-pathname "/home/angel/Development/lisp/circuit-solver/subcircuits/vc-3-2-1-48.sub"
-                                     :nodes-list ("N2" "GND" "N3" "N4"))
+                                     :file-pathname "/home/angel/Development/lisp/circuit-solver/subcircuits/t-1000-120-240.sub"
+                                     :nodes-list ( "N3" "N4" "N2" "GND"))
 
                          (passive :name "Rt"
                                   :class "resistance"
@@ -33,7 +42,7 @@
                          (passive :name "R2"
                                   :class "resistance"
                                   :nodes-list ("GND" "N5")
-                                  :value 2.2d3)
+                                  :value 720d0)
 
 		         (node :name "GND"
 		               :class "reference")

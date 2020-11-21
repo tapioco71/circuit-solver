@@ -39,8 +39,8 @@
   "Sigmoid function see https://en.wikipedia.org/wiki/Sigmoid_function"
   (declare (ignorable parameters amplitude scale x0 y0))
   (+ (* amplitude
-        (/ (exp (* scale (- x x0)))
-           (+ 1d0 (exp (* scale (- x x0))))))
+        (/ 1d0
+           (+ 1d0 (exp (- (* scale (- x x0)))))))
      y0))
 
 ;; Built-in models.
@@ -269,33 +269,43 @@
                       (/ (expt (/ (- v1 v2) (* n vt)) 2d0)
                          6d0))))))))))
 
-(defun zener-diode-1 (&rest rest &key parameters state)
+(defun zener-diode (&rest rest &key parameters state)
   "A zener diode modelled with sigmoids."
   (declare (ignorable rest parameters state))
   (destructuring-bind (&key
-                         (kf 1d0)
+                         (maximum-forward-conductance 1d0)
+                         (maximum-backward-conductance 1d0)
+                         (minimum-conductance 0d0)
                          (nf 1d0)
-                         (kz 1d0)
                          (nz 1d0)
-                         (vf 0.7d0)
-                         (vz 5.6d0))
+                         (forward-voltage 0.7d0)
+                         (breakdown-voltage 5.6d0))
       parameters
-    (declare (ignorable kf nf kz nz vf vz))
+    (declare (ignorable maximum-forward-conductance
+                        maximum-backward-conductance
+                        minimum-conductance
+                        nf
+                        nz
+                        forward-voltage
+                        breakdown-voltage))
     (let ((v2 (pop state))
 	  (v1 (pop state))
           (vak nil))
       (when (and v1 v2)
         (setq vak (- v1 v2))
         (+ (sigmoid vak
-                    :amplitude (abs kf)
+                    :amplitude (- (abs maximum-forward-conductance)
+                                  (abs minimum-conductance))
                     :scale (abs nf)
-                    :x0 (abs vf)
+                    :x0 (abs forward-voltage)
                     :y0 0d0)
            (sigmoid (- vak)
-                    :amplitude (abs kz)
+                    :amplitude (- (abs maximum-backward-conductance)
+                                  (abs minimum-conductance))
                     :scale (abs nz)
-                    :x0 (abs vz)
-                    :y0 0d0))))))
+                    :x0 (abs breakdown-voltage)
+                    :y0 0d0)
+           (abs minimum-conductance))))))
 
 (defun simple-switch-1 (&rest rest &key parameters state)
   "Simple switch."

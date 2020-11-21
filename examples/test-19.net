@@ -1,0 +1,51 @@
+;;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; indent-tabs-mode: nil; coding: utf-8; show-trailing-whitespace: t -*-
+(netlist :name "test-19"
+         :elements-list ((source :name "V1"
+		                 :class "voltage-source"
+		                 :nodes-list ("N1" "GND")
+		                 :model (model :name "sinusoidal"
+				               :function-name "sinusoidal-function"
+				               :class "function"
+				               :parameters-list (:amplitude 240d0 :frequency 50d0)))
+
+                         (passive :name "R1"
+                                  :class "resistance"
+                                  :nodes-list ("N1" "N2")
+                                  :value 2.2d-3)
+
+                         (subcircuit :name "DB1"
+                                     :file-pathname "/home/angel/Development/lisp/circuit-solver/subcircuits/single-phase-full-bridge.sub"
+                                     :nodes-list ("GND" "N2" "N3" "N4"))
+
+                         (passive :name "R2"
+                                  :class "resistance"
+                                  :nodes-list ("N3" "N4")
+                                  :value 220d0)
+
+                         (passive :name "C1"
+                                  :class "capacitance"
+                                  :nodes-list ("N3" "N4")
+                                  :value 100d-9)
+
+		         (node :name "GND"
+		               :class "reference")
+
+		         (node :name "N1"
+		               :class "v-i")
+
+		         (node :name "N2"
+		               :class "v-i")
+
+                         (node :name "N3"
+		               :class "v-i")
+
+		         (node :name "N4"
+		               :class "v-i")
+
+                         (probe :name "currents"
+                                :class "current-probe"
+                                :elements-list ("V1" "R1" "R2" "C1"))
+
+		         (probe :name "voltages"
+		                :class "voltage-probe"
+		                :nodes-list ("N1" "N2" "N3" "N4"))))

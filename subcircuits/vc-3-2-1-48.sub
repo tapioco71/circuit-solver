@@ -8,17 +8,17 @@
          :elements-list ((passive :name "G0"
 		                  :class "conductance"
 		                  :nodes-list ("N1" "N0")
-		                  :value 2d-3)
+		                  :value 18.9d-6)
 
                          (passive :name "C1"
                                   :class capacitance
                                   :nodes-list ("N0" "N1")
-                                  :value 220d-12)
+                                  :value 22d-9)
 
                          (passive :name "C2"
                                   :class capacitance
                                   :nodes-list ("N2" "N3")
-                                  :value 22d-12)
+                                  :value 2.2d-9)
 
                          (coupling :name "M1"
 		                   :class "transformational"
@@ -35,7 +35,7 @@
 
                          (passive :name "C12"
                                   :class capacitance
-                                  :nodes-list ("N1" "N5")
+                                  :nodes-list ("N1" "N2")
                                   :value 100d-9)
 
 		         (passive :name "R2cc"

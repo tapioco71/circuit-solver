@@ -6,16 +6,8 @@
                                  :model (model :name "sinusoidal-voltage"
                                                :function-name "sinusoidal-function"
                                                :class "function"
-                                               :parameters-list (:amplitude 2.5d-1 :offset 10d0 :frequency 50d0 :phase 0d0)
+                                               :parameters-list (:amplitude 5d-1 :offset 10d0 :frequency 50d0 :phase 0d0)
                                                :value 0d0))
-
-                         ;; (source :name "V1"
-		         ;;         :class "voltage-source"
-		         ;;         :nodes-list ("N1" "GND")
-		         ;;         :model (model :name "ramp"
-			 ;;                       :function-name "ramp-function"
-			 ;;                       :class "function"
-			 ;;                       :parameters-list (:t0 0d0 :m 1d3)))
 
                          (passive :name "L1"
                                   :class "inductance"
@@ -36,9 +28,15 @@
                                   :class "conductance"
                                   :nodes-list ("GND" "N3")
                                   :model (model :name "simple-diode"
-                                                :function-name "zener-diode-1"
+                                                :function-name "zener-diode"
                                                 :class "function"
-                                                :parameters-list (:kf 1d5 :nf 1d2 :kz 1d6 :nz 1d2 :vf 0.7d0 :vz 5.6d0)
+                                                :parameters-list (:minimum-conductance 1d-6
+                                                                  :maximum-forward-conductance 1d4
+                                                                  :maximum-backward-conductance 2d4
+                                                                  :nf 1d2
+                                                                  :nz 1d2
+                                                                  :forward-voltage 0.7d0
+                                                                  :breakdown-voltage 6.8d0)
                                                 :probes-list ((probe :name "diode-a-5"
                                                                      :class "voltage-probe"
                                                                      :nodes-list ("GND"))
