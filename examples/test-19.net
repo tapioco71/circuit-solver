@@ -11,7 +11,7 @@
                          (passive :name "R1"
                                   :class "resistance"
                                   :nodes-list ("N1" "N2")
-                                  :value 2.2d-3)
+                                  :value 1d-3)
 
                          (subcircuit :name "DB1"
                                      :file-pathname "/home/angel/Development/lisp/circuit-solver/subcircuits/single-phase-full-bridge.sub"
