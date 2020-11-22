@@ -23,74 +23,90 @@
                                      :file-pathname "/home/angel/Development/lisp/circuit-solver/subcircuits/mov-500.sub"
                                      :nodes-list ("N3" "N4"))
 
-                         (passive :name "Z1"
-                                  :class "conductance"
-                                  :nodes-list ("N3" "N5")
-                                  :model (model :name ""
-                                                :function-name "zener-diode"
-                                                :class "function"
-                                                :parameters-list (:minimum-conductance 1d-7
-                                                                  :maximum-forward-conductance 1d6
-                                                                  :maximum-backward-conductance 5d6
-                                                                  :nf 1d2
-                                                                  :nz 1d2
-                                                                  :forward-voltage 0.7d0
-                                                                  :breakdown-voltage 400d0)
-                                                :probes-list ((probe :name "diode-a-1"
-                                                                     :class "voltage-probe"
-                                                                     :nodes-list ("N3"))
-
-                                                              (probe :name "diode-k-1"
-                                                                     :class "voltage-probe"
-                                                                     :nodes-list ("N5")))))
-
-                         (passive :name "C1"
-                                  :class "capacitance"
-                                  :nodes-list ("N3" "N5")
-                                  :value 220d-12)
-
-                         (passive :name "Z2"
-                                  :class "conductance"
-                                  :nodes-list ("N4" "N6")
-                                  :model (model :name ""
-                                                :function-name "zener-diode"
-                                                :class "function"
-                                                :parameters-list (:minimum-conductance 1d-7
-                                                                  :maximum-forward-conductance 1d6
-                                                                  :maximum-backward-conductance 5d6
-                                                                  :nf 1d2
-                                                                  :nz 1d2
-                                                                  :forward-voltage 0.7d0
-                                                                  :breakdown-voltage 400d0)
-                                                :probes-list ((probe :name "diode-a-1"
-                                                                     :class "voltage-probe"
-                                                                     :nodes-list ("N4"))
-
-                                                              (probe :name "diode-k-1"
-                                                                     :class "voltage-probe"
-                                                                     :nodes-list ("N6")))))
-                         (passive :name "C2"
-                                  :class "capacitance"
-                                  :nodes-list ("N4" "N6")
-                                  :value 220d-12)
-
                          (subcircuit :name "T1"
                                      :file-pathname "/home/angel/Development/lisp/circuit-solver/subcircuits/t-1000-48-240.sub"
-                                     :nodes-list ( "N7" "N8" "N5" "N6"))
+                                     :nodes-list ( "N5" "N6" "N3" "N4"))
 
                          (passive :name "Rt"
                                   :class "resistance"
-                                  :nodes-list ("N7" "N5")
+                                  :nodes-list ("N5" "N3")
                                   :value 1d8)
 
                          (subcircuit :name "DB1"
                                      :file-pathname "/home/angel/Development/lisp/circuit-solver/subcircuits/single-phase-full-bridge.sub"
-                                     :nodes-list ("N8" "N7" "GND" "N9"))
+                                     :nodes-list ("N5" "N6" "GND" "N7"))
+
+                         (passive :name "C1"
+                                  :class "capacitance"
+                                  :nodes-list ("GND" "N7")
+                                  :value 220d-12)
 
                          (passive :name "R3"
                                   :class "resistance"
+                                  :nodes-list ("N7" "N8")
+                                  :value 560d0)
+
+                         (passive :name "C2"
+                                  :class "capacitance"
+                                  :nodes-list ("GND" "N8")
+                                  :value 100d-9)
+
+                         (passive :name "Z1"
+                                  :class "conductance"
+                                  :nodes-list ("GND" "N8")
+                                  :model (model :name ""
+                                                :function-name "zener-diode"
+                                                :class "function"
+                                                :parameters-list (:minimum-conductance 1d-7
+                                                                  :maximum-forward-conductance 1d6
+                                                                  :maximum-backward-conductance 5d6
+                                                                  :nf 1d2
+                                                                  :nz 1d2
+                                                                  :forward-voltage 0.7d0
+                                                                  :breakdown-voltage 12d0)
+                                                :probes-list ((probe :name "diode-a-1"
+                                                                     :class "voltage-probe"
+                                                                     :nodes-list ("GND"))
+
+                                                              (probe :name "diode-k-1"
+                                                                     :class "voltage-probe"
+                                                                     :nodes-list ("N8")))))
+
+                         (passive :name "R4"
+                                  :class "resistance"
+                                  :nodes-list ("N8" "N9")
+                                  :value 330d0)
+
+                         (passive :name "C3"
+                                  :class "capacitance"
                                   :nodes-list ("GND" "N9")
-                                  :value 2.2d3)
+                                  :value 220d-9)
+
+                         (passive :name "R5"
+                                  :class "resistance"
+                                  :nodes-list ("N10" "N9")
+                                  :value 330d0)
+
+                         (passive :name "D1"
+                                  :class "conductance"
+                                  :nodes-list ("N10" "GND")
+                                  :model (model :name ""
+                                                :function-name "zener-diode"
+                                                :class "function"
+                                                :parameters-list (:minimum-conductance 1d-6
+                                                                  :maximum-forward-conductance 1d5
+                                                                  :maximum-backward-conductance 5d5
+                                                                  :nf 1d2
+                                                                  :nz 1d2
+                                                                  :forward-voltage 0.6d0
+                                                                  :breakdown-voltage 30d0)
+                                                :probes-list ((probe :name "diode-a-1"
+                                                                     :class "voltage-probe"
+                                                                     :nodes-list ("N10"))
+
+                                                              (probe :name "diode-k-1"
+                                                                     :class "voltage-probe"
+                                                                     :nodes-list ("GND")))))
 
 		         (node :name "GND"
 		               :class "reference")
@@ -122,10 +138,13 @@
                          (node :name "N9"
 		               :class "v-i")
 
+                         (node :name "N10"
+		               :class "v-i")
+
                          (probe :name "currents"
                                 :class "current-probe"
-                                :elements-list ("V1" "R1" "R2" "R3" "C1" "C2" "M1:R" "Z1" "Z2"))
+                                :elements-list ("V1" "R1" "R2" "R3" "R4" "R5" "C1" "C2" "D1" "M1:R" "Z1"))
 
 		         (probe :name "voltages"
 		                :class "voltage-probe"
-		                :nodes-list ("N1" "N2" "N3" "N4" "N5" "N6" "N7" "N8" "N9"))))
+		                :nodes-list ("N1" "N2" "N3" "N4" "N5" "N6" "N7" "N8" "N9" "N10"))))

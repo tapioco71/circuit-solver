@@ -36,7 +36,7 @@
                          (passive :name "C"
                                   :class "capacitance"
                                   :nodes-list ("N2" "B")
-                                  :value 100d-9)
+                                  :value 16d-9)
                          (passive :name "G"
 		                  :class "conductance"
 		                  :nodes-list ("N2" "B")
