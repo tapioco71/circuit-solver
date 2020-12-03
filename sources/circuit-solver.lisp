@@ -634,66 +634,66 @@
                   "~%Including subcircuits.")
           (finish-output output))
 	(loop do
-	     (setq subcircuit-calls-list (select (where :class-type 'subcircuit-class)
-						 (netlist-class-elements-list return-value)))
-	     (when subcircuit-calls-list
-	       (when debug-mode
-		 (format output
-                         "~%~%Subcircuit calls: ~a~%"
-                         (mapcar #'sexpify subcircuit-calls-list))
-                 (finish-output output))
-	       (let ((subcircuits-list (mapcar #'(lambda (x)
-						   (read-netlist (subcircuit-class-file-pathname x)
-                                                                 :debug-mode debug-mode
-                                                                 :output output))
-                                               subcircuit-calls-list))
-		     (subcircuit nil)
-		     (i 0))
-		 (dolist (subcircuit-call subcircuit-calls-list)
-		   (setq subcircuit (nth i subcircuits-list))
-		   (when debug-mode
-		     (format output
-                             "~%~%Original subcircuit netlist:~%~a"
-                             (sexpify subcircuit))
-                     (finish-output output))
-		   (setq subcircuit (rename-netlist-element subcircuit
-                                                            (element-class-name subcircuit-call)
-                                                            :debug-mode debug-mode
-                                                            :output output))
-		   (let ((subcircuit-nodes-list (select (where :class-type 'node-class)
-							(netlist-class-elements-list subcircuit))))
-		     (when (> (length (subcircuit-class-nodes-list subcircuit-call))
-                              (length subcircuit-nodes-list))
-		       (error 'wrong-subcircuit-nodes-list-error
-                              :subcircuit-name (element-class-name subcircuit)
-			      :actual-nodes-count (length subcircuit-nodes-list)
-			      :needed-nodes-count (length (subcircuit-class-nodes-list subcircuit-call))))
-		     (let ((connection-nodes-list nil))
-		       (loop
-                         for i from 0 below (length (subcircuit-class-nodes-list subcircuit-call))
-                         do
-			    (setq connection-nodes-list (append connection-nodes-list (list (list (element-class-name (nth i subcircuit-nodes-list))
-												  (nth i (subcircuit-class-nodes-list subcircuit-call)))))))
-		       (when debug-mode
-			 (format output
-                                 "~%~%Connections nodes pairs ~a"
-                                 connection-nodes-list)
-                         (finish-output output))
-		       (setq return-value (connect subcircuit
-                                                   return-value
-                                                   connection-nodes-list
-                                                   :debug-mode debug-mode
-                                                   :output output))
-		       (setf (netlist-class-elements-list return-value) (exclude (where :name (element-class-name subcircuit-call)
-                                                                                        :class-type 'subcircuit-class)
-										 (netlist-class-elements-list return-value)))
-		       (when debug-mode
-			 (format output
-                                 "~%~%Resulting netlist:~%~s~%"
-                                 (sexpify return-value))
-                         (finish-output output))))
-		   (incf i))))
-	   until (eql subcircuit-calls-list nil))
+	  (setq subcircuit-calls-list (select (where :class-type 'subcircuit-class)
+					      (netlist-class-elements-list return-value)))
+	  (when subcircuit-calls-list
+	    (when debug-mode
+	      (format output
+                      "~%~%Subcircuit calls: ~a~%"
+                      (mapcar #'sexpify subcircuit-calls-list))
+              (finish-output output))
+	    (let ((subcircuits-list (mapcar #'(lambda (x)
+						(read-netlist (subcircuit-class-file-pathname x)
+                                                              :debug-mode debug-mode
+                                                              :output output))
+                                            subcircuit-calls-list))
+		  (subcircuit nil)
+		  (i 0))
+	      (dolist (subcircuit-call subcircuit-calls-list)
+		(setq subcircuit (nth i subcircuits-list))
+		(when debug-mode
+		  (format output
+                          "~%~%Original subcircuit netlist:~%~a"
+                          (sexpify subcircuit))
+                  (finish-output output))
+		(setq subcircuit (rename-netlist-element subcircuit
+                                                         (element-class-name subcircuit-call)
+                                                         :debug-mode debug-mode
+                                                         :output output))
+		(let ((subcircuit-nodes-list (select (where :class-type 'node-class)
+						     (netlist-class-elements-list subcircuit))))
+		  (when (> (length (subcircuit-class-nodes-list subcircuit-call))
+                           (length subcircuit-nodes-list))
+		    (error 'wrong-subcircuit-nodes-list-error
+                           :subcircuit-name (element-class-name subcircuit)
+			   :actual-nodes-count (length subcircuit-nodes-list)
+			   :needed-nodes-count (length (subcircuit-class-nodes-list subcircuit-call))))
+		  (let ((connection-nodes-list nil))
+		    (loop
+                      for i from 0 below (length (subcircuit-class-nodes-list subcircuit-call))
+                      do
+			 (setq connection-nodes-list (append connection-nodes-list (list (list (element-class-name (nth i subcircuit-nodes-list))
+											       (nth i (subcircuit-class-nodes-list subcircuit-call)))))))
+		    (when debug-mode
+		      (format output
+                              "~%~%Connections nodes pairs ~a"
+                              connection-nodes-list)
+                      (finish-output output))
+		    (setq return-value (connect subcircuit
+                                                return-value
+                                                connection-nodes-list
+                                                :debug-mode debug-mode
+                                                :output output))
+		    (setf (netlist-class-elements-list return-value) (exclude (where :name (element-class-name subcircuit-call)
+                                                                                     :class-type 'subcircuit-class)
+									      (netlist-class-elements-list return-value)))
+		    (when debug-mode
+		      (format output
+                              "~%~%Resulting netlist:~%~s~%"
+                              (sexpify return-value))
+                      (finish-output output))))
+		(incf i))))
+	      until (eql subcircuit-calls-list nil))
 	(when verbose
 	  (format output
                   " Done!")
@@ -1550,37 +1550,37 @@
                    (coupling-class-value element) k)
            (finish-output output))
 	 (loop for ii from 0 below k do
-	      (loop for jj from 0 below k do
-		   (unless (eql ii jj)
-		     (when debug-mode
-		       (format output
-                               "~%Mutual coupling (~a, ~a)."
-                               ii
-                               jj)
-                       (finish-output output))
-		     (if (> jj ii)
-			 (setq p (/ (+ (* ii (- (* 2 k) ii 3)) (* 2 (- jj 1))) 2))
-			 (setq p (/ (+ (* jj (- (* 2 k) jj 3)) (* 2 (- ii 1))) 2)))
-		     (when debug-mode
-		       (format output
-                               "~%Coupling coefficient position ~a.~%i = ~a, ii = ~a, j = ~a, jj = ~a, M(~a, ~a) = "
-                               p
-                               i
-                               ii
-                               j
-                               jj
-                               (+ i ii)
-                               (+ j jj))
-                       (finish-output output))
-		     (setq m-value (* (grid:gref (coupling-class-value element) p)
-				      (sqrt (* (abs (grid:gref l-matrix (+ i ii) (+ j ii)))
-					       (abs (grid:gref l-matrix (+ i jj) (+ j jj)))))))
-		     (when debug-mode
-		       (format output
-                               "~a."
-                               m-value)
-                       (finish-output output))
-		     (setf (grid:gref l-matrix (+ i ii) (+ j jj)) (- m-value)))))
+	   (loop for jj from 0 below k do
+	     (unless (eql ii jj)
+	       (when debug-mode
+		 (format output
+                         "~%Mutual coupling (~a, ~a)."
+                         ii
+                         jj)
+                 (finish-output output))
+	       (if (> jj ii)
+		   (setq p (/ (+ (* ii (- (* 2 k) ii 3)) (* 2 (- jj 1))) 2))
+		   (setq p (/ (+ (* jj (- (* 2 k) jj 3)) (* 2 (- ii 1))) 2)))
+	       (when debug-mode
+		 (format output
+                         "~%Coupling coefficient position ~a.~%i = ~a, ii = ~a, j = ~a, jj = ~a, M(~a, ~a) = "
+                         p
+                         i
+                         ii
+                         j
+                         jj
+                         (+ i ii)
+                         (+ j jj))
+                 (finish-output output))
+	       (setq m-value (* (grid:gref (coupling-class-value element) p)
+				(sqrt (* (abs (grid:gref l-matrix (+ i ii) (+ j ii)))
+					 (abs (grid:gref l-matrix (+ i jj) (+ j jj)))))))
+	       (when debug-mode
+		 (format output
+                         "~a."
+                         m-value)
+                 (finish-output output))
+	       (setf (grid:gref l-matrix (+ i ii) (+ j jj)) (- m-value)))))
 	 (incf i k)
 	 (incf j k))
 	(source-class
@@ -2330,291 +2330,292 @@
           (finish-output output))
 	(let ((netlist (read-netlist netlist-file-pathname))
 	      (error-found 0))
-	  (setq netlist (include-subcircuits netlist
-                                             :verbose verbose
-                                             :debug-mode debug-mode
-                                             :output output))
-	  (setq error-found (check-netlist netlist))
-	  (when (zerop error-found)
-	    (when verbose
-	      (format output
-                      "~%Input file: ~a"
-                      netlist-file-pathname)
-	      (format output
-                      "~%Debug Mode: ~a"
-                      debug-mode)
-	      (format output
-                      "~%Loaded netlist: ~a"
-                      (element-class-name netlist))
-              (finish-output output))
-	    (when debug-mode
-	      (format output
-                      "~%~a"
-                      (sexpify netlist))
-              (finish-output output))
-	    (when verbose
-	      (format output
-                      "~%Start at ~a s upto ~a s with Delta t = ~a s (~a steps)."
-                      *t0*
-                      *t1*
-                      *h*
-                      *steps-number*)
-              (finish-output output))
-	    (when debug-mode
-	      (format output
-                      "~%Found ~a nodes and ~a elements."
-		      (length (select (where :class-type 'node-class)
-                                      (netlist-class-elements-list netlist)))
-		      (length (exclude (list (where :class-type 'node-class)
-					     (where :class-type 'subcircuit-class))
-                                       (netlist-class-elements-list netlist))))
-              (finish-output output))
-	    (let ((p-matrix (create-p-matrix (netlist-class-elements-list netlist)
-                                             :debug-mode debug-mode
-                                             :output output))
-		  (r-matrix (create-r-l-matrix (netlist-class-elements-list netlist)
+          (when netlist
+	    (setq netlist (include-subcircuits netlist
+                                               :verbose verbose
                                                :debug-mode debug-mode
                                                :output output))
-		  (g-matrix (create-g-c-matrix (netlist-class-elements-list netlist)
+	    (setq error-found (check-netlist netlist))
+	    (when (zerop error-found)
+	      (when verbose
+	        (format output
+                        "~%Input file: ~a"
+                        netlist-file-pathname)
+	        (format output
+                        "~%Debug Mode: ~a"
+                        debug-mode)
+	        (format output
+                        "~%Loaded netlist: ~a"
+                        (element-class-name netlist))
+                (finish-output output))
+	      (when debug-mode
+	        (format output
+                        "~%~a"
+                        (sexpify netlist))
+                (finish-output output))
+	      (when verbose
+	        (format output
+                        "~%Start at ~a s upto ~a s with Delta t = ~a s (~a steps)."
+                        *t0*
+                        *t1*
+                        *h*
+                        *steps-number*)
+                (finish-output output))
+	      (when debug-mode
+	        (format output
+                        "~%Found ~a nodes and ~a elements."
+		        (length (select (where :class-type 'node-class)
+                                        (netlist-class-elements-list netlist)))
+		        (length (exclude (list (where :class-type 'node-class)
+					       (where :class-type 'subcircuit-class))
+                                         (netlist-class-elements-list netlist))))
+                (finish-output output))
+	      (let ((p-matrix (create-p-matrix (netlist-class-elements-list netlist)
                                                :debug-mode debug-mode
                                                :output output))
-		  (si-matrix (create-si-matrix (netlist-class-elements-list netlist)
-                                               :debug-mode debug-mode
-                                               :output output))
-		  (sv-matrix (create-sv-matrix (netlist-class-elements-list netlist)
-                                               :debug-mode debug-mode
-                                               :output output))
-		  (l-matrix (create-r-l-matrix (netlist-class-elements-list netlist)
-                                               :debug-mode debug-mode
-                                               :output output))
-		  (c-matrix (create-g-c-matrix (netlist-class-elements-list netlist)
-                                               :debug-mode debug-mode
-                                               :output output))
-		  (ki-vector (create-ki-vector (netlist-class-elements-list netlist)
-                                               :debug-mode debug-mode
-                                               :output output))
-		  (kv-vector (create-kv-vector (netlist-class-elements-list netlist)
-                                               :debug-mode debug-mode
-                                               :output output))
-		  (y-old-vector (create-k-y-vector (netlist-class-elements-list netlist)
-                                                   :debug-mode debug-mode
-                                                   :output output))
-		  (y-new-vector (create-k-y-vector (netlist-class-elements-list netlist)
-                                                   :debug-mode debug-mode
-                                                   :output output)))
-	      (setq y-old-vector (setup-initial-conditions netlist y-old-vector
-                                                           :debug-mode debug-mode
-                                                           :output output))
-	      (let* ((output-file-pathname (make-pathname :directory (pathname-directory netlist-file-pathname)
-                                                          :name (pathname-name netlist-file-pathname)
-                                                          :type "sim"))
-		     (output-file-stream (open-simulation-file netlist
-                                                               output-file-pathname)))
-		(when verbose
-		  (format output
-                          "~&Output file: ~a~2%"
-                          output-file-pathname)
-                  (finish-output output))
-		(format output
-                        "~2&Solving: ")
-                (finish-output output)
-                (when parallel
-                  (setq lock (bt:make-recursive-lock (symbol-name (gensym "lock-")))
-                        thread-functions (list (generate-thread-function (promise debug-mode)
-                                                 (dolist (element (netlist-class-elements-list netlist))
-		                                   (setq element (update-model element
-                                                                               (netlist-class-elements-list netlist)
-                                                                               y-old-vector
-                                                                               :lock lock
-                                                                               :debug-mode debug-mode
-                                                                               :output output))))
-                                               (generate-thread-function (promise debug-mode)
-                                                 (setq p-matrix (update-p-matrix p-matrix
-                                                                                 (netlist-class-elements-list netlist)
-                                                                                 :lock lock
-                                                                                 :debug-mode debug-mode
-                                                                                 :output output)))
-                                               (generate-thread-function (promise debug-mode)
-			                         (setq r-matrix (update-r-matrix r-matrix
-                                                                                 (netlist-class-elements-list netlist)
-                                                                                 :lock lock
-                                                                                 :debug-mode debug-mode
-                                                                                 :output output)))
-                                               (generate-thread-function (promise debug-mode)
-			                         (setq g-matrix (update-g-matrix g-matrix
-                                                                                 (netlist-class-elements-list netlist)
-                                                                                 :lock lock
-                                                                                 :debug-mode debug-mode
-                                                                                 :output output)))
-                                               (generate-thread-function (promise debug-mode)
-                                                 (setq si-matrix (update-si-matrix si-matrix
-                                                                                   (netlist-class-elements-list netlist)
-                                                                                   :debug-mode debug-mode
-                                                                                   :output output)))
-                                               (generate-thread-function (promise debug-mode)
-			                         (setq sv-matrix (update-sv-matrix sv-matrix
-                                                                                   (netlist-class-elements-list netlist)
-                                                                                   :debug-mode debug-mode
-                                                                                   :output output)))
-                                               (generate-thread-function (promise debug-mode)
-                                                 (setq l-matrix (update-l-matrix l-matrix
-                                                                                 (netlist-class-elements-list netlist)
-                                                                                 :debug-mode debug-mode
-                                                                                 :output output)))
-                                               (generate-thread-function (promise debug-mode)
-			                         (setq c-matrix (update-c-matrix c-matrix
-                                                                                 (netlist-class-elements-list netlist)
-                                                                                 :debug-mode debug-mode
-                                                                                 :output output)))
-                                               (generate-thread-function (promise debug-mode)
-			                         (setq ki-vector (update-ki-vector ki-vector
-                                                                                   (netlist-class-elements-list netlist)
-                                                                                   :debug-mode debug-mode
-                                                                                   :output output)))
-                                               (generate-thread-function (promise debug-mode)
-                                                 (setq kv-vector (update-kv-vector kv-vector
-                                                                                   (netlist-class-elements-list netlist)
-                                                                                   :debug-mode debug-mode
-                                                                                   :output output))))
-                        tasks-count (length thread-functions))
-                  (when debug-mode
-                    (format output
-                            "Number of tasks: ~a~%"
-                            tasks-count)
+		    (r-matrix (create-r-l-matrix (netlist-class-elements-list netlist)
+                                                 :debug-mode debug-mode
+                                                 :output output))
+		    (g-matrix (create-g-c-matrix (netlist-class-elements-list netlist)
+                                                 :debug-mode debug-mode
+                                                 :output output))
+		    (si-matrix (create-si-matrix (netlist-class-elements-list netlist)
+                                                 :debug-mode debug-mode
+                                                 :output output))
+		    (sv-matrix (create-sv-matrix (netlist-class-elements-list netlist)
+                                                 :debug-mode debug-mode
+                                                 :output output))
+		    (l-matrix (create-r-l-matrix (netlist-class-elements-list netlist)
+                                                 :debug-mode debug-mode
+                                                 :output output))
+		    (c-matrix (create-g-c-matrix (netlist-class-elements-list netlist)
+                                                 :debug-mode debug-mode
+                                                 :output output))
+		    (ki-vector (create-ki-vector (netlist-class-elements-list netlist)
+                                                 :debug-mode debug-mode
+                                                 :output output))
+		    (kv-vector (create-kv-vector (netlist-class-elements-list netlist)
+                                                 :debug-mode debug-mode
+                                                 :output output))
+		    (y-old-vector (create-k-y-vector (netlist-class-elements-list netlist)
+                                                     :debug-mode debug-mode
+                                                     :output output))
+		    (y-new-vector (create-k-y-vector (netlist-class-elements-list netlist)
+                                                     :debug-mode debug-mode
+                                                     :output output)))
+	        (setq y-old-vector (setup-initial-conditions netlist y-old-vector
+                                                             :debug-mode debug-mode
+                                                             :output output))
+	        (let* ((output-file-pathname (make-pathname :directory (pathname-directory netlist-file-pathname)
+                                                            :name (pathname-name netlist-file-pathname)
+                                                            :type "sim"))
+		       (output-file-stream (open-simulation-file netlist
+                                                                 output-file-pathname)))
+		  (when verbose
+		    (format output
+                            "~&Output file: ~a~2%"
+                            output-file-pathname)
                     (finish-output output))
-                  (setf lparallel:*kernel* (lparallel:make-kernel tasks-count
-                                                                  :name (symbol-name (gensym "kernel-"))))
-                  (setq channel (lparallel:make-channel)))
-	        (loop
-                   for i from 0 to *steps-number*
-                   do
-		     (setq *time* (+ *t0*
-                                     (* *h*
-                                        (float i))))
-		     (when (and debug-mode
-                                (not progress-bar))
-		       (format output
-                               "~2%----~%Iteration #~a~%time = ~a~%----~2%"
-                               i
-                               *time*)
-                       (finish-output output))
+		  (format output
+                          "~2&Solving: ")
+                  (finish-output output)
+                  (when parallel
+                    (setq lock (bt:make-recursive-lock (symbol-name (gensym "lock-")))
+                          thread-functions (list (generate-thread-function (promise debug-mode)
+                                                   (dolist (element (netlist-class-elements-list netlist))
+		                                     (setq element (update-model element
+                                                                                 (netlist-class-elements-list netlist)
+                                                                                 y-old-vector
+                                                                                 :lock lock
+                                                                                 :debug-mode debug-mode
+                                                                                 :output output))))
+                                                 (generate-thread-function (promise debug-mode)
+                                                   (setq p-matrix (update-p-matrix p-matrix
+                                                                                   (netlist-class-elements-list netlist)
+                                                                                   :lock lock
+                                                                                   :debug-mode debug-mode
+                                                                                   :output output)))
+                                                 (generate-thread-function (promise debug-mode)
+			                           (setq r-matrix (update-r-matrix r-matrix
+                                                                                   (netlist-class-elements-list netlist)
+                                                                                   :lock lock
+                                                                                   :debug-mode debug-mode
+                                                                                   :output output)))
+                                                 (generate-thread-function (promise debug-mode)
+			                           (setq g-matrix (update-g-matrix g-matrix
+                                                                                   (netlist-class-elements-list netlist)
+                                                                                   :lock lock
+                                                                                   :debug-mode debug-mode
+                                                                                   :output output)))
+                                                 (generate-thread-function (promise debug-mode)
+                                                   (setq si-matrix (update-si-matrix si-matrix
+                                                                                     (netlist-class-elements-list netlist)
+                                                                                     :debug-mode debug-mode
+                                                                                     :output output)))
+                                                 (generate-thread-function (promise debug-mode)
+			                           (setq sv-matrix (update-sv-matrix sv-matrix
+                                                                                     (netlist-class-elements-list netlist)
+                                                                                     :debug-mode debug-mode
+                                                                                     :output output)))
+                                                 (generate-thread-function (promise debug-mode)
+                                                   (setq l-matrix (update-l-matrix l-matrix
+                                                                                   (netlist-class-elements-list netlist)
+                                                                                   :debug-mode debug-mode
+                                                                                   :output output)))
+                                                 (generate-thread-function (promise debug-mode)
+			                           (setq c-matrix (update-c-matrix c-matrix
+                                                                                   (netlist-class-elements-list netlist)
+                                                                                   :debug-mode debug-mode
+                                                                                   :output output)))
+                                                 (generate-thread-function (promise debug-mode)
+			                           (setq ki-vector (update-ki-vector ki-vector
+                                                                                     (netlist-class-elements-list netlist)
+                                                                                     :debug-mode debug-mode
+                                                                                     :output output)))
+                                                 (generate-thread-function (promise debug-mode)
+                                                   (setq kv-vector (update-kv-vector kv-vector
+                                                                                     (netlist-class-elements-list netlist)
+                                                                                     :debug-mode debug-mode
+                                                                                     :output output))))
+                          tasks-count (length thread-functions))
+                    (when debug-mode
+                      (format output
+                              "Number of tasks: ~a~%"
+                              tasks-count)
+                      (finish-output output))
+                    (setf lparallel:*kernel* (lparallel:make-kernel tasks-count
+                                                                    :name (symbol-name (gensym "kernel-"))))
+                    (setq channel (lparallel:make-channel)))
+	          (loop
+                    for i from 0 to *steps-number*
+                    do
+		       (setq *time* (+ *t0*
+                                       (* *h*
+                                          (float i))))
+		       (when (and debug-mode
+                                  (not progress-bar))
+		         (format output
+                                 "~2%----~%Iteration #~a~%time = ~a~%----~2%"
+                                 i
+                                 *time*)
+                         (finish-output output))
 
-		   ;; Update matrices
+		       ;; Update matrices
 
-                     (if parallel
-                         (progn
-                           (setq promise (lparallel:promise))
-                           (loop
-                              for thread-function in thread-functions
-                              do
-                                (lparallel:submit-task channel thread-function))
-                           (lparallel:fulfill promise t)
-                           (loop
-                              finally (when debug-mode
-                                        (format output
-                                                "All tasks completed!~%")
-                                        (finish-output output))
-                              for i from 0 below tasks-count
-                              do
-                                (lparallel:receive-result channel)))
-                         (progn
-		           (dolist (element (netlist-class-elements-list netlist))
-		             (setq element (update-model element
-                                                         (netlist-class-elements-list netlist)
-                                                         y-old-vector
-                                                         :debug-mode debug-mode
-                                                         :output output)))
-		           (setq p-matrix (update-p-matrix p-matrix
+                       (if parallel
+                           (progn
+                             (setq promise (lparallel:promise))
+                             (loop
+                               for thread-function in thread-functions
+                               do
+                                  (lparallel:submit-task channel thread-function))
+                             (lparallel:fulfill promise t)
+                             (loop
+                               finally (when debug-mode
+                                         (format output
+                                                 "All tasks completed!~%")
+                                         (finish-output output))
+                               for i from 0 below tasks-count
+                               do
+                                  (lparallel:receive-result channel)))
+                           (progn
+		             (dolist (element (netlist-class-elements-list netlist))
+		               (setq element (update-model element
                                                            (netlist-class-elements-list netlist)
+                                                           y-old-vector
                                                            :debug-mode debug-mode
-                                                           :output output)
-			         r-matrix (update-r-matrix r-matrix
-                                                           (netlist-class-elements-list netlist)
-                                                           :debug-mode debug-mode
-                                                           :output output)
-			         g-matrix (update-g-matrix g-matrix
-                                                           (netlist-class-elements-list netlist)
-                                                           :debug-mode debug-mode
-                                                           :output output)
-			         si-matrix (update-si-matrix si-matrix
+                                                           :output output)))
+		             (setq p-matrix (update-p-matrix p-matrix
                                                              (netlist-class-elements-list netlist)
                                                              :debug-mode debug-mode
                                                              :output output)
-			         sv-matrix (update-sv-matrix sv-matrix
+			           r-matrix (update-r-matrix r-matrix
                                                              (netlist-class-elements-list netlist)
                                                              :debug-mode debug-mode
                                                              :output output)
-			         l-matrix (update-l-matrix l-matrix
-                                                           (netlist-class-elements-list netlist)
-                                                           :debug-mode debug-mode
-                                                           :output output)
-			         c-matrix (update-c-matrix c-matrix
-                                                           (netlist-class-elements-list netlist)
-                                                           :debug-mode debug-mode
-                                                           :output output)
-			         ki-vector (update-ki-vector ki-vector
+			           g-matrix (update-g-matrix g-matrix
                                                              (netlist-class-elements-list netlist)
                                                              :debug-mode debug-mode
                                                              :output output)
-			         kv-vector (update-kv-vector kv-vector
+			           si-matrix (update-si-matrix si-matrix
+                                                               (netlist-class-elements-list netlist)
+                                                               :debug-mode debug-mode
+                                                               :output output)
+			           sv-matrix (update-sv-matrix sv-matrix
+                                                               (netlist-class-elements-list netlist)
+                                                               :debug-mode debug-mode
+                                                               :output output)
+			           l-matrix (update-l-matrix l-matrix
                                                              (netlist-class-elements-list netlist)
                                                              :debug-mode debug-mode
-                                                             :output output))))
-		     (multiple-value-bind (a-matrix b-matrix k-vector)
-		         (assemble-system p-matrix
-                                          r-matrix
-                                          g-matrix
-                                          si-matrix
-                                          sv-matrix
-                                          l-matrix
-                                          c-matrix
-                                          ki-vector
-                                          kv-vector
-                                          :debug-mode debug-mode
-                                          :output output)
-		       (let ((alpha-matrix (gsl:elt+ (gsl:elt* *h*
-                                                               (grid:copy-to a-matrix 'grid:foreign-array))
-                                                     (grid:copy-to b-matrix 'grid:foreign-array)))
-			     (beta-matrix (gsl:elt+ (gsl:elt* *h*
-                                                              (grid:copy-to k-vector 'grid:foreign-array))
-                                                    (gsl:matrix-product (grid:copy-to b-matrix 'grid:foreign-array)
-                                                                        (grid:copy-to y-old-vector 'grid:foreign-array)))))
-		         (multiple-value-bind (decomposition-matrix permutation-matrix sign)
-                             (gsl:lu-decomposition (grid:copy-to alpha-matrix 'grid:foreign-array))
-                           (when debug-mode
-			     (format output
-                                     "~&Permutation sign: ~a~%"
-                                     sign)
-                             (finish-output output))
-                           (let ((initial-solution (gsl:lu-solve (grid:copy-to decomposition-matrix 'grid:foreign-array)
-                                                                 (grid:copy-to beta-matrix 'grid:foreign-array)
-                                                                 permutation-matrix
-                                                                 t)))
-			     (setq y-new-vector (gsll:lu-refine (grid:copy-to alpha-matrix 'grid:foreign-array)
-                                                                (grid:copy-to decomposition-matrix 'grid:foreign-array)
-                                                                permutation-matrix
-                                                                (grid:copy-to beta-matrix 'grid:foreign-array)
-                                                                initial-solution))
-			     (when debug-mode
-			       (format output
-                                       "~&Y(n+1) =~%~a~%"
-                                       y-new-vector)
-			       (format output
-                                       "~&Y(n) =~%~a~%"
-                                       y-old-vector)
-                               (finish-output output))
-			     (select-probes netlist
-                                            y-new-vector
-                                            output-file-stream
+                                                             :output output)
+			           c-matrix (update-c-matrix c-matrix
+                                                             (netlist-class-elements-list netlist)
+                                                             :debug-mode debug-mode
+                                                             :output output)
+			           ki-vector (update-ki-vector ki-vector
+                                                               (netlist-class-elements-list netlist)
+                                                               :debug-mode debug-mode
+                                                               :output output)
+			           kv-vector (update-kv-vector kv-vector
+                                                               (netlist-class-elements-list netlist)
+                                                               :debug-mode debug-mode
+                                                               :output output))))
+		       (multiple-value-bind (a-matrix b-matrix k-vector)
+		           (assemble-system p-matrix
+                                            r-matrix
+                                            g-matrix
+                                            si-matrix
+                                            sv-matrix
+                                            l-matrix
+                                            c-matrix
+                                            ki-vector
+                                            kv-vector
                                             :debug-mode debug-mode
                                             :output output)
-			     (setq y-old-vector y-new-vector)))
-		         (when (and (not debug-mode)
-				    progress-bar)
-			   (print-progress-bar i 2 20 :output output)))))
-		(when output-file-stream
-		  (close output-file-stream))
-		output-file-pathname)))))
+		         (let ((alpha-matrix (gsl:elt+ (gsl:elt* *h*
+                                                                 (grid:copy-to a-matrix 'grid:foreign-array))
+                                                       (grid:copy-to b-matrix 'grid:foreign-array)))
+			       (beta-matrix (gsl:elt+ (gsl:elt* *h*
+                                                                (grid:copy-to k-vector 'grid:foreign-array))
+                                                      (gsl:matrix-product (grid:copy-to b-matrix 'grid:foreign-array)
+                                                                          (grid:copy-to y-old-vector 'grid:foreign-array)))))
+		           (multiple-value-bind (decomposition-matrix permutation-matrix sign)
+                               (gsl:lu-decomposition (grid:copy-to alpha-matrix 'grid:foreign-array))
+                             (when debug-mode
+			       (format output
+                                       "~&Permutation sign: ~a~%"
+                                       sign)
+                               (finish-output output))
+                             (let ((initial-solution (gsl:lu-solve (grid:copy-to decomposition-matrix 'grid:foreign-array)
+                                                                   (grid:copy-to beta-matrix 'grid:foreign-array)
+                                                                   permutation-matrix
+                                                                   t)))
+			       (setq y-new-vector (gsll:lu-refine (grid:copy-to alpha-matrix 'grid:foreign-array)
+                                                                  (grid:copy-to decomposition-matrix 'grid:foreign-array)
+                                                                  permutation-matrix
+                                                                  (grid:copy-to beta-matrix 'grid:foreign-array)
+                                                                  initial-solution))
+			       (when debug-mode
+			         (format output
+                                         "~&Y(n+1) =~%~a~%"
+                                         y-new-vector)
+			         (format output
+                                         "~&Y(n) =~%~a~%"
+                                         y-old-vector)
+                                 (finish-output output))
+			       (select-probes netlist
+                                              y-new-vector
+                                              output-file-stream
+                                              :debug-mode debug-mode
+                                              :output output)
+			       (setq y-old-vector y-new-vector)))
+		           (when (and (not debug-mode)
+				      progress-bar)
+			     (print-progress-bar i 2 20 :output output)))))
+		  (when output-file-stream
+		    (close output-file-stream))
+		  output-file-pathname))))))
     (gsll:input-domain (condition)
       (format *error-output*
               "Simulation error at time (~a): ~a.~%"
