@@ -1,21 +1,19 @@
 ;;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; indent-tabs-mode: nil; coding: utf-8; show-trailing-whitespace: t -*-
 ;;
-;; single phase full bridge rectifier Vb = 600 V
+;; single phase full bridge rectifier Vb = 15 kV
 
-(netlist :name "db-600"
+(netlist :name "db-15k"
          :elements-list ((passive :name "D1"
                                   :class "conductance"
                                   :nodes-list ("in+" "out+")
                                   :model (model :name "diode"
-                                                :function-name "zener-diode"
+                                                :function-name "zener-diode-2"
                                                 :class "function"
                                                 :parameters-list (:minimum-conductance 1d-6
                                                                   :maximum-forward-conductance 1d6
                                                                   :maximum-backward-conductance 1d6
-                                                                  :nf 1d0
-                                                                  :nz 1d0
-                                                                  :forward-voltage 1d0
-                                                                  :breakdown-voltage 6d2)
+                                                                  :forward-voltage 10d0
+                                                                  :breakdown-voltage 15d3)
                                                 :probes-list ((probe :name "diode-a-1"
                                                                      :class "voltage-probe"
                                                                      :nodes-list ("in+"))
@@ -28,15 +26,13 @@
                                   :class "conductance"
                                   :nodes-list ("out-" "in+")
                                   :model (model :name "diode"
-                                                :function-name "zener-diode"
+                                                :function-name "zener-diode-2"
                                                 :class "function"
                                                 :parameters-list (:minimum-conductance 1d-6
                                                                   :maximum-forward-conductance 1d6
                                                                   :maximum-backward-conductance 1d6
-                                                                  :nf 1d0
-                                                                  :nz 1d0
-                                                                  :forward-voltage 1d0
-                                                                  :breakdown-voltage 6d2)
+                                                                  :forward-voltage 10d0
+                                                                  :breakdown-voltage 15d3)
                                                 :probes-list ((probe :name "diode-a-2"
                                                                      :class "voltage-probe"
                                                                      :nodes-list ("out-"))
@@ -49,15 +45,13 @@
                                   :class "conductance"
                                   :nodes-list ("out-" "in-")
                                   :model (model :name "diode"
-                                                :function-name "zener-diode"
+                                                :function-name "zener-diode-2"
                                                 :class "function"
                                                 :parameters-list (:minimum-conductance 1d-6
                                                                   :maximum-forward-conductance 1d6
                                                                   :maximum-backward-conductance 1d6
-                                                                  :nf 1d0
-                                                                  :nz 1d0
-                                                                  :forward-voltage 1d0
-                                                                  :breakdown-voltage 6d2)
+                                                                  :forward-voltage 10d0
+                                                                  :breakdown-voltage 15d3)
                                                 :probes-list ((probe :name "diode-a-3"
                                                                      :class "voltage-probe"
                                                                      :nodes-list ("out-"))
@@ -70,15 +64,13 @@
                                   :class "conductance"
                                   :nodes-list ("in-" "out+")
                                   :model (model :name "diode"
-                                                :function-name "zener-diode"
+                                                :function-name "zener-diode-2"
                                                 :class "function"
                                                 :parameters-list (:minimum-conductance 1d-6
                                                                   :maximum-forward-conductance 1d6
                                                                   :maximum-backward-conductance 1d6
-                                                                  :nf 1d0
-                                                                  :nz 1d0
-                                                                  :forward-voltage 1d0
-                                                                  :breakdown-voltage 6d2)
+                                                                  :forward-voltage 10d0
+                                                                  :breakdown-voltage 15d3)
                                                 :probes-list ((probe :name "diode-a-4"
                                                                      :class "voltage-probe"
                                                                      :nodes-list ("in-"))

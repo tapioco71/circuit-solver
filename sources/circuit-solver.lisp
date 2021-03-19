@@ -2415,10 +2415,10 @@
 		    (format output
                             "~&Output file: ~a~2%"
                             output-file-pathname)
+                    (finish-output output)
+		    (format output
+                            "~2&Solving: ")
                     (finish-output output))
-		  (format output
-                          "~2&Solving: ")
-                  (finish-output output)
                   (when parallel
                     (setq lock (bt:make-recursive-lock (symbol-name (gensym "lock-")))
                           thread-functions (list (generate-thread-function (promise debug-mode)

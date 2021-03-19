@@ -2,100 +2,100 @@
 ;; single phase rectifier bridge
 ;;
 
-(NETLIST
-	:NAME "single_phase_bridge"
-	:ELEMENTS-LIST ((PASSIVE
-				:NAME "D1"
-				:CLASS "conductance"
-				:NODES-LIST ("N1" "N3")
-				:MODEL (MODEL :NAME "simple-diode-1"
-				       	      :FUNCTION-NAME "simple-diode-4"
-					      :CLASS "function"
-					      :PARAMETERS-LIST (:VT 252d-3 :N 1d0 :IS 1d-6 :ORDER 1)
-					      :PROBES-LIST ((PROBE
-					      		   	   :NAME "diode-a-1"
-								   :CLASS "voltage-probe"
-								   :NODES-LIST ("N1"))
+(netlist
+	:name "single_phase_bridge"
+	:elements-list ((passive
+				:name "d1"
+				:class "conductance"
+				:nodes-list ("n1" "n3")
+				:model (model :name "simple-diode-1"
+				       	      :function-name "simple-diode-3"
+					      :class "function"
+					      :parameters-list (:is 1d-6 :vt 252d-3 :n 1d0)
+					      :probes-list ((probe
+					      		   	   :name "diode-a-1"
+								   :class "voltage-probe"
+								   :nodes-list ("n1"))
 
-							    (PROBE
-					      		   	   :NAME "diode-k-1"
-								   :CLASS "voltage-probe"
-								   :NODES-LIST ("N3")))
-					      :VALUE 0d0))
+							    (probe
+					      		   	   :name "diode-k-1"
+								   :class "voltage-probe"
+								   :nodes-list ("n3")))
+					      :value 0d0))
 
-			(PASSIVE
-				:NAME "D2"
-				:CLASS "conductance"
-				:NODES-LIST ("N2" "N3")
-				:MODEL (MODEL :NAME "simple-diode-2"
-				       	      :FUNCTION-NAME "simple-diode-4"
-					      :CLASS "function"
-					      :PARAMETERS-LIST (:VT 252d-3 :N 1d0 :IS 1d-6 :ORDER 1)
-					      :PROBES-LIST ((PROBE
-					      		   	   :NAME "diode-a-2"
-								   :CLASS "voltage-probe"
-								   :NODES-LIST ("N2"))
+			(passive
+				:name "d2"
+				:class "conductance"
+				:nodes-list ("n2" "n3")
+				:model (model :name "simple-diode-2"
+				       	      :function-name "simple-diode-3"
+					      :class "function"
+					      :parameters-list (:is 1d-6 :vt 252d-3 :n 1d0)
+					      :probes-list ((probe
+					      		   	   :name "diode-a-2"
+								   :class "voltage-probe"
+								   :nodes-list ("n2"))
 
-							    (PROBE
-					      		   	   :NAME "diode-k-2"
-								   :CLASS "voltage-probe"
-								   :NODES-LIST ("N3")))
-					      :VALUE 0d0))
+							    (probe
+					      		   	   :name "diode-k-2"
+								   :class "voltage-probe"
+								   :nodes-list ("n3")))
+					      :value 0d0))
 
-			(PASSIVE
-				:NAME "D3"
-				:CLASS "conductance"
-				:NODES-LIST ("N4" "N2")
-				:MODEL (MODEL :NAME "simple-diode-3"
-				       	      :FUNCTION-NAME "simple-diode-4"
-					      :CLASS "function"
-					      :PARAMETERS-LIST (:VT 252d-3 :N 1d0 :IS 1d-6 :ORDER 1)
-					      :PROBES-LIST ((PROBE
-					      		   	   :NAME "diode-a-3"
-								   :CLASS "voltage-probe"
-								   :NODES-LIST ("N4"))
+			(passive
+				:name "d3"
+				:class "conductance"
+				:nodes-list ("n4" "n2")
+				:model (model :name "simple-diode-3"
+				       	      :function-name "simple-diode-3"
+					      :class "function"
+					      :parameters-list (:is 1d-6 :vt 252d-3 :n 1d0)
+					      :probes-list ((probe
+					      		   	   :name "diode-a-3"
+								   :class "voltage-probe"
+								   :nodes-list ("n4"))
 
-							    (PROBE
-					      		   	   :NAME "diode-k-3"
-								   :CLASS "voltage-probe"
-								   :NODES-LIST ("N2")))
-					      :VALUE 0d0))
+							    (probe
+					      		   	   :name "diode-k-3"
+								   :class "voltage-probe"
+								   :nodes-list ("n2")))
+					      :value 0d0))
 
-			(PASSIVE
-				:NAME "D4"
-				:CLASS "conductance"
-				:NODES-LIST ("N4" "N1")
-				:MODEL (MODEL :NAME "simple-diode-4"
-				       	      :FUNCTION-NAME "simple-diode-4"
-					      :CLASS "function"
-					      :PARAMETERS-LIST (:VT 252d-3 :N 1d0 :IS 1d-6 :ORDER 1)
-					      :PROBES-LIST ((PROBE
-					      		   	   :NAME "diode-a-4"
-								   :CLASS "voltage-probe"
-								   :NODES-LIST ("N4"))
+			(passive
+				:name "d4"
+				:class "conductance"
+				:nodes-list ("n4" "n1")
+				:model (model :name "simple-diode-4"
+				       	      :function-name "simple-diode-3"
+					      :class "function"
+					      :parameters-list (:is 1d-6 :vt 252d-3 :n 1d0)
+					      :probes-list ((probe
+					      		   	   :name "diode-a-4"
+								   :class "voltage-probe"
+								   :nodes-list ("n4"))
 
-							    (PROBE
-					      		   	   :NAME "diode-k-4"
-								   :CLASS "voltage-probe"
-								   :NODES-LIST ("N1")))
-					      :VALUE 0d0))
+							    (probe
+					      		   	   :name "diode-k-4"
+								   :class "voltage-probe"
+								   :nodes-list ("n1")))
+					      :value 0d0))
 
 ;;
 ;; external connection nodes
 ;;
 
-			(NODE
-				:NAME "N1"
-				:CLASS "v-i")
+			(node
+				:name "n1"
+				:class "v-i")
 
-			(NODE
-				:NAME "N2"
-				:CLASS "v-i")
+			(node
+				:name "n2"
+				:class "v-i")
 
-			(NODE
-				:NAME "N3"
-				:CLASS "v-i")
+			(node
+				:name "n3"
+				:class "v-i")
 
-			(NODE
-				:NAME "N4"
-				:CLASS "v-i")))
+			(node
+				:name "n4"
+				:class "v-i")))

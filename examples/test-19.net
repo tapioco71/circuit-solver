@@ -6,7 +6,7 @@
 		                 :model (model :name "sinusoidal"
 				               :function-name "sinusoidal-function"
 				               :class "function"
-				               :parameters-list (:amplitude 240d0 :frequency 50d0)))
+				               :parameters-list (:amplitude 311d0 :frequency 50d0)))
 
                          (passive :name "R1"
                                   :class "resistance"

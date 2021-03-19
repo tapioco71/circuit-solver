@@ -4,31 +4,31 @@
 
 (NETLIST
  :NAME "test_1ph_fault"
- :ELEMENTS-LIST ((SOURCE 
+ :ELEMENTS-LIST ((SOURCE
 		  :NAME "V1"
 		  :CLASS "voltage-source"
 		  :NODES-LIST ("GND" "N1")
-		  :MODEL (MODEL 
+		  :MODEL (MODEL
 			  :NAME "sinusoidal-voltage-1"
 			  :FUNCTION-NAME "sinusoidal-function"
 			  :CLASS "function"
 			  :PARAMETERS-LIST (:AMPLITUDE 4242d0 :FREQUENCY 50d0 :PHASE 0d0)))
 
-		 (SOURCE 
+		 (SOURCE
 		  :NAME "V2"
 		  :CLASS "voltage-source"
 		  :NODES-LIST ("GND" "N2")
-		  :MODEL (MODEL 
+		  :MODEL (MODEL
 			  :NAME "sinusoidal-voltage-2"
 			  :FUNCTION-NAME "sinusoidal-function"
 			  :CLASS "function"
 			  :PARAMETERS-LIST (:AMPLITUDE 4242d0 :FREQUENCY 50d0 :PHASE -2.09439510239d0)))
 
-		 (SOURCE 
+		 (SOURCE
 		  :NAME "V3"
 		  :CLASS "voltage-source"
 		  :NODES-LIST ("GND" "N3")
-		  :MODEL (MODEL 
+		  :MODEL (MODEL
 			  :NAME "sinusoidal-voltage-3"
 			  :FUNCTION-NAME "sinusoidal-function"
 			  :CLASS "function"
@@ -64,7 +64,7 @@
 		  :CLASS "resistance"
 		  :NODES-LIST ("N4" "GND")
 		  :VALUE 7.5d0)
-		 
+
 		 (PASSIVE
 		  :NAME "R2"
 		  :CLASS "resistance"
@@ -89,11 +89,11 @@
 			  :NAME "breaker"
 			  :FUNCTION-NAME "simple-switch-2"
 			  :CLASS "function"
-			  :PARAMETERS-LIST (:ON-CONDUCTANCE 1d4 
-							    :OFF-CONDUCTANCE 1d-6 
+			  :PARAMETERS-LIST (:ON-CONDUCTANCE 1d4
+							    :OFF-CONDUCTANCE 1d-6
 							    :ON-TIME 1d-6
 							    :OFF-TIME 1d-6
-							    :UPPER-THRESHOLD 6d0 
+							    :UPPER-THRESHOLD 6d0
 							    :LOWER-THRESHOLD 4d0)
 			  :PROBES-LIST ((PROBE
 					 :NAME "P1"
@@ -125,7 +125,7 @@
 			  :FUNCTION-NAME "gas-discharge-lamp"
 			  :CLASS "differential"
 			  :PARAMETERS-LIST (:A2 67d0 :A1 0d0 :B3 0d0 :B2 6.3d5 :B1 1d3 :B0 0d0 :FRAG 0d0 :EQE 0d0)
-			  :PROBES-LIST ((PROBE 
+			  :PROBES-LIST ((PROBE
 					 :NAME "lamp-current-1"
 					 :CLASS "current-probe"
 					 :ELEMENTS-LIST ("G11")))
@@ -150,12 +150,12 @@
 		  :NAME "G21"
 		  :CLASS "conductance"
 		  :NODES-LIST ("N8" "GND")
-		  :MODEL (MODEL 
+		  :MODEL (MODEL
 			  :NAME "gas-discharge-lamp-2"
 			  :FUNCTION-NAME "gas-discharge-lamp"
 			  :CLASS "differential"
 			  :PARAMETERS-LIST (:A2 67d0 :A1 0d0 :B3 0d0 :B2 6.3d5 :B1 1d3 :B0 0d0 :FRAG 0d0 :EQE 0d0)
-			  :PROBES-LIST ((PROBE 
+			  :PROBES-LIST ((PROBE
 					 :NAME "lamp-current-2"
 					 :CLASS "current-probe"
 					 :ELEMENTS-LIST ("G21")))
@@ -180,15 +180,15 @@
 		  :NAME "G31"
 		  :CLASS "conductance"
 		  :NODES-LIST ("N9" "GND")
-		  :MODEL (MODEL 
+		  :MODEL (MODEL
 			  :NAME "gas-discharge-lamp-3"
 			  :FUNCTION-NAME "gas-discharge-lamp"
 			  :CLASS "differential"
 			  :PARAMETERS-LIST (:A2 67d0 :A1 0d0 :B3 0d0 :B2 6.3d5 :B1 1d3 :B0 0d0 :FRAG 0d0 :EQE 0d0)
-			  :PROBES-LIST ((PROBE 
+			  :PROBES-LIST ((PROBE
 					 :NAME "lamp-current-3"
 					 :CLASS "current-probe"
-					 :ELEMENTS-LIST ("G31")))	
+					 :ELEMENTS-LIST ("G31")))
 			  :VALUE 4.7d-3))
 
 		 (NODE

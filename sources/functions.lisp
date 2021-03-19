@@ -79,6 +79,27 @@
                         phase))))
           0d0))))
 
+(defun harmonic-function (&rest rest &key parameters state)
+  "harmonic-function(parameters, state) where parameters = list of (amplitude, frequency, phase, time start)."
+  (declare (ignorable rest parameters state))
+  (destructuring-bind (&key (harmonics '(:amplitude 1d0 :frequency 50.0d0 :phase 0d0)) (offset 0d0) (time-start 0d0))
+      parameters
+    (declare (ignorable harmonics offset time-start))
+    (if (>= *time* time-start)
+        (loop
+          with value = offset
+          finally (return value)
+          for harmonic in harmonics
+          do
+             (destructuring-bind (&key (amplitude 1d0) (frequency 50d0) (phase 0d0))
+                 harmonic
+               (declare (ignorable amplitude frequency phase))
+               (setq value (+ value
+                              (* amplitude
+                                 (sin (+ (* 2d0 pi frequency *time*)
+                                         phase)))))))
+        0d0)))
+
 ;;
 ;; ramp function y = m * t, t >= t0
 ;;
@@ -306,6 +327,34 @@
                     :x0 (abs breakdown-voltage)
                     :y0 0d0)
            (abs minimum-conductance))))))
+
+(defun zener-diode-2 (&rest rest &key parameters state)
+  "A zener diode modelled with sigmoids."
+  (declare (ignorable rest parameters state))
+  (destructuring-bind (&key
+                         (maximum-forward-conductance 1d0)
+                         (maximum-backward-conductance 1d0)
+                         (minimum-conductance 0d0)
+                         (forward-voltage 0.7d0)
+                         (breakdown-voltage 5.6d0))
+      parameters
+    (declare (ignorable maximum-forward-conductance
+                        maximum-backward-conductance
+                        minimum-conductance
+                        forward-voltage
+                        breakdown-voltage))
+    (let ((v2 (pop state))
+	  (v1 (pop state))
+          (vak nil))
+      (when (and v1 v2)
+        (setq vak (- v1 v2))
+        (if (and (> vak 0d0)
+                 (> (abs vak) forward-voltage))
+            maximum-forward-conductance
+            (if (and (< vak 0d0)
+                     (> (abs vak) maximum-backward-conductance))
+                maximum-backward-conductance
+                minimum-conductance))))))
 
 (defun simple-switch-1 (&rest rest &key parameters state)
   "Simple switch."

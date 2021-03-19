@@ -1,0 +1,64 @@
+;;
+;; c type filter element.
+;;
+
+(netlist
+ :name "c_type_filter__01"
+ :elements-list ((passive
+		  :name "C1"
+		  :class "capacitance"
+		  :nodes-list ("a" "n2")
+		  :value 28.29d-6)
+
+		 (passive
+		  :name "C2"
+		  :class "capacitance"
+		  :nodes-list ("n2" "n3")
+		  :value 226.4d-6)
+
+		 (passive
+		  :name "R1"
+		  :class "resistance"
+		  :nodes-list ("n3" "n4")
+		  :value 140d-3)
+
+		 (passive
+		  :name "L1"
+		  :class "inductance"
+		  :nodes-list ("n4" "b")
+		  :value 44.76d-3)
+
+		 (passive
+		  :name "RT"
+		  :class "resistance"
+		  :nodes-list ("n2" "b")
+		  :value 2688d0)
+
+
+		 ;;
+		 ;; external connection nodes
+		 ;;
+
+		 (node
+		  :name "a"
+		  :class "v-i")
+
+		 (node
+		  :name "b"
+		  :class "v-i")
+
+		 ;;
+		 ;; internal nodes
+		 ;;
+
+		 (node
+		  :name "n2"
+		  :class "v-i")
+
+		 (node
+		  :name "n3"
+		  :class "v-i")
+
+		 (node
+		  :name "n4"
+		  :class "v-i")))

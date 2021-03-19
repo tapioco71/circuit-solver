@@ -1,0 +1,178 @@
+;;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; indent-tabs-mode: nil; coding: utf-8; show-trailing-whitespace: t -*-
+
+(netlist :name "ctype-filter-002"
+         :elements-list ((source :name "V1R"
+		                 :class "voltage-source"
+		                 :nodes-list ("N1R" "N")
+		                 :model (model :name "harmonic-1"
+				               :function-name "harmonic-function"
+				               :class "function"
+				               :parameters-list (:harmonics ((:amplitude 8660d0 :frequency 50d0)
+                                                                             (:amplitude 80d0 :frequency 150d0 )
+                                                                             (:amplitude 25d0 :frequency 250d0)
+                                                                             (:amplitude 55d0 :frequency 350d0)
+                                                                             (:amplitude 82d0 :frequency 450d0)
+                                                                             (:amplitude 17d0 :frequency 550d0)
+                                                                             (:amplitude 18d0 :frequency 650d0)
+                                                                             (:amplitude 10d0 :frequency 750d0)))))
+
+                         (source :name "V1S"
+		                 :class "voltage-source"
+		                 :nodes-list ("N1S" "N")
+		                 :model (model :name "harmonic-2"
+				               :function-name "harmonic-function"
+				               :class "function"
+				               :parameters-list (:harmonics ((:amplitude 8660d0 :frequency 50d0 :phase 2.094395d0)
+                                                                             (:amplitude 80d0 :frequency 150d0 :phase 2.094395d0)
+                                                                             (:amplitude 25d0 :frequency 250d0 :phase 2.094395d0)
+                                                                             (:amplitude 55d0 :frequency 350d0 :phase 2.094395d0)
+                                                                             (:amplitude 82d0 :frequency 450d0 :phase 2.094395d0)
+                                                                             (:amplitude 17d0 :frequency 550d0 :phase 2.094395d0)
+                                                                             (:amplitude 18d0 :frequency 650d0 :phase 2.094395d0)
+                                                                             (:amplitude 10d0 :frequency 750d0 :phase 2.094395d0)))))
+
+                         (source :name "V1T"
+		                 :class "voltage-source"
+		                 :nodes-list ("N1T" "N")
+		                 :model (model :name "harmonic-3"
+				               :function-name "harmonic-function"
+				               :class "function"
+				               :parameters-list (:harmonics ((:amplitude 8660d0 :frequency 50d0 :phase 4.188790d0)
+                                                                             (:amplitude 80d0 :frequency 150d0 :phase 4.188790d0)
+                                                                             (:amplitude 25d0 :frequency 250d0 :phase 4.188790d0)
+                                                                             (:amplitude 55d0 :frequency 350d0 :phase 4.188790d0)
+                                                                             (:amplitude 82d0 :frequency 450d0 :phase 4.188790d0)
+                                                                             (:amplitude 17d0 :frequency 550d0 :phase 4.188790d0)
+                                                                             (:amplitude 18d0 :frequency 650d0 :phase 4.188790d0)
+                                                                             (:amplitude 10d0 :frequency 750d0 :phase 4.188790d0)))))
+
+                         (passive :name "RR"
+                                  :class "resistance"
+                                  :nodes-list ("N1R" "N2R")
+                                  :value 1d-3)
+
+                         (passive :name "LR"
+                                  :class "inductance"
+                                  :nodes-list ("N2R" "N3R")
+                                  :value 1d-6)
+
+                         (passive :name "RS"
+                                  :class "resistance"
+                                  :nodes-list ("N1S" "N2S")
+                                  :value 1d-3)
+
+                         (passive :name "LS"
+                                  :class "inductance"
+                                  :nodes-list ("N2S" "N3S")
+                                  :value 1d-6)
+
+                         (passive :name "RT"
+                                  :class "resistance"
+                                  :nodes-list ("N1T" "N2T")
+                                  :value 1d-3)
+
+                         (passive :name "LT"
+                                  :class "inductance"
+                                  :nodes-list ("N2T" "N3T")
+                                  :value 1d-6)
+
+                         (passive :name "Rload1R"
+                                  :class "resistance"
+                                  :nodes-list ("N3R" "N4R")
+                                  :value 30d0)
+
+                         (passive :name "Rload1S"
+                                  :class "resistance"
+                                  :nodes-list ("N3S" "N4S")
+                                  :value 30d0)
+
+                         (passive :name "Rload1T"
+                                  :class "resistance"
+                                  :nodes-list ("N3T" "N4T")
+                                  :value 30d0)
+
+                         (passive :name "Lload1R"
+                                  :class "inductance"
+                                  :nodes-list ("N4R" "N")
+                                  :value 1d-6)
+
+                         (passive :name "Lload1S"
+                                  :class "inductance"
+                                  :nodes-list ("N4S" "N")
+                                  :value 1d-6)
+
+                         (passive :name "Lload1T"
+                                  :class "inductance"
+                                  :nodes-list ("N4T" "N")
+                                  :value 1d-6)
+
+                         (subcircuit :name "F1R"
+		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/ctype-filter-3rd.sub"
+		                     :nodes-list ("N" "N3R"))
+
+                         (subcircuit :name "F1S"
+		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/ctype-filter-3rd.sub"
+		                     :nodes-list ("N" "N3S"))
+
+                         (subcircuit :name "F1T"
+		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/ctype-filter-3rd.sub"
+		                     :nodes-list ("N" "N3T"))
+
+                         (subcircuit :name "DB1"
+		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/three-phases-full-bridge-001.sub"
+		                     :nodes-list ("N3R" "N3S" "N3T" "GND" "N1+"))
+
+                         (passive :name "Rload2"
+                                  :class "resistance"
+                                  :nodes-list ("N1+" "GND")
+                                  :value 40d0)
+
+                         (passive :name "Cload2"
+                                  :class "capacitance"
+                                  :nodes-list ("N1+" "GND")
+                                  :value 560d-5)
+
+		         (node :name "GND"
+		               :class "reference")
+
+                         (node :name "N"
+		               :class "v-i")
+
+                         (node :name "N1R"
+		               :class "v-i")
+                         (node :name "N1S"
+		               :class "v-i")
+                         (node :name "N1T"
+		               :class "v-i")
+
+		         (node :name "N2R"
+		               :class "v-i")
+		         (node :name "N2S"
+		               :class "v-i")
+		         (node :name "N2T"
+		               :class "v-i")
+
+		         (node :name "N3R"
+		               :class "v-i")
+		         (node :name "N3S"
+		               :class "v-i")
+		         (node :name "N3T"
+		               :class "v-i")
+
+                         (node :name "N4R"
+		               :class "v-i")
+                         (node :name "N4S"
+		               :class "v-i")
+                         (node :name "N4T"
+		               :class "v-i")
+
+                         (node :name "N1+"
+		               :class "v-i")
+
+                         (probe :name "currents"
+                                :class "current-probe"
+                                :elements-list ("V1R" "RR" "LR" "Rload1R" "Rload2"))
+
+		         (probe :name "voltages"
+		                :class "voltage-probe"
+		                :nodes-list ("N" "N1R" "N1S" "N1T" "N3R" "N3S" "N3T" "N1+"))))
