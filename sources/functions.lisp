@@ -87,17 +87,17 @@
     (declare (ignorable harmonics offset time-start))
     (if (>= *time* time-start)
         (loop
-          with value = offset
+          with value = 0.0
+          initially (setq value offset)
           finally (return value)
           for harmonic in harmonics
           do
              (destructuring-bind (&key (amplitude 1d0) (frequency 50d0) (phase 0d0))
                  harmonic
                (declare (ignorable amplitude frequency phase))
-               (setq value (+ value
-                              (* amplitude
-                                 (sin (+ (* 2d0 pi frequency *time*)
-                                         phase)))))))
+               (incf value (* amplitude
+                              (sin (+ (* 2d0 pi frequency (- *time* time-start))
+                                      phase))))))
         0d0)))
 
 ;;

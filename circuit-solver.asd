@@ -44,4 +44,5 @@
                (:file "sources/initial-condition")
                (:file "sources/problem")
                (:file "sources/spline")
+               (:file "sources/utilities")
                (:file "sources/circuit-solver")))

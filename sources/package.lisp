@@ -24,5 +24,5 @@
 (defpackage #:circuit-solver
   (:nicknames #:cs)
   (:use #:cl #:common-lisp)
-  (:export #:solve-problem)
-  (:export #:version))
+  (:export #:solve-problem
+           #:version))

@@ -8,13 +8,13 @@
 				               :function-name "harmonic-function"
 				               :class "function"
 				               :parameters-list (:harmonics ((:amplitude 8660d0 :frequency 50d0)
-                                                                             (:amplitude 80d0 :frequency 150d0 )
-                                                                             (:amplitude 25d0 :frequency 250d0)
+                                                                             (:amplitude 80d0 :frequency 150d0)
+                                                                             (:amplitude 250d0 :frequency 250d0)
                                                                              (:amplitude 55d0 :frequency 350d0)
                                                                              (:amplitude 82d0 :frequency 450d0)
                                                                              (:amplitude 17d0 :frequency 550d0)
                                                                              (:amplitude 18d0 :frequency 650d0)
-                                                                             (:amplitude 10d0 :frequency 750d0)))))
+                                                                             (:amplitude 1.0d0 :frequency 750d0)))))
 
                          (source :name "V1S"
 		                 :class "voltage-source"
@@ -24,7 +24,7 @@
 				               :class "function"
 				               :parameters-list (:harmonics ((:amplitude 8660d0 :frequency 50d0 :phase 2.094395d0)
                                                                              (:amplitude 80d0 :frequency 150d0 :phase 2.094395d0)
-                                                                             (:amplitude 25d0 :frequency 250d0 :phase 2.094395d0)
+                                                                             (:amplitude 250d0 :frequency 250d0 :phase 2.094395d0)
                                                                              (:amplitude 55d0 :frequency 350d0 :phase 2.094395d0)
                                                                              (:amplitude 82d0 :frequency 450d0 :phase 2.094395d0)
                                                                              (:amplitude 17d0 :frequency 550d0 :phase 2.094395d0)
@@ -39,12 +39,12 @@
 				               :class "function"
 				               :parameters-list (:harmonics ((:amplitude 8660d0 :frequency 50d0 :phase 4.188790d0)
                                                                              (:amplitude 80d0 :frequency 150d0 :phase 4.188790d0)
-                                                                             (:amplitude 25d0 :frequency 250d0 :phase 4.188790d0)
+                                                                             (:amplitude 250d0 :frequency 250d0 :phase 4.188790d0)
                                                                              (:amplitude 55d0 :frequency 350d0 :phase 4.188790d0)
                                                                              (:amplitude 82d0 :frequency 450d0 :phase 4.188790d0)
                                                                              (:amplitude 17d0 :frequency 550d0 :phase 4.188790d0)
                                                                              (:amplitude 18d0 :frequency 650d0 :phase 4.188790d0)
-                                                                             (:amplitude 10d0 :frequency 750d0 :phase 4.188790d0)))))
+                                                                             (:amplitude 1.0d0 :frequency 750d0 :phase 4.188790d0)))))
 
                          (passive :name "RR"
                                   :class "resistance"

@@ -2282,8 +2282,15 @@
                                                                                                (debug-mode nil)
                                                                                                (progress-bar nil)
                                                                                                (parallel nil)
+                                                                                               (epsilon 1d-6 epsilon-p)
+                                                                                               (maximum-refinement-iteration-count 1000 maximum-refinement-iteration-count-p)
                                                                                                (output *standard-output*))
-  (declare (ignorable parameters verbose debug-mode progress-bar parallel output))
+  (declare (ignorable parameters verbose debug-mode progress-bar parallel epsilon maximum-refinement-iteration-count output))
+  (when epsilon-p
+    (check-type epsilon double-float)
+    (assert (> epsilon 0d0)))
+  (when maximum-refinement-iteration-count-p
+    (check-type maximum-refinement-iteration-count (integer 1)))
   (handler-case
       (let ((problem (make-problem :netlist-file-pathname netlist-file-pathname))
             (thread-functions nil)
@@ -2587,15 +2594,22 @@
                                        "~&Permutation sign: ~a~%"
                                        sign)
                                (finish-output output))
-                             (let ((initial-solution (gsl:lu-solve (grid:copy-to decomposition-matrix 'grid:foreign-array)
+                             (let ((residuals (grid:make-foreign-array 'double-float :dimensions (grid:dimensions y-new-vector) :initial-element 0d0))
+                                   (initial-solution (gsl:lu-solve (grid:copy-to decomposition-matrix 'grid:foreign-array)
                                                                    (grid:copy-to beta-matrix 'grid:foreign-array)
                                                                    permutation-matrix
                                                                    t)))
-			       (setq y-new-vector (gsll:lu-refine (grid:copy-to alpha-matrix 'grid:foreign-array)
-                                                                  (grid:copy-to decomposition-matrix 'grid:foreign-array)
-                                                                  permutation-matrix
-                                                                  (grid:copy-to beta-matrix 'grid:foreign-array)
-                                                                  initial-solution))
+                               (loop
+                                 for j from 0 below maximum-refinement-iteration-count
+                                 do
+			            (setq y-new-vector (gsll:lu-refine (grid:copy-to alpha-matrix 'grid:foreign-array)
+                                                                       (grid:copy-to decomposition-matrix 'grid:foreign-array)
+                                                                       permutation-matrix
+                                                                       (grid:copy-to beta-matrix 'grid:foreign-array)
+                                                                       initial-solution
+                                                                       residuals))
+                                    (when (< (grid:norm residuals) epsilon)
+                                      (return)))
 			       (when debug-mode
 			         (format output
                                          "~&Y(n+1) =~%~a~%"
