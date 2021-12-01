@@ -36,21 +36,25 @@
   ((file-pathname
     :initarg :file-pathname
     :initform #p""
+    :accessor file-pathname
     :accessor netlist-class-file-pathname
     :accessor element-class-file-pathname)
    (author
     :initarg :author
     :initform ""
+    :accessor author
     :accessor netlist-class-author
     :accessor element-class-author)
    (date
     :initarg :date
     :initform ""
+    :accessor date
     :accessor netlist-class-date
     :accessor element-class-date)
    (elements-list
     :initarg :elements-list
     :initform nil
+    :accessor elements-list
     :accessor netlist-class-elements-list
     :accessor element-class-elements-list)))
 

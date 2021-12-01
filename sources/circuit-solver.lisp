@@ -82,7 +82,8 @@
 (defun create-object-from-sexp (class sexp)
   (apply (function make-instance)
 	 (concatenate 'list (list class) (mapcar (lambda (subsexp)
-						   (objectify subsexp)) (rest sexp)))))
+						   (objectify subsexp))
+                                                 (rest sexp)))))
 
 (defun objectify (sexp)
   (handler-case
@@ -583,9 +584,9 @@
 ;;; write a netlist in a file
 ;;;
 
-(defun write-netlist (file-name netlist)
+(defun write-netlist (file-pathname netlist)
   "Write a complete netlist in a file."
-  (with-open-file (out file-name :direction :output :if-exists :supersede)
+  (with-open-file (out file-pathname :direction :output :if-exists :supersede)
     (with-standard-io-syntax
       (print (mapcar #'sexpify netlist-class)
 	     out))))

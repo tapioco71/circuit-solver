@@ -34,24 +34,28 @@
     :documentation "coupling CLASS: motional or transformational."
     :initarg :class
     :initform "undefined"
+    :accessor class
     :accessor coupling-class-class
     :accessor element-class-class)
    (elements-list
     :documentation "list of the inductances taking part in the coupling."
     :initarg :elements-list
     :initform ()
+    :accessor elements-list
     :accessor coupling-class-elements-list
     :accessor element-class-elements-list)
    (model
     :documentation "model definition for k parameter."
     :initarg :model
     :initform nil
+    :accessor model
     :accessor coupling-class-model
     :accessor element-class-model)
    (value
     :documentation "k parameter constant value."
     :initarg :value
     :initform 0d0
+    :accessor value
     :accessor coupling-class-value
     :accessor element-class-value)))
 

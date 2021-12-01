@@ -31,26 +31,28 @@
 
 (defclass subcircuit-class (element-class)
   ((file-pathname
-    :documentation "FILE-NAME for subcircuit definition."
+    :documentation "FILE-PATHNAME for subcircuit definition."
     :initarg :file-pathname
     :initform ""
+    :accessor file-pathname
     :accessor subcircuit-class-file-pathname
     :accessor element-class-file-pathname)
    (nodes-list
     :documentation "list of connection nodes."
     :initarg :nodes-list
     :initform nil
+    :accessor nodes-list
     :accessor subcircuit-class-nodes-list
     :accessor element-class-nodes-list)))
 
 ;; Methods.
 
 ;;
-;; create a sexp for subcircuit element: :NAME name [ :ID id ] :FILE-NAME file-name :NODES-LIST nodes-list
+;; create a sexp for subcircuit element: :NAME name [ :ID id ] :FILE-PATHNAME file-name :NODES-LIST nodes-list
 ;;
 
 (defmethod sexpify ((object subcircuit-class))
-  "Create a sexp for subcircuit element: :NAME name [ :ID id ] :FILE-NAME file-name :NODES-LIST nodes-list."
+  "Create a sexp for subcircuit element: :NAME name [ :ID id ] :FILE-PATHNAME file-name :NODES-LIST nodes-list."
   (let ((return-value (call-next-method object)))
     (when (pathnamep (subcircuit-class-file-pathname object))
       (setq return-value (append return-value  (list :file-pathname (subcircuit-class-file-pathname object)))))

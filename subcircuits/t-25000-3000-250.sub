@@ -11,27 +11,22 @@
 		                  :class "conductance"
 		                  :nodes-list ("N1" "N0")
 		                  :value 3.472d-6)
-
 		         (passive :name "R1cc"
 		                  :class "resistance"
 		                  :nodes-list ("N1" "N2")
 		                  :value 3.744d0)
-
 		         (passive :name "L1cc"
 		                  :class "inductance"
 		                  :nodes-list ("N2" "N3")
 		                  :value 26d-3)
-
 		         (passive :name "R2cc"
 		                  :class "resistance"
 		                  :nodes-list ("N4" "N5")
 		                  :value 26d-3)
-
 		         (passive :name "L2cc"
 		                  :class "inductance"
 		                  :nodes-list ("N5" "N6")
 		                  :value 180d-6)
-
 		         (coupling :name "M"
 		                   :class "transformational"
 		                   :value #(1d0)
@@ -39,23 +34,19 @@
 				                            :class "inductance"
 				                            :nodes-list ("N0" "N3")
 				                            :value 11591d-3)
-
 				                   (passive :name "L22"
 				                            :class "inductance"
 				                            :nodes-list ("N7" "N4")
 				                            :value 80.5d-3)))
 
-		         ;; external connection nodes
+		         ;; External connection nodes
 
 		         (node :name "N0"
 		               :class "v-i")
-
 		         (node :name "N1"
 		               :class "v-i")
-
 		         (node :name "N6"
 		               :class "v-i")
-
 		         (node :name "N7"
 		               :class "v-i")
 
@@ -63,12 +54,9 @@
 
 		         (node :name "N2"
 		               :class "v-i")
-
 		         (node :name "N3"
 		               :class "v-i")
-
 		         (node :name "N4"
 		               :class "v-i")
-
 		         (node :name "N5"
 		               :class "v-i")))

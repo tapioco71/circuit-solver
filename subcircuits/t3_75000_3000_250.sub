@@ -5,71 +5,42 @@
 ;; V2n = 250 V 
 ;;
 
-(NETLIST
- :NAME "t3_75000_3000_250"
- :ELEMENTS-LIST ((SUBCIRCUIT
-		  :NAME "T1"
-		  :FILE-NAME #p"/home/angel/Development/lisp/circuit-solver/subcircuits/t_25000_3000_250.sub"
-		  :NODES-LIST ("A1" "A2" "a1" "a2")) 
+(NETLIST :NAME "t3_75000_3000_250"
+	 :ELEMENTS-LIST ((SUBCIRCUIT :NAME "T1"
+				     :FILE-PATHNAME #p"/home/angel/Development/lisp/circuit-solver/subcircuits/t-25000-3000-250.sub"
+				     :NODES-LIST ("A1" "A2" "a1" "a2")) 
+			 (SUBCIRCUIT :NAME "T2"
+				     :FILE-PATHNAME "/home/angel/Development/lisp/circuit-solver/subcircuits/t-25000-3000-250.sub"
+				     :NODES-LIST ("B1" "B2" "b1" "b2")) 
+			 (SUBCIRCUIT :NAME "T3"
+				     :FILE-PATHNAME "/home/angel/Development/lisp/circuit-solver/subcircuits/t-25000-3000-250.sub"
+				     :NODES-LIST ("C1" "C2" "c1" "c2")) 
 
-		 (SUBCIRCUIT
-		  :NAME "T2"
-		  :FILE-NAME "/home/angel/Development/lisp/circuit-solver/subcircuits/t_25000_3000_250.sub"
-		  :NODES-LIST ("B1" "B2" "b1" "b2")) 
+			 ;;
+			 ;; Internal nodes
+			 ;;
 
-		 (SUBCIRCUIT
-		  :NAME "T3"
-		  :FILE-NAME "/home/angel/Development/lisp/circuit-solver/subcircuits/t_25000_3000_250.sub"
-		  :NODES-LIST ("C1" "C2" "c1" "c2")) 
-
-		 ;;
-		 ;; internal nodes
-		 ;;
-
-		 (NODE
-		  :NAME "A1"
-		  :CLASS "v-i")
-
-		 (NODE
-		  :NAME "A2"
-		  :CLASS "v-i")
-
-		 (NODE
-		  :NAME "B1"
-		  :CLASS "v-i")
-
-		 (NODE
-		  :NAME "B2"
-		  :CLASS "v-i")
-
-		 (NODE
-		  :NAME "C1"
-		  :CLASS "v-i")
-
-		 (NODE
-		  :NAME "C2"
-		  :CLASS "v-i")
-
-		 (NODE
-		  :NAME "a1"
-		  :CLASS "v-i")
-
-		 (NODE
-		  :NAME "a2"
-		  :CLASS "v-i")
-
-		 (NODE
-		  :NAME "b1"
-		  :CLASS "v-i")
-
-		 (NODE
-		  :NAME "b2"
-		  :CLASS "v-i")
-
-		 (NODE
-		  :NAME "c1"
-		  :CLASS "v-i")
-
-		 (NODE
-		  :NAME "c2"
-		  :CLASS "v-i")))
+			 (NODE :NAME "A1"
+			       :CLASS "v-i")
+			 (NODE :NAME "A2"
+			       :CLASS "v-i")
+			 (NODE :NAME "B1"
+			       :CLASS "v-i")
+			 (NODE :NAME "B2"
+			       :CLASS "v-i")
+			 (NODE :NAME "C1"
+			       :CLASS "v-i")
+			 (NODE :NAME "C2"
+			       :CLASS "v-i")
+			 (NODE :NAME "a1"
+			       :CLASS "v-i")
+			 (NODE :NAME "a2"
+			       :CLASS "v-i")
+			 (NODE :NAME "b1"
+			       :CLASS "v-i")
+			 (NODE :NAME "b2"
+			       :CLASS "v-i")
+			 (NODE :NAME "c1"
+			       :CLASS "v-i")
+			 (NODE :NAME "c2"
+			       :CLASS "v-i")))
