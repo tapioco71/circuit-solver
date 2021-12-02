@@ -14,7 +14,7 @@
 		                 :model (model :name "square-voltage-1"
 			                       :function-name "bistable-function-1"
 			                       :class "function"
-			                       :parameters-list (:polarity nil :t0 200d-3 :low-value 0d0 :high-value 5d0)))
+			                       :parameters-list (:polarity nil :time-start 200d-3 :low-value 0d0 :high-value 5d0)))
 
 		         (passive :name "Rb"
 		                  :class "resistance"

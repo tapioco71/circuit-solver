@@ -34,7 +34,6 @@
     :documentation "coupling CLASS: motional or transformational."
     :initarg :class
     :initform "undefined"
-    :accessor class
     :accessor coupling-class-class
     :accessor element-class-class)
    (elements-list
