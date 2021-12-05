@@ -2111,7 +2111,8 @@
                  (finish-output output-file-stream))))))
 	(format output-file-stream
                 "~%")
-        (finish-output output-file-stream))
+        (finish-output output-file-stream)
+        t)
     (file-writing-error (condition)
       (format *error-output*
               "~%Could not write file ~a~%"
@@ -2619,11 +2620,12 @@
                                          "~&Y(n) =~%~a~%"
                                          y-old-vector)
                                  (finish-output output))
-			       (select-probes netlist
-                                              y-new-vector
-                                              output-file-stream
-                                              :debug-mode debug-mode
-                                              :output output)
+                               (unless (select-probes netlist
+                                                      y-new-vector
+                                                      output-file-stream
+                                                      :debug-mode debug-mode
+                                                      :output output)
+                                 (return-from solve-problem))
 			       (setq y-old-vector y-new-vector)))
 		           (when (and (not debug-mode)
 				      progress-bar)

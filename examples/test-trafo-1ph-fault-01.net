@@ -39,13 +39,13 @@
 
 		         (subcircuit :name "T1"
 		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/t-25000-3000-250.sub"
-		                     :nodes-list ("N4a" "GND" "N5a" "N"))
+		                     :nodes-list ("N4a" "N4b" "N5a" "N"))
 		         (subcircuit :name "T2"
 		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/t-25000-3000-250.sub"
-		                     :nodes-list ("N4b" "GND" "N5b" "N"))
+		                     :nodes-list ("N4b" "N4c" "N5b" "N"))
 		         (subcircuit :name "T3"
 		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/t-25000-3000-250.sub"
-		                     :nodes-list ("N4c" "GND" "N5c" "N"))
+		                     :nodes-list ("N4c" "N4a" "N5c" "N"))
 
 		         (passive :name "R1a"
 		                  :class "resistance"
@@ -154,37 +154,37 @@
 
 		         (passive :name "Rla"
 		                  :class "resistance"
-		                  :nodes-list ("N5a" "N7a")
+		                  :nodes-list ("N5a" "N6a")
 		                  :value 7d0)
 
 		         (passive :name "Lla"
 		                  :class "inductance"
-		                  :nodes-list ("N7a" "N8a")
+		                  :nodes-list ("N6a" "N7a")
 		                  :value 350d-3)
 
 		         (passive :name "Rlb"
 		                  :class "resistance"
-		                  :nodes-list ("N5b" "N7b")
+		                  :nodes-list ("N5b" "N6b")
 		                  :value 7d0)
 
 		         (passive :name "Llb"
 		                  :class "inductance"
-		                  :nodes-list ("N7b" "N8b")
+		                  :nodes-list ("N6b" "N7b")
 		                  :value 350d-3)
 
 		         (passive :name "Rlc"
 		                  :class "resistance"
-		                  :nodes-list ("N5c" "N7c")
+		                  :nodes-list ("N5c" "N6c")
 		                  :value 7d0)
 
 		         (passive :name "Llc"
 		                  :class "inductance"
-		                  :nodes-list ("N7c" "N8c")
+		                  :nodes-list ("N6c" "N7c")
 		                  :value 350d-3)
 
 		         (passive :name "G1a"
 		                  :class "conductance"
-		                  :nodes-list ("N8a" "N")
+		                  :nodes-list ("N7a" "N")
 		                  :model (model :name "gas-discharge-lamp-1"
 			                        :function-name "gas-discharge-lamp"
 			                        :class "differential"
@@ -196,7 +196,7 @@
 
                          (passive :name "G1b"
 		                  :class "conductance"
-		                  :nodes-list ("N8b" "N")
+		                  :nodes-list ("N7b" "N")
 		                  :model (model :name "gas-discharge-lamp-2"
 			                        :function-name "gas-discharge-lamp"
 			                        :class "differential"
@@ -208,7 +208,7 @@
 
                          (passive :name "G1c"
 		                  :class "conductance"
-		                  :nodes-list ("N8c" "N")
+		                  :nodes-list ("N7c" "N")
 		                  :model (model :name "gas-discharge-lamp-3"
 			                        :function-name "gas-discharge-lamp"
 			                        :class "differential"
@@ -269,6 +269,15 @@
 		         (node :name "N"
 		               :class "v-i")
 
+		         (node :name "N6a"
+		               :class "v-i")
+
+		         (node :name "N6b"
+		               :class "v-i")
+
+		         (node :name "N6c"
+		               :class "v-i")
+
 		         (node :name "N7a"
 		               :class "v-i")
 
@@ -276,15 +285,6 @@
 		               :class "v-i")
 
 		         (node :name "N7c"
-		               :class "v-i")
-
-		         (node :name "N8a"
-		               :class "v-i")
-
-		         (node :name "N8b"
-		               :class "v-i")
-
-		         (node :name "N8c"
 		               :class "v-i")
 
 		         (node :name "N10"
@@ -296,4 +296,4 @@
 
 		         (probe :name "voltage"
 		                :class "voltage-probe"
-		                :nodes-list ("N1a" "N1b" "N1c" "N2a" "N2b" "N2c" "N3a" "N3b" "N3c" "N4a" "N4b" "N4c" "N5a" "N5b" "N5c" "N" "N7a" "N7b" "N7c" "N8a" "N8b" "N8c" "N10"))))
+		                :nodes-list ("N1a" "N1b" "N1c" "N2a" "N2b" "N2c" "N3a" "N3b" "N3c" "N4a" "N4b" "N4c" "N5a" "N5b" "N5c" "N" "N6a" "N6b" "N6c" "N7a" "N7b" "N7c" "N10"))))
