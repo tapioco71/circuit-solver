@@ -4,7 +4,7 @@
 
 (NETLIST
  :NAME "nRF51822_pressure_sensor_noload"
- :ELEMENTS-LIST ((SOURCE 
+ :ELEMENTS-LIST ((SOURCE
 		  :NAME "V1"
 		  :CLASS "voltage-source"
 		  :NODES-LIST ("N1" "GND")
