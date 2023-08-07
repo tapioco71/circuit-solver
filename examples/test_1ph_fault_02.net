@@ -1,14 +1,15 @@
+;;;; -*- mode: common-lisp; indent-tabs-mode: nil; coding: utf-8; show-trailing-whitespace: t -*-
 ;;
 ;; pay attention to three-phase machine abduction phenomena
 ;;
 
 (NETLIST
  :NAME "test_1ph_fault_02"
- :ELEMENTS-LIST ((SOURCE 
+ :ELEMENTS-LIST ((SOURCE
 		  :NAME "V1"
 		  :CLASS "voltage-source"
 		  :NODES-LIST ("GND" "N1")
-		  :MODEL (MODEL 
+		  :MODEL (MODEL
 			  :NAME "sinusoidal-voltage-1"
 			  :FUNCTION-NAME "sinusoidal-function"
 			  :CLASS "function"
@@ -69,7 +70,7 @@
 			  :FUNCTION-NAME "gas-discharge-lamp"
 			  :CLASS "differential"
 			  :PARAMETERS-LIST (:A2 1.12d0 :A1 0d0 :B3 0d0 :B2 1074d0 :B1 3778d0 :B0 0d0 :FRAG 1d0 :EQE 0d0)
-			  :PROBES-LIST ((PROBE 
+			  :PROBES-LIST ((PROBE
 					 :NAME "lamp-current-1"
 					 :CLASS "current-probe"
 					 :ELEMENTS-LIST ("G1")))

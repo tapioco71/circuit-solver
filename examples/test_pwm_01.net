@@ -1,6 +1,7 @@
+;;;; -*- mode: common-lisp; indent-tabs-mode: nil; coding: utf-8; show-trailing-whitespace: t -*-
 (NETLIST
 	:NAME "pwm_test"
-	:ELEMENTS-LIST ((SOURCE 
+	:ELEMENTS-LIST ((SOURCE
 				:NAME "V1"
 				:CLASS "voltage-source"
 				:NODES-LIST ("GND" "N1")
@@ -8,7 +9,7 @@
 					:FUNCTION-NAME "square-function"
 					:CLASS "function"
 					:PARAMETERS-LIST (:LOW-VALUE 0d0 :HIGH-VALUE 10d0 :PERIOD 20d-3 :T0 0d0 :DUTY-CYCLE 0.5d0 :RISING-TIME 0d0 :FALLING-TIME 0d0 :POLARITY t)))
-					      		  
+
 			(PASSIVE
 				:NAME "R1"
 				:CLASS "resistance"
@@ -21,7 +22,7 @@
 				:NODES-LIST ("N2" "GND")
 				:VALUE 2.2d-9)
 
-							
+
 			(NODE
 				:NAME "GND"
 				:CLASS "reference")
@@ -33,7 +34,7 @@
 			(NODE
 				:NAME "N2"
 				:CLASS "v-i")
-			
+
 			(PROBE
 			       :NAME "resistance-current"
 			       :CLASS "current-probe"

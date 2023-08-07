@@ -1,3 +1,4 @@
+;;;; -*- mode: common-lisp; indent-tabs-mode: nil; coding: utf-8; show-trailing-whitespace: t -*-
 (NETLIST
 	:NAME "switch_capacitance_01"
 	:ELEMENTS-LIST ((SOURCE
@@ -16,8 +17,8 @@
 				:NAME "C1"
 				:CLASS "capacitance"
 				:NODES-LIST ("N2" "GND")
-				:VALUE 100d-6)					      		  
-							
+				:VALUE 100d-6)
+
 			(NODE
 				:NAME "GND"
 				:CLASS "reference")

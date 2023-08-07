@@ -1,3 +1,4 @@
+;;;; -*- mode: common-lisp; indent-tabs-mode: nil; coding: utf-8; show-trailing-whitespace: t -*-
 (NETLIST
 	:NAME "test_inductance_01"
 	:ELEMENTS-LIST ((SOURCE
@@ -16,8 +17,8 @@
 				:NAME "L1"
 				:CLASS "inductance"
 				:NODES-LIST ("N2" "GND")
-				:VALUE 220d-3)					      		  
-							
+				:VALUE 220d-3)
+
 			(NODE
 				:NAME "GND"
 				:CLASS "reference")
