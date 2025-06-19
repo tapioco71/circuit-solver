@@ -1,0 +1,100 @@
+;;;;-*- mode: lisp -*-
+
+(netlist :name "test-switch-09"
+	 :elements-list ((source :name "v1"
+				 :class "voltage-source"
+				 :nodes-list ("gnd" "n1")
+				 :value 325d0)
+
+			 (source :name "v2"
+				 :class "voltage-source"
+				 :nodes-list ("gnd" "nc")
+				 :model (model :name "square-voltage-1"
+					       :function-name "square-function"
+					       :class "function"
+					       :parameters-list (:low-value 0d0 :high-value 10d0 :period 2d-4 :t0 0d0 :duty-cycle 0.5d0 :rising-time 0d0 :falling-time 0d0 :polarity t)))
+			 (source :name "v3"
+				 :class "voltage-source"
+				 :nodes-list ("gnd" "nc")
+				 :model (model :name "square-voltage-2"
+					       :function-name "square-function"
+					       :class "function"
+					       :parameters-list (:low-value 0d0 :high-value 10d0 :period 5d-4 :t0 0d0 :duty-cycle 0.5d0 :rising-time 0d0 :falling-time 0d0 :polarity t)))
+
+			 (passive :name "S1"
+				  :class "resistance"
+				  :nodes-list ("n3" "n4")
+				  :model (model :name "simple-switch-1"
+						:function-name "simple-switch-1"
+						:class "function"
+						:parameters-list (:upper-threshold 6d0 :lower-threshold 4d0 :on-resistance 1d-3 :off-resistance 1d8)
+						:probes-list ((probe :name "sp1"
+								     :class "voltage-probe"
+								     :nodes-list ("gnd"))
+
+							      (probe :name "sp2"
+								     :class "voltage-probe"
+								     :nodes-list ("nc")))
+						:value 1d8))
+
+			 (passive :name "L1"
+				  :class "inductance"
+				  :nodes-list ("n1" "n2")
+				  :value 20d-3)
+
+			 (passive :name "R1"
+				  :class "resistance"
+				  :nodes-list ("n2" "n3")
+				  :value 1d3)
+
+			 (passive :name "R2"
+				  :class "resistance"
+				  :nodes-list ("n4" "gnd")
+				  :value 3.3d1)
+
+			 (passive :name "S2"
+				  :class "resistance"
+				  :nodes-list ("n4" "n5")
+				  :model (model :name "simple-switch-2"
+						:function-name "simple-switch-1"
+						:class "function"
+						:parameters-list (:upper-threshold 6d0 :lower-threshold 4d0 :on-resistance 1d-3 :off-resistance 1d8)
+						:probes-list ((probe :name "sp1"
+								     :class "voltage-probe"
+								     :nodes-list ("gnd"))
+
+							      (probe :name "sp2"
+								     :class "voltage-probe"
+								     :nodes-list ("nc")))
+						:value 1d8))
+
+			 (passive :name "R3"
+				  :nodes-list ("n5" "gnd")
+				  :value 1d1)
+
+			 (node :name "gnd"
+			       :class "reference")
+
+			 (node :name "n1"
+			       :class "v-i")
+
+			 (node :name "n2"
+			       :class "v-i")
+
+			 (node :name "n3"
+			       :class "v-i")
+
+			 (node :name "n4"
+			       :class "v-i")
+
+			 (node :name "n5"
+			       :class "v-i")
+
+			 (probe :name "resistance-current"
+				:class "current-probe"
+				:elements-list ("R1"))
+
+
+			 (probe :name "resistance-voltage"
+				:class "voltage-probe"
+				:nodes-list ("n4" "gnd"))))
