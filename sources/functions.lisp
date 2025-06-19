@@ -1,4 +1,4 @@
-;;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; indent-tabs-mode: nil; coding: utf-8; show-trailing-whitespace: t -*-
+;;;; -*- mode: lisp; indent-tabs-mode: nil; coding: utf-8; show-trailing-whitespace: t -*-
 ;;;; functions.lisp
 ;;;;
 ;;;; Copyright (c) 2020 Angelo Rossi
@@ -144,7 +144,7 @@
       parameters
     (declare (ignorable low-value high-value polarity time-start time-end))
     (if (and (>= *time* time-start)
-             (< *time* time-stop))
+             (< *time* time-end))
 	(if polarity
 	    high-value
 	    low-value)
@@ -290,8 +290,8 @@
                       (/ (expt (/ (- v1 v2) (* n vt)) 2d0)
                          6d0))))))))))
 
-(defun zener-diode (&rest rest &key parameters state)
-  "A zener diode modelled with sigmoids."
+(defun simple-diode-4 (&rest rest &key parameters state)
+  "A diode modelled with sigmoids."
   (declare (ignorable rest parameters state))
   (destructuring-bind (&key
                          (maximum-forward-conductance 1d0)
@@ -314,22 +314,26 @@
           (vak nil))
       (when (and v1 v2)
         (setq vak (- v1 v2))
-        (+ (sigmoid vak
-                    :amplitude (- (abs maximum-forward-conductance)
-                                  (abs minimum-conductance))
-                    :scale (abs nf)
-                    :x0 (abs forward-voltage)
-                    :y0 0d0)
-           (sigmoid (- vak)
-                    :amplitude (- (abs maximum-backward-conductance)
-                                  (abs minimum-conductance))
-                    :scale (abs nz)
-                    :x0 (abs breakdown-voltage)
-                    :y0 0d0)
-           (abs minimum-conductance))))))
+        (cond
+          ((< vak 0d0)
+           (+ (sigmoid vak
+                       :amplitude (- (abs maximum-forward-conductance)
+                                     (abs minimum-conductance))
+                       :scale (abs nf)
+                       :x0 (abs forward-voltage)
+                       :y0 0d0)
+              (abs minimum-conductance)))
+          (t
+           (+ (sigmoid (- vak)
+                       :amplitude (- (abs maximum-backward-conductance)
+                                     (abs minimum-conductance))
+                       :scale (abs nz)
+                       :x0 (- (abs breakdown-voltage))
+                       :y0 0d0)
+              (abs minimum-conductance))))))))
 
-(defun zener-diode-2 (&rest rest &key parameters state)
-  "A zener diode modelled with sigmoids."
+(defun simple-diode-5 (&rest rest &key parameters state)
+  "A diode model."
   (declare (ignorable rest parameters state))
   (destructuring-bind (&key
                          (maximum-forward-conductance 1d0)

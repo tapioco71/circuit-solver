@@ -1,4 +1,4 @@
-;;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; indent-tabs-mode: nil; coding: utf-8; show-trailing-whitespace: t -*-
+;;;; -*- mode: lisp; indent-tabs-mode: nil; coding: utf-8; show-trailing-whitespace: t -*-
 ;;;; model.lisp
 ;;;;
 ;;;; Copyright (c) 2020 Angelo Rossi
@@ -85,7 +85,16 @@
                                       (probes-list nil probes-list-p)
                                       (states-list nil states-list-p)
                                       (value nil value-p))
-  (declare (ignorable parameters id name class parameters-list function-name external-function-name probes-list states-list value))
+  (declare (ignorable parameters
+		      id
+		      name
+		      class
+		      parameters-list
+		      function-name
+		      external-function-name
+		      probes-list
+		      states-list
+		      value))
   (let ((object (make-instance 'model-class
                                :id id
                                :name name
