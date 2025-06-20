@@ -454,12 +454,7 @@
       (when (and v1 v2)
         (setq delta-v (- v1 v2))
         (+ gmin
-           (sigmoid delta-v
-                    :amplitude (abs (- gmax gmin))
-                    :scale (abs kv)
-                    :x0 (abs vmax)
-                    :y0 0d0)
-           (sigmoid (- delta-v)
+           (sigmoid (abs delta-v)
                     :amplitude (abs (- gmax gmin))
                     :scale (abs kv)
                     :x0 (abs vmax)
