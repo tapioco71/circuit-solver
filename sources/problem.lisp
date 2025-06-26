@@ -1,7 +1,7 @@
-;;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; indent-tabs-mode: nil; coding: utf-8; show-trailing-whitespace: t -*-
+;;;; -*- mode: lisp; indent-tabs-mode: nil; coding: utf-8; show-trailing-whitespace: t -*-
 ;;;; problem.lisp
 ;;;;
-;;;; Copyright (c) 2020 Angelo Rossi
+;;;; Copyright (c) 2020-2025 Angelo Rossi
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a copy
 ;;; of this software and associated documentation files (the "Software"), to deal
@@ -189,4 +189,4 @@
 	 (setq return-value t)
 	 return-value)))
 
-;; End problem.lisp
+;;;; end of problem.lisp file.

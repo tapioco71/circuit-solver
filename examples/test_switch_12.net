@@ -19,7 +19,7 @@
 					       :parameters-list (:low-value 0d0
 								 :high-value 1d0
 								 :polarity t
-								 :time-start 1d0
+								 :time-start 0.5d0
 								 :time-end 15d0)))
 
 			 (source :name "Vpulse2"
@@ -31,8 +31,8 @@
 					       :parameters-list (:low-value 0d0
 								 :high-value 1d0
 								 :polarity t
-								 :time-start 22d0
-								 :time-end 22.010d0)))
+								 :time-start 20d0
+								 :time-end 20.010d0)))
 
 			 (passive :name "S1"
 				  :class "resistance"
@@ -42,7 +42,7 @@
 						:class "function"
 						:parameters-list (:lower-threshold 0.4
 								  :upper-threshold 0.6
-								  :on-resistance 1d-4
+								  :on-resistance 0d0
 								  :off-resistance 1d8)
 						:probes-list ((probe :name "sp1"
 								     :class "voltage-probe"
@@ -63,10 +63,11 @@
 				  :model (model :name "diode-1"
 						:function-name "simple-diode-4"
 						:class "function"
-						:parameters-list (:maximum-forward-conductance 1d0
-								  :maximum-backward-conductance 1d0
+						:parameters-list (:maximum-forward-conductance 1d1
+								  :maximum-backward-conductance 1d1
 								  :minimum-conductance 0d0
-								  :nf 1d0
+								  :nf 1d1
+                                                                  :nz 1d-1
 								  :forward-voltage 1d0
 								  :breakdown-voltage 8d2)
 						:probes-list ((probe :name "diode-a-1"
@@ -87,10 +88,11 @@
 				  :model (model :name "diode-2"
 						:function-name "simple-diode-4"
 						:class "function"
-						:parameters-list (:maximum-forward-conductance 1d0
-								  :maximum-backward-conductance 1d0
+						:parameters-list (:maximum-forward-conductance 1d1
+								  :maximum-backward-conductance 1d1
 								  :minimum-conductance 0d0
-								  :nf 1d0
+								  :nf 1d1
+                                                                  :nz 1d-1
 								  :forward-voltage 1d0
 								  :breakdown-voltage 8d2)
 						:probes-list ((probe :name "diode-a-2"
@@ -111,22 +113,24 @@
 				  :value 5.25d-3)
 
 			 (passive :name "S2"
-				  :class "resistance"
+				  :class "conductance"
 				  :nodes-list ("n5" "n6")
+                                  :value 1d-6
 				  :model (model :name "switch-2"
-						:function-name "simple-switch-1"
+						:function-name "simple-switch-2"
 						:class "function"
 						:parameters-list (:lower-threshold 0.4
 								  :upper-threshold 0.6
-								  :on-resistance 1d-4
-								  :off-resistance 1d8)
+								  :on-conductance 33.3
+								  :off-conductance 1d-6
+                                                                  :k-on 5d3
+                                                                  :k-off 3.5d3)
 						:probes-list ((probe :name "sp3"
 								     :class "voltage-probe"
 								     :nodes-list ("nc2"))
 							      (probe :name "sp4"
 								     :class "voltage-probe"
-								     :nodes-list ("gnd")))
-						:value 1d8))
+								     :nodes-list ("gnd")))))
 
 			 (passive :name "D3"
 				  :class "conductance"
@@ -134,12 +138,13 @@
 				  :model (model :name "diode-3"
 						:function-name "simple-diode-4"
 						:class "function"
-						:parameters-list (:maximum-forward-conductance 1d0
-								  :maximum-backward-conductance 1d0
+						:parameters-list (:maximum-forward-conductance 1d1
+								  :maximum-backward-conductance 1d1
 								  :minimum-conductance 0d0
 								  :forward-voltage 1d0
-								  :nf 1d0
-								  :breakdown-voltage 8d2)
+								  :nf 1d1
+                                                                  :nz 1d-1
+								  :breakdown-voltage 9d2)
 						:probes-list ((probe :name "diode-a-2"
 								     :class "voltage-probe"
 								     :nodes-list ("n6"))
@@ -152,14 +157,12 @@
 				  :model (model :name "mov-1"
 						:function-name "simple-mov-2"
 						:class "function"
-						:parameters-list (:vmax 3d2
-								  :kv 1.5d0
-								  :gmax 1d3
-								  :gmin 1d-6)
-						:probes-list ((probe :name "diode-a-2"
+						:parameters-list (:c 5d2
+								  :beta 0.20d0)
+						:probes-list ((probe :name "mov-1-1"
 								     :class "voltage-probe"
 								     :nodes-list ("n6"))
-							      (probe :name "diode-k-2"
+							      (probe :name "mov-1-2"
 								     :class "voltage-probe"
 								     :nodes-list ("n5")))))
 

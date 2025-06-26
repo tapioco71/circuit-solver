@@ -1,7 +1,7 @@
-;;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; indent-tabs-mode: nil; coding: utf-8; show-trailing-whitespace: t -*-
+;;;; -*- mode: lisp; indent-tabs-mode: nil; coding: utf-8; show-trailing-whitespace: t -*-
 ;;;; utilities.lisp
 ;;;;
-;;;; Copyright (c) 2020 Angelo Rossi
+;;;; Copyright (c) 2020-2025 Angelo Rossi
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a copy
 ;;; of this software and associated documentation files (the "Software"), to deal
@@ -78,4 +78,4 @@
                                          :dimensions (list (1- (grid:dim0 as))
                                                            (1- (grid:dim1 as))))))))))
       
-
+;;;; end if utilities.lisp file.

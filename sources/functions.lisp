@@ -1,7 +1,7 @@
 ;;;; -*- mode: lisp; indent-tabs-mode: nil; coding: utf-8; show-trailing-whitespace: t -*-
 ;;;; functions.lisp
 ;;;;
-;;;; Copyright (c) 2020 Angelo Rossi
+;;;; Copyright (c) 2020-2025 Angelo Rossi
 ;;;
 ;;; Permission is hereby granted, free of charge, to any person obtaining a copy
 ;;; of this software and associated documentation files (the "Software"), to deal
@@ -384,35 +384,35 @@
                          (upper-threshold 1d0)
                          (on-conductance 1d6)
                          (off-conductance 1d-6)
-                         (on-time 1d-3)
-                         (off-time 1d-3))
+                         (k-on 1d4)
+                         (k-off 1d4))
       parameters
+    (declare (ignorable lower-threshold
+                        upper-threshold
+                        on-conductance
+                        off-conductance
+                        k-on
+                        k-off))
     (let* ((v1 (pop state))
 	   (v2 (pop state))
-	   (old-conductance-value (pop state))
-	   (return-value old-conductance-value))
-      (when (and v1 v2)
+	   (old-conductance (pop state))
+           (delta-v nil)
+	   (return-value nil))
+      (when (and (numberp v1)
+                 (numberp v2)
+                 (numberp old-conductance))
         (setq delta-v (- v1 v2))
-        (when (< on-time *h*)
-          (setq on-time *h*))
-        (when (< off-time *h*)
-          (setq off-time *h*))
+        (setq return-value old-conductance)
         (cond
           ((> delta-v upper-threshold)
-           (if (> return-value on-conductance)
-	       (setq return-value on-conductance)
-	       (incf return-value (* *h* (/ (- on-conductance off-conductance) on-time)))))
+           (incf return-value (* k-on off-conductance)))
           ((< delta-v lower-threshold)
-           (if (< return-value off-conductance)
-	       (setq return-value off-conductance)
-	       (decf return-value (* *h* (/ (- on-conductance off-conductance) off-time)))))
-          (t
-           (setq return-value old-conductance-value)))
+	   (decf return-value (* k-off off-conductance))))
         (when (> return-value on-conductance)
           (setq return-value on-conductance))
         (when (< return-value off-conductance)
-          (setq return-value off-conductance))
-        return-value))))
+          (setq return-value off-conductance)))
+      return-value)))
 
 ;; Ebers-Moll transistor model.
 
@@ -445,20 +445,22 @@
 (defun simple-mov-2 (&rest rest &key parameters state)
   "MOV model using sigmoid."
   (declare (ignorable rest parameters state))
-  (destructuring-bind (&key (vmax 250d0) (kv 1d0) (gmax 1d6) (gmin 0d0))
+  (destructuring-bind (&key
+                         (c 10d0)
+                         (beta 0.20d0))
       parameters
-    (declare (ignorable vmax kv gmax gmin))
+    (declare (ignorable c
+                        beta))
     (let ((v1 (pop state))
           (v2 (pop state))
+          (alpha nil)
           (delta-v nil))
-      (when (and v1 v2)
+      (when (and (numberp v1)
+                 (numberp v2))
         (setq delta-v (- v1 v2))
-        (+ gmin
-           (sigmoid (abs delta-v)
-                    :amplitude (abs (- gmax gmin))
-                    :scale (abs kv)
-                    :x0 (abs vmax)
-                    :y0 0d0))))))
+        (setq alpha (/ 1d0 beta))
+        (/ (expt (abs delta-v) (1- alpha))
+           (expt c alpha))))))
 
 (defun lightning-pulse-DEXP (&rest rest &key parameters state)
   "Double exponential (DEXP) lightning model (T.R. McComb, J.E. Lagnese)."
@@ -510,3 +512,5 @@
            (- (expt (- (* a *time*)))
               (expt (- (* b *time*)))))
         0d0)))
+
+;;;; end of functions.lisp file.
