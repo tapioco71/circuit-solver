@@ -380,39 +380,30 @@
 (defun simple-switch-2 (&rest rest &key parameters state)
   (declare (ignorable rest parameters state))
   (destructuring-bind (&key
-                         (lower-threshold 0d0)
-                         (upper-threshold 1d0)
+                         (on-time 0d0)
+                         (off-time 1d0)
                          (on-conductance 1d6)
                          (off-conductance 1d-6)
-                         (k-on 1d4)
-                         (k-off 1d4))
+                         (k-on 1d0)
+                         (k-off 1d0))
       parameters
-    (declare (ignorable lower-threshold
-                        upper-threshold
+    (declare (ignorable on-time
+                        off-time
                         on-conductance
                         off-conductance
                         k-on
                         k-off))
-    (let* ((v1 (pop state))
-	   (v2 (pop state))
-	   (old-conductance (pop state))
-           (delta-v nil)
-	   (return-value nil))
-      (when (and (numberp v1)
-                 (numberp v2)
-                 (numberp old-conductance))
-        (setq delta-v (- v1 v2))
-        (setq return-value old-conductance)
-        (cond
-          ((> delta-v upper-threshold)
-           (incf return-value (* k-on off-conductance)))
-          ((< delta-v lower-threshold)
-	   (decf return-value (* k-off off-conductance))))
-        (when (> return-value on-conductance)
-          (setq return-value on-conductance))
-        (when (< return-value off-conductance)
-          (setq return-value off-conductance)))
-      return-value)))
+    (- (+ (sigmoid *time*
+                   :amplitude (- on-conductance off-conductance)
+                   :scale (abs k-on)
+                   :x0 on-time
+                   :y0 0d0)
+          (sigmoid (- *time*)
+                   :amplitude (- on-conductance off-conductance)
+                   :scale (abs k-off)
+                   :x0 (- off-time)
+                   :y0 0d0))
+       on-conductance)))
 
 ;; Ebers-Moll transistor model.
 
