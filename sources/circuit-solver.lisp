@@ -2094,10 +2094,11 @@
                  (finish-output output-file-stream))))
 	    ((current-probe-class-p probe)
 	     (dolist (element-name (probe-class-elements-list probe))
-	       (multiple-value-bind (found-element found-element-position) (find-element (where :name element-name) elements-list)
+	       (multiple-value-bind (found-element found-element-position)
+                   (find-element (where :name element-name) elements-list)
 		 (unless found-element
 		   (error 'probe-not-found-error
-                          :probe-name (element-name probe)
+                          :probe-name (element-class-name probe)
                           :element-name element-name))
 		 (when debug-mode
 		   (format output

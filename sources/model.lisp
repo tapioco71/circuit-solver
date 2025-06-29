@@ -108,7 +108,19 @@
     object))
 
 ;; Methods.
-
+(defmethod print-object ((object model-class) s)
+  (print-unreadable-object (object s :type t)
+    (format s
+            ":id ~s name ~s :class ~s :parameters-list ~s :function-name ~s :external-function-name ~s :probes-list ~s :states-list ~s :value ~s"
+            (model-class-id object)
+            (model-class-name object)
+            (model-class-class object)
+            (model-class-parameters-list object)
+            (model-class-function-name object)
+            (model-class-external-function-name object)
+            (model-class-probes-list object)
+            (model-class-states-list object)
+            (model-class-value object))))
 
 (defmethod sexpify ((object model-class))
   (let ((return-value (call-next-method object)))

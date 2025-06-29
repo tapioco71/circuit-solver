@@ -75,6 +75,16 @@
     object))
 
 ;; Methods.
+(defmethod print-object ((object probe-class) s)
+  (print-unreadable-object (object s :type t)
+    (format s
+            ":id ~s name ~s :class ~s :nodes-list ~s :model ~s :value~s"
+            (source-class-id object)
+            (source-class-name object)
+            (source-class-class object)
+            (source-class-nodes-list object)
+            (source-class-model object)
+            (source-class-value object))))
 
 (defmethod sexpify ((object source-class))
   "Create a sexp for source element: :NAME name [ :ID id ] :CLASS element-class :NODES-LIST nodes-list { :MODEL model | :VALUE value }."

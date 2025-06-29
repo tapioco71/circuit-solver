@@ -54,6 +54,12 @@
     object))
 
 ;; Methods.
+(defmethod print-object ((object element-class) s)
+  (print-unreadable-object (object s :type t)
+    (format s
+            ":id ~s :name ~s"
+            (element-class-id object)
+            (element-class-name object))))
 
 (defmethod sexpify ((object element-class))
   "Create a sexp for element: :NAME name :ID id"

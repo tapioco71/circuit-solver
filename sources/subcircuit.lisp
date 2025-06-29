@@ -45,7 +45,32 @@
     :accessor subcircuit-class-nodes-list
     :accessor element-class-nodes-list)))
 
+;; Functions
+(defun make-subcircuit (&rest parameters &key
+                                           (id nil id-p)
+                                           (name (symbol-name (gensym "subcircuit-")) name-p)
+                                           (file-pathname #p"" file-pathname-p)
+                                           (nodes-list nil nodes-list-p))
+  (declare (ignorable parameters
+                      id
+                      name
+                      file-pathname
+                      nodes-list))
+  (make-instance (find-class 'subcircuit-class)
+                 :id id
+                 :name name
+                 :file-pathname file-pathname
+                 :nodes-list nodes-list))
+
 ;; Methods.
+(defmethod print-object ((object subcircuit-class) s)
+  (print-unreadable-object (object s :type t)
+    (format s
+            ":id ~s name ~s :class ~s :file-pathname ~s :nodes-list ~s"
+            (subcircuit-class-id object)
+            (subcircuit-class-name object)
+            (subcircuit-class-file-pathname object)
+            (subcircuit-class-nodes-list object))))
 
 ;;
 ;; create a sexp for subcircuit element: :NAME name [ :ID id ] :FILE-PATHNAME file-name :NODES-LIST nodes-list

@@ -67,6 +67,15 @@
     object))
 
 ;; Methods.
+(defmethod print-object ((object node-class) s)
+  (print-unreadable-object (object s :type t)
+    (format s
+            ":id ~s name ~s :class ~s :state ~s :number ~s"
+            (node-class-id object)
+            (node-class-name object)
+            (node-class-class object)
+            (node-class-state object)
+            (node-class-number object))))
 
 (defmethod sexpify ((object node-class))
   "Create a sexp for node element: :NAME name [ :ID id ] :CLASS element-class [ :STATE state ] [ :NUMBER number ]."

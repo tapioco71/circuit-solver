@@ -78,6 +78,16 @@
     object))
 
 ;; Methods.
+(defmethod print-object ((object coupling-class) s)
+  (print-unreadable-object (object s :type t)
+    (format s
+            ":id ~s name ~s :class ~s :elements-list ~s :model ~s :value ~s"
+            (coupling-class-id object)
+            (coupling-class-name object)
+            (coupling-class-class object)
+            (coupling-class-elements-list object)
+            (coupling-class-model object)
+            (coupling-class-value object))))
 
 (defmethod sexpify ((object coupling-class))
   "Create a sexp for coupling element: :NAME name [ :ID id ] :ELEMENTS-LIST elements-list { :MODEL model | :VALUE value }."

@@ -437,21 +437,19 @@
   "MOV model using sigmoid."
   (declare (ignorable rest parameters state))
   (destructuring-bind (&key
-                         (c 10d0)
-                         (beta 0.20d0))
+                         (k 1d0)
+                         (alpha 0.1d0))
       parameters
-    (declare (ignorable c
-                        beta))
+    (declare (ignorable k
+                        alpha))
     (let ((v1 (pop state))
           (v2 (pop state))
-          (alpha nil)
           (delta-v nil))
       (when (and (numberp v1)
                  (numberp v2))
         (setq delta-v (- v1 v2))
-        (setq alpha (/ 1d0 beta))
-        (/ (expt (abs delta-v) (1- alpha))
-           (expt c alpha))))))
+        (* (expt k alpha)
+           (expt (abs delta-v) (- alpha 1d0)))))))
 
 (defun lightning-pulse-DEXP (&rest rest &key parameters state)
   "Double exponential (DEXP) lightning model (T.R. McComb, J.E. Lagnese)."

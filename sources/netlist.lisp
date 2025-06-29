@@ -78,6 +78,16 @@
     object))
 
 ;; Methods.
+(defmethod print-object ((object netlist-class) s)
+  (print-unreadable-object (object s :type t)
+    (format s
+            ":id ~s name ~s :file-pathname ~s :author ~s :date ~s :elements-list ~s"
+            (netlist-class-id object)
+            (netlist-class-name object)
+            (netlist-class-file-pathname object)
+            (netlist-class-author object)
+            (netlist-class-date object)
+            (netlist-class-elements-list object))))
 
 (defmethod sexpify ((object netlist-class))
   "Create a sexp for netlist element: :NAME name [ :ID id ] :ELEMENTS-LIST elements-list."

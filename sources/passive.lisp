@@ -75,6 +75,16 @@
     object))
 
 ;; Methods.
+(defmethod print-object ((object passive-class) s)
+  (print-unreadable-object (object s :type t)
+    (format s
+            ":id ~s name ~s :class ~s :nodes-list ~s :model ~s :value ~s"
+            (passive-class-id object)
+            (passive-class-name object)
+            (passive-class-class object)
+            (passive-class-nodes-list object)
+            (passive-class-model object)
+            (passive-class-value object))))
 
 (defmethod sexpify ((object passive-class))
   "Create a sexp for passive element: :NAME name [ :ID id ] :CLASS element-class :NODES-LIST nodes-list { :MODEL model | :VALUE value }."

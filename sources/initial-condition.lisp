@@ -59,6 +59,14 @@
     object))
 
 ;; Methods.
+(defmethod print-object ((object initial-condition-class) s)
+  (print-unreadable-object (object s :type t)
+    (format s
+            ":id ~s name ~s :target-name ~s :value ~s"
+            (initial-condition-class-id object)
+            (initial-condition-class-name object)
+            (initial-condition-class-target-name object)
+            (initial-condition-class-value object))))
 
 (defmethod sexpify ((object initial-condition-class))
   (let ((return-value (call-next-method object)))

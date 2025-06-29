@@ -67,6 +67,15 @@
     object))
 
 ;; Methods.
+(defmethod print-object ((object probe-class) s)
+  (print-unreadable-object (object s :type t)
+    (format s
+            ":id ~s name ~s :class ~s :elements-list ~s :nodes-list ~s"
+            (element-class-id object)
+            (element-class-name object)
+            (probe-class-class object)
+            (probe-class-elements-list object)
+            (probe-class-nodes-list object))))
 
 (defmethod sexpify ((object probe-class))
   (let ((return-value (call-next-method object)))

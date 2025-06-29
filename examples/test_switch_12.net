@@ -108,11 +108,11 @@
 						:function-name "simple-switch-2"
 						:class "function"
 						:parameters-list (:on-time 20d0
-								  :off-time 20.010d0
-								  :on-conductance 33.3
-								  :off-conductance 1d-6
+								  :off-time 20.020d0
+								  :on-conductance 30.3
+								  :off-conductance 4.16d-8
                                                                   :k-on 1d3
-                                                                  :k-off 1d3)))
+                                                                  :k-off 1.5d3)))
 
 			 (passive :name "D3"
 				  :class "conductance"
@@ -133,14 +133,17 @@
 							      (probe :name "diode-k-2"
 								     :class "voltage-probe"
 								     :nodes-list ("n5")))))
+			 ;; siov 350 V s-14..e2: k = 8.56d-15, alpha = 5.19d0
+			 ;; siov 350 V s-20..e2: k = 1.59d-99, alpha = 34.48
+			 ;; siov 230 V s-20    : alpha = 32.72, k = 1.94d-3
 			 (passive :name "M1"
 				  :class "conductance"
 				  :nodes-list ("n6" "n5")
 				  :model (model :name "mov-1"
 						:function-name "simple-mov-2"
 						:class "function"
-						:parameters-list (:c 5d3
-								  :beta 0.90d0)
+						:parameters-list (:alpha 32.72d0
+								  :k 1.94d-3)
 						:probes-list ((probe :name "mov-1-1"
 								     :class "voltage-probe"
 								     :nodes-list ("n6"))
