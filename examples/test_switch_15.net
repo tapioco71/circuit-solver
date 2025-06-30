@@ -57,8 +57,8 @@
 				  :model (model :name "mov-1"
 						:function-name "simple-mov-2"
 						:class "function"
-						:parameters-list (:alpha 6.40d0
-								  :k 1.5d-3
+						:parameters-list (:alpha 26.40d0
+								  :k 1.95d-3
 								  :g-minimum 5d-5)
 						:probes-list ((probe :name "mov-1-1"
 								     :class "voltage-probe"

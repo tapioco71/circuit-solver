@@ -58,13 +58,12 @@
                                       (elements-list nil elements-list-p)
                                       (nodes-list nil nodes-list-p))
   (declare (ignorable parameters id name class elements-list nodes-list))
-  (let ((object (make-instance 'probe-class
-                               :id id
-                               :name name
-                               :class class
-                               :elements-list elements-list
-                               :nodes-list nodes-list)))
-    object))
+  (make-instance (find-class 'probe-class)
+                 :id id
+                 :name name
+                 :class class
+                 :elements-list elements-list
+                 :nodes-list nodes-list))
 
 ;; Methods.
 (defmethod print-object ((object probe-class) s)

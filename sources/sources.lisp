@@ -75,7 +75,7 @@
     object))
 
 ;; Methods.
-(defmethod print-object ((object probe-class) s)
+(defmethod print-object ((object source-class) s)
   (print-unreadable-object (object s :type t)
     (format s
             ":id ~s name ~s :class ~s :nodes-list ~s :model ~s :value~s"
