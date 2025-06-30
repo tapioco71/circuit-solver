@@ -1,0 +1,59 @@
+;;;; -*- mode: lisp; indent-tabs-mode: nil; coding: utf-8; show-trailing-whitespace: t -*-
+(netlist :name "mov-230"
+         :elements-list ((passive :name "L1"
+		                  :class "inductance"
+		                  :nodes-list ("a" "n1")
+		                  :value 100d-9)
+
+                         (passive :name "C1"
+                                  :class "capacitance"
+                                  :nodes-list ("n1" "n2")
+                                  :value 100d-9)
+
+			 (passive :name "R1"
+				  :class "resistance"
+				  :nodes-list ("n1" "n2")
+				  :value 1d11)
+
+                         (passive :name "M1"
+		                  :class "conductance"
+		                  :nodes-list ("n1" "n2")
+		                  :model (model :name "mov1"
+			                        :function-name "simple-mov-2"
+			                        :class "function"
+			                        :parameters-list (:alpha 34.04d0
+								  :k 2.04d-3
+								  :g-minimum 0d0)
+			                        :probes-list ((probe :name "m1-p1"
+					                             :class "voltage-probe"
+					                             :nodes-list ("n1"))
+
+					                      (probe :name "m1-p2"
+					                             :class "voltage-probe"
+					                             :nodes-list ("n2")))))
+
+			 (passive :name "R2"
+		                  :class "resistance"
+		                  :nodes-list ("n2" "b")
+		                  :value 1d0)
+
+
+		 ;;
+		 ;; external connection nodes
+		 ;;
+
+		         (node :name "a"
+		               :class "v-i")
+
+		         (node :name "b"
+		               :class "v-i")
+
+		 ;;
+		 ;; internal nodes
+		 ;;
+
+		         (node :name "n1"
+		               :class "v-i")
+
+                         (node :name "n2"
+                               :class "v-i")))
