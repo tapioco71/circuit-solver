@@ -112,8 +112,8 @@
   (print-unreadable-object (object s :type t)
     (format s
             ":id ~s name ~s :class ~s :parameters-list ~s :function-name ~s :external-function-name ~s :probes-list ~s :states-list ~s :value ~s"
-            (model-class-id object)
-            (model-class-name object)
+            (element-class-id object)
+            (element-class-name object)
             (model-class-class object)
             (model-class-parameters-list object)
             (model-class-function-name object)

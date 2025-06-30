@@ -82,8 +82,8 @@
   (print-unreadable-object (object s :type t)
     (format s
             ":id ~s name ~s :file-pathname ~s :author ~s :date ~s :elements-list ~s"
-            (netlist-class-id object)
-            (netlist-class-name object)
+            (element-class-id object)
+            (element-class-name object)
             (netlist-class-file-pathname object)
             (netlist-class-author object)
             (netlist-class-date object)

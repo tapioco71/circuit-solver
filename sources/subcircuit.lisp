@@ -67,8 +67,8 @@
   (print-unreadable-object (object s :type t)
     (format s
             ":id ~s name ~s :class ~s :file-pathname ~s :nodes-list ~s"
-            (subcircuit-class-id object)
-            (subcircuit-class-name object)
+            (element-class-id object)
+            (element-class-name object)
             (subcircuit-class-file-pathname object)
             (subcircuit-class-nodes-list object))))
 

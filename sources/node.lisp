@@ -71,8 +71,8 @@
   (print-unreadable-object (object s :type t)
     (format s
             ":id ~s name ~s :class ~s :state ~s :number ~s"
-            (node-class-id object)
-            (node-class-name object)
+            (element-class-id object)
+            (element-class-name object)
             (node-class-class object)
             (node-class-state object)
             (node-class-number object))))

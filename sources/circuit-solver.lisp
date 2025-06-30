@@ -1743,8 +1743,22 @@
 ;;
 ;; assemble A, B and K matrix
 
-(defun assemble-system (p-matrix r-matrix g-matrix si-matrix sv-matrix l-matrix c-matrix ki-vector kv-vector &rest parameters &key (debug-mode nil) (output *standard-output*))
-  (declare (ignorable parameters debug-mode output))
+(defun assemble-system (p-matrix
+                        r-matrix
+                        g-matrix
+                        si-matrix
+                        sv-matrix
+                        l-matrix
+                        c-matrix
+                        ki-vector
+                        kv-vector
+                        &rest parameters
+                        &key
+                          (debug-mode nil)
+                          (output *standard-output*))
+  (declare (ignorable parameters
+                      debug-mode
+                      output))
   (let ((a-matrix nil)
 	(b-matrix nil)
 	(k-vector nil))
@@ -1797,14 +1811,16 @@
                                                                      c-matrix
                                                                      :axis 1)
                                              :axis 0))
-      (setq b-matrix (grid:concatenate-grids b-matrix
-					     (grid:make-foreign-array 'double-float
-                                                                      :dimensions (list (+ (grid:dim0 si-matrix)
-											   (grid:dim0 sv-matrix))
-											(+ (grid:dim1 p-matrix)
-											   (grid:dim1 g-matrix)))
-                                                                      :initial-element 0d0)
-                                             :axis 0))
+      (unless (or (zerop (+ (grid:dim0 si-matrix) (grid:dim0 sv-matrix)))
+		  (zerop (+ (grid:dim1 p-matrix) (grid:dim1 g-matrix))))
+        (setq b-matrix (grid:concatenate-grids b-matrix
+					       (grid:make-foreign-array 'double-float
+                                                                        :dimensions (list (+ (grid:dim0 si-matrix)
+											     (grid:dim0 sv-matrix))
+											  (+ (grid:dim1 p-matrix)
+											     (grid:dim1 g-matrix)))
+                                                                        :initial-element 0d0)
+                                               :axis 0)))
       (when debug-mode
 	(format output
                 "~%B = ~a"
@@ -2190,8 +2206,12 @@
 ;;; setup initial conditions
 ;;;
 
-(defun setup-initial-conditions (netlist y-vector &rest parameters &key (debug-mode nil) (output *standard-output*))
-  (declare (ignorable parameters debug-mode output))
+(defun setup-initial-conditions (netlist y-vector &rest parameters &key
+                                                                     (debug-mode nil)
+                                                                     (output *standard-output*))
+  (declare (ignorable parameters
+                      debug-mode
+                      output))
   (handler-case
       (let ((elements-list (exclude (list (where :class-type 'initial-condition-class)
 					  (where :class-type 'probe-class))
@@ -2201,45 +2221,46 @@
 	(dolist (initial-condition initial-conditions-list)
 	  (when debug-mode
 	    (format output
-                    "Found initial condition ~a.~%"
+                    "~%Found initial condition ~a.~%"
                     (element-class-name initial-condition))
             (finish-output output))
 	  (multiple-value-bind (element i)
-	      (find-element (where :name (element-target-name initial-condition))
+	      (find-element (where :name (initial-condition-class-target-name initial-condition))
                             elements-list)
-	    (unless element
-	      (error 'unknown-element-for-initial-condition-error
-                     :element-name (element-target-name initial-condition)
-                     :initial-condition-name (element-class-name initial-condition)))
-	    (typecase element
-	      (source-class
-	       (error 'initial-condition-error
-                      :initial-condition-name (element-class-name initial-condition)
-                      :source-name (element-class-name element)))
-	      (passive-class
-	       (when debug-mode
-		 (format output
-                         "Setting y(~a) = ~a.~%"
-                         i
-                         (passive-class-value initial-condition))
-                 (finish-output output))
-	       (setf (grid:gref y-vector i) (initial-condition-class-value initial-condition)))
-	      (coupling-class
-	       (error 'initial-condition-error
-                      :initial-condition-name (element-class-name initial-condition)
-                      :coupling-name (element-class-name element)))
-	      (node-class
-	       (when (reference-class-node-p (element-class element))
-		 (error 'initial-condition-error
+            (progn
+  	      (unless element
+	        (error 'unknown-element-for-initial-condition-error
+                       :element-name (initial-condition-class-target-name initial-condition)
+                       :initial-condition-name (element-class-name initial-condition)))
+	      (typecase element
+	        (source-class
+	         (error 'initial-condition-error
                         :initial-condition-name (element-class-name initial-condition)
-                        :node-name (element-class-name element)))
-	       (setf (grid:gref y-vector (1- i)) (initial-condition-class-value initial-condition)))
-	      (model-class
-	       (setf (model-class-value element) (initial-condition-class-value initial-condition)))
-	      (t
-	       (error "Initial condition ~a: ~a could not have an initial condition: only passive and models.~%"
-                      (element-class-name initial-condition)
-                      (element-class-name element))))))
+                        :source-name (element-class-name element)))
+	        (passive-class
+	         (when debug-mode
+		   (format output
+                           "Setting y(~a) = ~a.~%"
+                           i
+                           (passive-class-value initial-condition))
+                   (finish-output output))
+	         (setf (grid:gref y-vector i) (initial-condition-class-value initial-condition)))
+	        (coupling-class
+	         (error 'initial-condition-error
+                        :initial-condition-name (element-class-name initial-condition)
+                        :coupling-name (element-class-name element)))
+	        (node-class
+	         (when (reference-class-node-p element)
+		   (error 'initial-condition-error
+                          :initial-condition-name (element-class-name initial-condition)
+                          :node-name (element-class-name element)))
+	         (setf (grid:gref y-vector (1- i)) (initial-condition-class-value initial-condition)))
+	        (model-class
+	         (setf (model-class-value element) (initial-condition-class-value initial-condition)))
+	        (t
+	         (error "Initial condition ~a: ~a could not have an initial condition: only passive and models.~%"
+                        (element-class-name initial-condition)
+                        (element-class-name element)))))))
 	y-vector)
     (unknown-element-for-initial-condition-error (condition)
       (format *error-output*
@@ -2248,7 +2269,7 @@
               (initial-condition-name condition))
       (finish-output *error-output*)
       nil)
-    (initial-condition-source-error (condition)
+    (initial-condition-error (condition)
       (format *error-output*
               "~%Could not set initial condition ~a"
               (initial-condition-name condition))

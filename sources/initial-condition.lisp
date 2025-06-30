@@ -63,8 +63,8 @@
   (print-unreadable-object (object s :type t)
     (format s
             ":id ~s name ~s :target-name ~s :value ~s"
-            (initial-condition-class-id object)
-            (initial-condition-class-name object)
+            (element-class-id object)
+            (element-class-name object)
             (initial-condition-class-target-name object)
             (initial-condition-class-value object))))
 

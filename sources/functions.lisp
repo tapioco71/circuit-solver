@@ -438,18 +438,21 @@
   (declare (ignorable rest parameters state))
   (destructuring-bind (&key
                          (k 1d0)
-                         (alpha 0.1d0))
+                         (alpha 0.1d0)
+                         (g-minimum 0d0))
       parameters
     (declare (ignorable k
-                        alpha))
+                        alpha
+                        g-minimum))
     (let ((v1 (pop state))
           (v2 (pop state))
           (delta-v nil))
       (when (and (numberp v1)
                  (numberp v2))
         (setq delta-v (- v1 v2))
-        (* (expt k alpha)
-           (expt (abs delta-v) (- alpha 1d0)))))))
+        (+ g-minimum
+           (* (expt k alpha)
+              (expt (abs delta-v) (- alpha 1d0))))))))
 
 (defun lightning-pulse-DEXP (&rest rest &key parameters state)
   "Double exponential (DEXP) lightning model (T.R. McComb, J.E. Lagnese)."

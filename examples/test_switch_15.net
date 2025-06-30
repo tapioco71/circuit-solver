@@ -1,0 +1,105 @@
+;;;;-*- mode: lisp -*-
+(netlist :name "test-switch-15"
+	 :elements-list ((passive :name "C1"
+				  :class "capacitance"
+				  :nodes-list ("gnd" "n1")
+				  :value 6.8d-3)
+
+			 (passive :name "R1"
+				  :class "resistance"
+				  :nodes-list ("n1" "gnd")
+				  :value 20d3)
+
+			 (passive :name "L1"
+				  :class "inductance"
+				  :nodes-list ("n1" "n2")
+				  :value 5.25d-3)
+
+			 (passive :name "S1"
+				  :class "conductance"
+				  :nodes-list ("n2" "n3")
+                                  :value 1d-6
+				  :model (model :name "switch-1"
+						:function-name "simple-switch-2"
+						:class "function"
+						:parameters-list (:on-time 0.1d0
+								  :off-time 0.120d0
+								  :on-conductance 30.3
+								  :off-conductance 4.16d-8
+                                                                  :k-on 2d3
+                                                                  :k-off 2d3)))
+
+			 (passive :name "D1"
+				  :class "conductance"
+				  :nodes-list ("n3" "n2")
+				  :model (model :name "diode-1"
+						:function-name "simple-diode-4"
+						:class "function"
+						:parameters-list (:maximum-forward-conductance 1d1
+								  :maximum-backward-conductance 1d1
+								  :minimum-conductance 1d-6
+								  :forward-voltage 1d1
+								  :nf 1d1
+                                                                  :nz 1d-1
+								  :breakdown-voltage 9d2)
+						:probes-list ((probe :name "diode-a-1"
+								     :class "voltage-probe"
+								     :nodes-list ("n3"))
+							      (probe :name "diode-k-1"
+								     :class "voltage-probe"
+								     :nodes-list ("n2")))))
+			 ;; siov 350 V s-14..e2: k = 8.56d-15, alpha = 5.19d0
+			 ;; siov 350 V s-20..e2: k = 1.59d-99, alpha = 34.48
+			 ;; siov 230 V s-20    : alpha = 32.72, k = 1.94d-3
+			 (passive :name "M1"
+				  :class "conductance"
+				  :nodes-list ("n2" "n3")
+				  :model (model :name "mov-1"
+						:function-name "simple-mov-2"
+						:class "function"
+						:parameters-list (:alpha 6.40d0
+								  :k 1.5d-3
+								  :g-minimum 5d-5)
+						:probes-list ((probe :name "mov-1-1"
+								     :class "voltage-probe"
+								     :nodes-list ("n2"))
+							      (probe :name "mov-1-2"
+								     :class "voltage-probe"
+								     :nodes-list ("n3")))))
+
+			 (passive :name "L2"
+				  :class "inductance"
+				  :nodes-list ("n3" "n4")
+				  :value 20d-3)
+
+			 (passive :name "R2"
+				  :class "resistance"
+				  :nodes-list ("n4" "gnd")
+				  :value 6.8d0)
+
+			 (node :name "gnd"
+			       :class "reference")
+
+			 (node :name "n1"
+			       :class "v-i")
+
+			 (node :name "n2"
+			       :class "v-i")
+
+			 (node :name "n3"
+			       :class "v-i")
+
+			 (node :name "n4"
+			       :class "v-i")
+
+			 (initial-condition :name "ic1"
+					    :target-name "n1"
+					    :value 300d0)
+
+			 (probe :name "current"
+				:class "current-probe"
+				:elements-list ("C1" "D1" "R1" "R2" "L1" "M1"))
+
+			 (probe :name "voltage"
+				:class "voltage-probe"
+				:nodes-list ("n1" "n2" "n3" "n4"))))

@@ -79,8 +79,8 @@
   (print-unreadable-object (object s :type t)
     (format s
             ":id ~s name ~s :class ~s :nodes-list ~s :model ~s :value ~s"
-            (passive-class-id object)
-            (passive-class-name object)
+            (element-class-id object)
+            (element-class-name object)
             (passive-class-class object)
             (passive-class-nodes-list object)
             (passive-class-model object)
