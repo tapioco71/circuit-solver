@@ -1,5 +1,5 @@
 ;;;;-*- mode: lisp -*-
-(netlist :name "test-switch-15"
+(netlist :name "test-switch-16"
 	 :elements-list ((passive :name "C1"
 				  :class "capacitance"
 				  :nodes-list ("gnd" "n1")
@@ -49,44 +49,10 @@
 								     :class "voltage-probe"
 								     :nodes-list ("n2")))))
 
-			 (passive :name "Lm1"
-				  :class "inductance"
-				  :nodes-list ("n3" "a")
-				  :value 220d-9)
 
-			 ;; siov 350 V s-20..e2: k = 1.59d-99, alpha = 34.48
-			 ;; siov 320 V           alpha = 48.21, k = 1.47d-3
-			 ;; siov 230 V s-20    : alpha = 32.72, k = 1.94d-3
-			 (passive :name "M1"
-				  :class "conductance"
-				  :nodes-list ("a" "b")
-				  :model (model :name "mov-1"
-						:function-name "simple-mov-2"
-						:class "function"
-						:parameters-list (:alpha 32.72d0
-								  :k 1.94d-3
-								  :g-minimum 0d0)
-						:probes-list ((probe :name "mov-1-1"
-								     :class "voltage-probe"
-								     :nodes-list ("a"))
-							      (probe :name "mov-1-2"
-								     :class "voltage-probe"
-								     :nodes-list ("b")))))
-
-			 (passive :name "Rig"
-				  :class "resistance"
-				  :nodes-list ("a" "b")
-				  :value 1d12)
-
-			 (passive :name "Cig"
-				  :class "capacitance"
-				  :nodes-list ("a" "b")
-				  :value 1d-12)
-
-			 (passive :name "Rb"
-				  :class "resistance"
-				  :nodes-list ("b" "n3")
-				  :value 1d0)
+		         (subcircuit :name "M1"
+		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/mov-230.sub"
+		                     :nodes-list ("n2" "n3"))
 
 			 (passive :name "L2"
 				  :class "inductance"
@@ -112,13 +78,6 @@
 
 			 (node :name "n4"
 			       :class "v-i")
-
-			 (node :name "a"
-			       :class "v-i")
-
-			 (node :name "b"
-			       :class "v-i")
-
 
 			 (initial-condition :name "ic1"
 					    :target-name "n1"

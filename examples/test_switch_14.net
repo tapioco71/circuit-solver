@@ -1,0 +1,75 @@
+;;;;-*- mode: lisp -*-
+(netlist :name "switch_test_14"
+	 :elements-list ((source :name "V1"
+				 :class "voltage-source"
+				 :nodes-list ("gnd" "n1")
+				 :value 325d0)
+
+			 (passive :name "L1"
+				  :class "inductance"
+				  :nodes-list ("n1" "n2")
+				  :value 5.25d-3)
+
+			 (passive :name "S1"
+				  :class "conductance"
+				  :nodes-list ("n2" "n3")
+				  :value 1d-6
+				  :model (model :name "switch-1"
+						:function-name "simple-switch-2"
+						:class "function"
+						:parameters-list (:on-time 0.5d0
+								  :off-time 1.0d0
+								  :on-conductance 30d0
+								  :off-conductance 4.16d-8
+								  :k-on 3d2
+								  :k-off 7d2)))
+
+			 (passive :name "M1"
+				  :class "conductance"
+				  :nodes-list ("n2" "n3")
+				  :model (model :name "mov-1"
+						:function-name "simple-mov-2"
+						:class "function"
+						:parameters-list (:alpha 37.71d0
+								  :k 1.94d-3)
+						:probes-list ((probe :name "mov1-1"
+								     :class "voltage-probe"
+								     :nodes-list ("n2"))
+							      (probe :name "mov1-2"
+								     :class "voltage-probe"
+								     :nodes-list ("n3")))))
+
+			 (passive :name "L2"
+				  :class "inductance"
+				  :nodes-list ("n3" "n4")
+				  :value 22d-3)
+
+			 (passive :name "R1"
+				  :class "resistance"
+				  :nodes-list ("n4" "gnd")
+				  :value 10d0)
+
+			 (node :name "gnd"
+			       :class "reference")
+
+			 (node :name "n1"
+			       :class "v-i")
+
+			 (node :name "n2"
+			       :class "v-i")
+
+			 (node :name "n3"
+			       :class "v-i")
+
+			 (node :name "n4"
+			       :class "v-i")
+
+			 (probe :name "current"
+				:class "current-probe"
+				:elements-list ("R1" "M1"))
+
+			 (probe :name "voltage"
+			       :class "voltage-probe"
+				:nodes-list ("n1" "n2" "n3" "n4"))))
+
+;;;; end of test_switch_14.net file.

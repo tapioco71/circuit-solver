@@ -691,7 +691,7 @@
 		    (when debug-mode
 		      (format output
                               "~%~%Resulting netlist:~%~s~%"
-                              (sexpify return-value))
+                              return-value)
                       (finish-output output))))
 		(incf i))))
 	      until (eql subcircuit-calls-list nil))
