@@ -42,7 +42,7 @@
 						:class "function"
 						:parameters-list (:maximum-forward-conductance 1d2
 								  :maximum-backward-conductance 1d3
-								  :minimum-conductance 1d-6
+								  :minimum-conductance 1d-12
 								  :forward-voltage 1d1
 								  :nf 1d1
                                                                   :nz 1d-1
@@ -87,6 +87,14 @@
 		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/mov-230.sub"
 		                     :nodes-list ("n3" "n4"))
 
+			 (subcircuit :name "M9"
+		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/mov-230.sub"
+		                     :nodes-list ("n3" "n4"))
+
+			 (subcircuit :name "M10"
+		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/mov-230.sub"
+		                     :nodes-list ("n3" "n4"))
+
 			 (passive :name "L2"
 				  :class "inductance"
 				  :nodes-list ("n4" "n5")
@@ -95,7 +103,7 @@
 			 (passive :name "R3"
 				  :class "resistance"
 				  :nodes-list ("n5" "gnd")
-				  :value 6.8d0)
+				  :value 5.6d0)
 
 			 (node :name "gnd"
 			       :class "reference")
