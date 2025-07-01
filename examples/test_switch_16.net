@@ -10,14 +10,19 @@
 				  :nodes-list ("n1" "gnd")
 				  :value 20d3)
 
+			 (passive :name "R2"
+				  :class "resistance"
+				  :nodes-list ("n1" "n2")
+				  :value 2.2d-3)
+
 			 (passive :name "L1"
 				  :class "inductance"
-				  :nodes-list ("n1" "n2")
+				  :nodes-list ("n2" "n3")
 				  :value 5.25d-3)
 
 			 (passive :name "S1"
 				  :class "conductance"
-				  :nodes-list ("n2" "n3")
+				  :nodes-list ("n3" "n4")
                                   :value 1d-6
 				  :model (model :name "switch-1"
 						:function-name "simple-switch-2"
@@ -31,7 +36,7 @@
 
 			 (passive :name "D1"
 				  :class "conductance"
-				  :nodes-list ("n3" "n2")
+				  :nodes-list ("n4" "n3")
 				  :model (model :name "diode-1"
 						:function-name "simple-diode-4"
 						:class "function"
@@ -42,54 +47,54 @@
 								  :nf 1d1
                                                                   :nz 1d-1
 								  :breakdown-voltage 9d2)
-						:probes-list ((probe :name "diode-a-1"
+						:probes-list ((probe :name "diode-1-a"
 								     :class "voltage-probe"
-								     :nodes-list ("n3"))
-							      (probe :name "diode-k-1"
+								     :nodes-list ("n4"))
+							      (probe :name "diode-1-k"
 								     :class "voltage-probe"
-								     :nodes-list ("n2")))))
+								     :nodes-list ("n3")))))
 
 
 		         (subcircuit :name "M1"
 		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/mov-230.sub"
-		                     :nodes-list ("n2" "n3"))
+		                     :nodes-list ("n3" "n4"))
 
 			 (subcircuit :name "M2"
 		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/mov-230.sub"
-		                     :nodes-list ("n2" "n3"))
+		                     :nodes-list ("n3" "n4"))
 
 			 (subcircuit :name "M3"
 		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/mov-230.sub"
-		                     :nodes-list ("n2" "n3"))
+		                     :nodes-list ("n3" "n4"))
 
 			 (subcircuit :name "M4"
 		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/mov-230.sub"
-		                     :nodes-list ("n2" "n3"))
+		                     :nodes-list ("n3" "n4"))
 
 			 (subcircuit :name "M5"
 		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/mov-230.sub"
-		                     :nodes-list ("n2" "n3"))
+		                     :nodes-list ("n3" "n4"))
 
 			 (subcircuit :name "M6"
 		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/mov-230.sub"
-		                     :nodes-list ("n2" "n3"))
+		                     :nodes-list ("n3" "n4"))
 
 			 (subcircuit :name "M7"
 		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/mov-230.sub"
-		                     :nodes-list ("n2" "n3"))
+		                     :nodes-list ("n3" "n4"))
 
 			 (subcircuit :name "M8"
 		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/mov-230.sub"
-		                     :nodes-list ("n2" "n3"))
+		                     :nodes-list ("n3" "n4"))
 
 			 (passive :name "L2"
 				  :class "inductance"
-				  :nodes-list ("n3" "n4")
+				  :nodes-list ("n4" "n5")
 				  :value 20d-3)
 
-			 (passive :name "R2"
+			 (passive :name "R3"
 				  :class "resistance"
-				  :nodes-list ("n4" "gnd")
+				  :nodes-list ("n5" "gnd")
 				  :value 6.8d0)
 
 			 (node :name "gnd"
@@ -107,18 +112,17 @@
 			 (node :name "n4"
 			       :class "v-i")
 
+			 (node :name "n5"
+			       :class "v-i")
+
 			 (initial-condition :name "ic1"
 					    :target-name "n1"
 					    :value 325d0)
 
-			 (initial-condition :name "ic2"
-					    :target-name "n2"
-					    :value 325d0)
-
 			 (probe :name "current"
 				:class "current-probe"
-				:elements-list ("C1" "D1" "R1" "R2" "L1" "M1:L1"))
+				:elements-list ("C1" "D1" "R1" "R2" "R3" "L1" "L2" "M1:L1"))
 
 			 (probe :name "voltage"
 				:class "voltage-probe"
-				:nodes-list ("n1" "n2" "n3" "n4"))))
+				:nodes-list ("n1" "n2" "n3" "n4" "n5"))))

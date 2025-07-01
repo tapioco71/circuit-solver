@@ -3,12 +3,12 @@
          :elements-list ((passive :name "L1"
 		                  :class "inductance"
 		                  :nodes-list ("a" "n1")
-		                  :value 100d-9)
+		                  :value 220d-9)
 
                          (passive :name "C1"
                                   :class "capacitance"
                                   :nodes-list ("n1" "n2")
-                                  :value 100d-9)
+                                  :value 220d-9)
 
 			 (passive :name "R1"
 				  :class "resistance"
