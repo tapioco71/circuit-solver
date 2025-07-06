@@ -1,0 +1,43 @@
+;;;;-*- mode: lisp -*-
+(netlist :name "test-switch-19"
+	 :elements-list ((source :name "V1"
+				 :class "voltage-source"
+				 :nodes-list ("gnd" "n1")
+				 :value 100d0)
+
+			 (passive :name "S1"
+				  :class "conductance"
+				  :nodes-list ("n1" "n2")
+				  :model (model :name "switch-1"
+						:function-name "simple-switch-3"
+						:class "function"
+						:parameters-list (:on-time 0.100d0
+								  :off-time 0.200d0
+								  :rise-time 1d-2
+								  :fall-time 1d-2
+								  :on-conductance 1d3
+								  :off-conductance 1d-8)))
+
+			 (passive :name "R1"
+				  :class "resistance"
+				  :nodes-list ("n2" "gnd")
+				  :value 1d2)
+
+			 (node :name "gnd"
+			       :class "reference")
+
+			 (node :name "n1"
+			       :class "v-i")
+
+			 (node :name "n2"
+			       :class "v-i")
+
+			 (probe :name "current"
+				:class "current-probe"
+				:elements-list ("R1"))
+
+			 (probe :name "voltage"
+				:class "voltage-probe"
+				:nodes-list ("n1" "n2"))))
+
+;;;; end of test_switch_19.net file.

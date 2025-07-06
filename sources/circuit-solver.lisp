@@ -986,7 +986,8 @@
       (finish-output output))
     (setq sv-rows (length voltage-sources-list))
     (setq sv-cols (1- (length nodes-list)))
-    (when (and (> sv-rows 0) (> sv-cols 0))
+    (when (and (> sv-rows 0)
+               (> sv-cols 0))
       (setq sv-matrix (grid:make-foreign-array 'double-float
                                                :dimensions (list sv-rows sv-cols)
                                                :initial-element 0d0)))
@@ -1811,8 +1812,8 @@
                                                                      c-matrix
                                                                      :axis 1)
                                              :axis 0))
-      (unless (or (zerop (+ (grid:dim0 si-matrix) (grid:dim0 sv-matrix)))
-		  (zerop (+ (grid:dim1 p-matrix) (grid:dim1 g-matrix))))
+      (when (and (> (+ (grid:dim0 si-matrix) (grid:dim0 sv-matrix)) 0)
+                 (> (+ (grid:dim1 p-matrix) (grid:dim1 g-matrix)) 0))
         (setq b-matrix (grid:concatenate-grids b-matrix
 					       (grid:make-foreign-array 'double-float
                                                                         :dimensions (list (+ (grid:dim0 si-matrix)

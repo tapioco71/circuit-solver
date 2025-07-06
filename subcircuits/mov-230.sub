@@ -15,14 +15,15 @@
 				  :nodes-list ("n1" "n2")
 				  :value 1d11)
 
+                         ;; alpha 34.04, k = 2.04d-3
                          (passive :name "M1"
 		                  :class "conductance"
 		                  :nodes-list ("n1" "n2")
 		                  :model (model :name "mov1"
 			                        :function-name "simple-mov-2"
 			                        :class "function"
-			                        :parameters-list (:alpha 34.04d0
-								  :k 2.04d-3
+			                        :parameters-list (:alpha 30.956d0
+								  :k 2.0d-3
 								  :g-minimum 0d0)
 			                        :probes-list ((probe :name "m1-p1"
 					                             :class "voltage-probe"

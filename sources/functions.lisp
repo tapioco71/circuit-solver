@@ -405,8 +405,46 @@
                    :y0 0d0))
        on-conductance)))
 
-;; Ebers-Moll transistor model.
+(defun simple-switch-3 (&rest rest &key parameters state)
+  (declare (ignorable rest parameters state))
+  (destructuring-bind (&key
+                         (on-time 0d0)
+                         (off-time 1d0)
+                         (rise-time 1d-6)
+                         (fall-time 1d-6)
+                         (on-conductance 1d6)
+                         (off-conductance 1d-6))
+      parameters
+    (declare (ignorable on-time
+                        off-time
+                        rise-time
+                        fall-time
+                        on-conductance
+                        off-conductance))
+    (let* ((amplitude (- on-conductance off-conductance))
+           (k-on (* (/ 1d0 rise-time)
+                    (log (- (/ amplitude
+                               (- (* 0.95 on-conductance)
+                                  (* 1.95 off-conductance)))
+                            1d0))))
+           (k-off (* (/ 1d0 fall-time)
+                     (log (- (/ amplitude
+                                (- (* 0.05 on-conductance)
+                                   (* 1.05 off-conductance)))
+                             1d0)))))
+      (+ (sigmoid *time*
+                  :amplitude amplitude
+                  :scale (- k-on)
+                  :x0 on-time
+                  :y0 0d0)
+         (sigmoid *time*
+                  :amplitude amplitude
+                  :scale (- k-off)
+                  :x0 off-time
+                  :y0 0d0)
+         (- amplitude)))))
 
+;; Ebers-Moll transistor model.
 (defun ebers-moll (&optional &key parameters state)
   "Ebers-Moll transistor model."
   (let* ((vc (pop state))

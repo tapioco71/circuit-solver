@@ -1,5 +1,5 @@
 ;;;;-*- mode: lisp -*-
-(netlist :name "test-switch-16"
+(netlist :name "test-switch-18"
 	 :elements-list ((passive :name "C1"
 				  :class "capacitance"
 				  :nodes-list ("gnd" "a")
@@ -30,14 +30,14 @@
 				  :nodes-list ("n3" "n4")
                                   :value 1d-6
 				  :model (model :name "switch-1"
-						:function-name "simple-switch-2"
+						:function-name "simple-switch-3"
 						:class "function"
 						:parameters-list (:on-time 0.050d0
 								  :off-time 0.060d0
+								  :rise-time 5d-4
+								  :fall-time 5d-4
 								  :on-conductance 30.3
-								  :off-conductance 4.16d-8
-                                                                  :k-on 2d3
-                                                                  :k-off 1d3)))
+								  :off-conductance 4.16d-8)))
 
 			 (passive :name "D1"
 				  :class "conductance"
@@ -100,10 +100,6 @@
 		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/mov-230.sub"
 		                     :nodes-list ("n3" "n4"))
 
-			 (subcircuit :name "M11"
-		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/mov-230.sub"
-		                     :nodes-list ("n3" "n4"))
-
 			 (passive :name "L2"
 				  :class "inductance"
 				  :nodes-list ("n4" "n5")
@@ -117,7 +113,7 @@
 			 (passive :name "R3"
 				  :class "resistance"
 				  :nodes-list ("n6" "gnd")
-				  :value 2.0d0)
+				  :value 1.0d0)
 
 			 (node :name "gnd"
 			       :class "reference")
