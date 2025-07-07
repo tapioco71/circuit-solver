@@ -2,13 +2,8 @@
 (netlist :name "test-switch-18"
 	 :elements-list ((passive :name "C1"
 				  :class "capacitance"
-				  :nodes-list ("gnd" "a")
+				  :nodes-list ("gnd" "n1")
 				  :value 5d-3)
-
-			 (passive :name "RC1"
-				  :class "resistance"
-				  :nodes-list ("a" "n1")
-				  :value 17.5d-3)
 
 			 (passive :name "R1"
 				  :class "resistance"
@@ -35,6 +30,8 @@
 				  :nodes-list ("n3" "gnd")
 				  :value 100d-9)
 
+			 ;; C3M00xxxxxx: Vds = 1200 V, Gon = 30.3 S, Goff = 4.16d-8 S
+			 ;; C3M0021120K: Vds = 1200 V, Gon = 34.72 S, Goff = 4.16d-8 S
 			 (passive :name "S1"
 				  :class "conductance"
 				  :nodes-list ("n3" "n4")
@@ -42,11 +39,11 @@
 				  :model (model :name "switch-1"
 						:function-name "simple-switch-3"
 						:class "function"
-						:parameters-list (:on-time 0.060d0
-								  :off-time 0.065d0
-								  :rise-time 5d-4
-								  :fall-time 5d-4
-								  :on-conductance 30.3
+						:parameters-list (:on-time 0.010d0
+								  :off-time 0.015d0
+								  :rise-time 2.5d-4
+								  :fall-time 2.5d-4
+								  :on-conductance 34.72
 								  :off-conductance 4.16d-8)))
 
 			 (passive :name "D1"
@@ -145,11 +142,8 @@
 			 (node :name "n6"
 			       :class "v-i")
 
-			 (node :name "a"
-			       :class "v-i")
-
 			 (initial-condition :name "ic1"
-					    :target-name "a"
+					    :target-name "n1"
 					    :value 324d0)
 
 			 (probe :name "current"

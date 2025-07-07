@@ -36,7 +36,7 @@
 			 (passive :name "R2"
 		                  :class "resistance"
 		                  :nodes-list ("n2" "b")
-		                  :value 1d0)
+		                  :value 5d0)
 
 
 		 ;;

@@ -1,5 +1,5 @@
 ;;;; -*- mode: lisp; indent-tabs-mode: nil; coding: utf-8; show-trailing-whitespace: t -*-
-(netlist :name "mov-250"
+(netlist :name "mov-320"
          :elements-list ((passive :name "L1"
 		                  :class "inductance"
 		                  :nodes-list ("a" "n1")
@@ -15,15 +15,15 @@
 				  :nodes-list ("n1" "n2")
 				  :value 1d11)
 
-                         ;; B80K250: alpha = 33.146, k = 2.460d-3
+                         ;; B80K320: alpha = 43.427, k = 1.718d-3
                          (passive :name "M1"
 		                  :class "conductance"
 		                  :nodes-list ("n1" "n2")
 		                  :model (model :name "mov1"
 			                        :function-name "simple-mov-2"
 			                        :class "function"
-			                        :parameters-list (:alpha 33.146d0
-								  :k 2.460d-3
+			                        :parameters-list (:alpha 43.427d0
+								  :k 1.718d-3
 								  :g-minimum 0d0)
 			                        :probes-list ((probe :name "m1-p1"
 					                             :class "voltage-probe"
@@ -59,4 +59,4 @@
                          (node :name "n2"
                                :class "v-i")))
 
-;;;; end of mov-250.sub file.
+;;;; end of mov-320.sub file.
