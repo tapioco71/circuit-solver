@@ -43,7 +43,7 @@
 						:function-name "simple-switch-3"
 						:class "function"
 						:parameters-list (:on-time 0.060d0
-								  :off-time 0.070d0
+								  :off-time 0.065d0
 								  :rise-time 5d-4
 								  :fall-time 5d-4
 								  :on-conductance 30.3
@@ -154,7 +154,7 @@
 
 			 (probe :name "current"
 				:class "current-probe"
-				:elements-list ("C1" "D1" "RL1" "RL2" "R3" "L1" "L2" "M1:L1"))
+				:elements-list ("C1" "D1" "RL1" "RL2" "R3" "L1" "L2" "S1" "M1:L1"))
 
 			 (probe :name "voltage"
 				:class "voltage-probe"
