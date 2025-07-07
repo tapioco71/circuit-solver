@@ -25,6 +25,16 @@
 				  :nodes-list ("n2" "n3")
 				  :value 27d-3)
 
+			 (passive :name "C2"
+				  :class "capacitance"
+				  :nodes-list ("n1" "gnd")
+				  :value 100d-9)
+
+			 (passive :name "C3"
+				  :class "capacitance"
+				  :nodes-list ("n3" "gnd")
+				  :value 100d-9)
+
 			 (passive :name "S1"
 				  :class "conductance"
 				  :nodes-list ("n3" "n4")
@@ -32,8 +42,8 @@
 				  :model (model :name "switch-1"
 						:function-name "simple-switch-3"
 						:class "function"
-						:parameters-list (:on-time 0.050d0
-								  :off-time 0.060d0
+						:parameters-list (:on-time 0.060d0
+								  :off-time 0.070d0
 								  :rise-time 5d-4
 								  :fall-time 5d-4
 								  :on-conductance 30.3
@@ -45,7 +55,7 @@
 				  :model (model :name "diode-1"
 						:function-name "simple-diode-4"
 						:class "function"
-						:parameters-list (:maximum-forward-conductance 1d2
+						:parameters-list (:maximum-forward-conductance 1d3
 								  :maximum-backward-conductance 1d3
 								  :minimum-conductance 1d-12
 								  :forward-voltage 1d1
@@ -58,7 +68,6 @@
 							      (probe :name "diode-1-k"
 								     :class "voltage-probe"
 								     :nodes-list ("n3")))))
-
 
 		         (subcircuit :name "M1"
 		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/mov-230.sub"
