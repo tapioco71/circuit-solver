@@ -20,18 +20,7 @@
 				  :nodes-list ("n2" "n3")
 				  :value 27d-3)
 
-			 (passive :name "C2"
-				  :class "capacitance"
-				  :nodes-list ("n1" "gnd")
-				  :value 100d-9)
-
-			 (passive :name "C3"
-				  :class "capacitance"
-				  :nodes-list ("n3" "gnd")
-				  :value 100d-9)
-
-			 ;; C3M00xxxxxx: Vds = 1200 V, Gon = 30.3 S, Goff = 4.16d-8 S
-			 ;; C3M0021120K: Vds = 1200 V, Gon = 34.72 S, Goff = 4.16d-8 S
+			 ;; C3M0021120K: Vds = 1200 V, In = 100 A, Gon = 34.72 S, Goff = 4.16d-8 S
 			 (passive :name "S1"
 				  :class "conductance"
 				  :nodes-list ("n3" "n4")
@@ -41,10 +30,10 @@
 						:class "function"
 						:parameters-list (:on-time 0.010d0
 								  :off-time 0.015d0
-								  :rise-time 2.5d-4
-								  :fall-time 2.5d-4
-								  :on-conductance 34.72
-								  :off-conductance 4.16d-8)))
+								  :rise-time 50d-6
+								  :fall-time 50d-6
+								  :on-conductance 34.722
+								  :off-conductance 4.166d-8)))
 
 			 (passive :name "D1"
 				  :class "conductance"
@@ -119,7 +108,7 @@
 			 (passive :name "R3"
 				  :class "resistance"
 				  :nodes-list ("n6" "gnd")
-				  :value 1.0d0)
+				  :value 3.2d0)
 
 			 (node :name "gnd"
 			       :class "reference")
