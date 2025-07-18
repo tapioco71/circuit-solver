@@ -3,7 +3,7 @@
 	 :elements-list ((passive :name "C1"
 				  :class "capacitance"
 				  :nodes-list ("gnd" "n1")
-				  :value 5d-3)
+				  :value 6.8d-3)
 
 			 (passive :name "R1"
 				  :class "resistance"
@@ -28,8 +28,8 @@
 				  :model (model :name "switch-1"
 						:function-name "simple-switch-3"
 						:class "function"
-						:parameters-list (:on-time 0.010d0
-								  :off-time 0.015d0
+						:parameters-list (:on-time 0.001d0
+								  :off-time 0.004d0
 								  :rise-time 50d-6
 								  :fall-time 50d-6
 								  :on-conductance 34.722
@@ -56,43 +56,43 @@
 								     :nodes-list ("n3")))))
 
 		         (subcircuit :name "M1"
-		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/mov-230.sub"
+		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/mov-siov80k230.sub"
 		                     :nodes-list ("n3" "n4"))
 
 			 (subcircuit :name "M2"
-		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/mov-230.sub"
+		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/mov-siov80k230.sub"
 		                     :nodes-list ("n3" "n4"))
 
 			 (subcircuit :name "M3"
-		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/mov-230.sub"
+		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/mov-siov80k230.sub"
 		                     :nodes-list ("n3" "n4"))
 
 			 (subcircuit :name "M4"
-		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/mov-230.sub"
+		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/mov-siov80k230.sub"
 		                     :nodes-list ("n3" "n4"))
 
 			 (subcircuit :name "M5"
-		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/mov-230.sub"
+		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/mov-siov80k230.sub"
 		                     :nodes-list ("n3" "n4"))
 
 			 (subcircuit :name "M6"
-		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/mov-230.sub"
+		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/mov-siov80k230.sub"
 		                     :nodes-list ("n3" "n4"))
 
 			 (subcircuit :name "M7"
-		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/mov-230.sub"
+		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/mov-siov80k230.sub"
 		                     :nodes-list ("n3" "n4"))
 
 			 (subcircuit :name "M8"
-		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/mov-230.sub"
+		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/mov-siov80k230.sub"
 		                     :nodes-list ("n3" "n4"))
 
 			 (subcircuit :name "M9"
-		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/mov-230.sub"
+		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/mov-siov80k230.sub"
 		                     :nodes-list ("n3" "n4"))
 
 			 (subcircuit :name "M10"
-		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/mov-230.sub"
+		                     :file-pathname #p"/home/angel/Development/lisp/circuit-solver/subcircuits/mov-siov80k230.sub"
 		                     :nodes-list ("n3" "n4"))
 
 			 (passive :name "L2"
@@ -108,7 +108,7 @@
 			 (passive :name "R3"
 				  :class "resistance"
 				  :nodes-list ("n6" "gnd")
-				  :value 3.2d0)
+				  :value 3.3d0)
 
 			 (node :name "gnd"
 			       :class "reference")
