@@ -1,14 +1,14 @@
 ;;;; -*- mode: lisp; indent-tabs-mode: nil; coding: utf-8; show-trailing-whitespace: t -*-
-(netlist :name "mov-230"
+(netlist :name "mov-siov80k230"
          :elements-list ((passive :name "L1"
 		                  :class "inductance"
 		                  :nodes-list ("a" "n1")
-		                  :value 330d-9)
+		                  :value 1d-9) ;;;; 330d-9
 
                          (passive :name "C1"
                                   :class "capacitance"
                                   :nodes-list ("n1" "n2")
-                                  :value 330d-9)
+                                  :value 16d-9) ;;;; 330d-9
 
 			 (passive :name "R1"
 				  :class "resistance"
@@ -58,3 +58,5 @@
 
                          (node :name "n2"
                                :class "v-i")))
+
+;;;; end of mov-siov80k230.sub file.
